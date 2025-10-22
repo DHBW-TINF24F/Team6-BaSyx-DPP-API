@@ -62,3 +62,7 @@ Key capabilities:
 - Programmatic access to DPP data via REST endpoints
 - Easy-to-use API documentation through Swagger/OpenAPI
 - Integration with the BaSyx WebUI navigation and existing authentication mechanisms
+
+The system follows a microservices (Docker) architecture.
+Primary technologies include a *==?==*-sided Frontend, Python-sided Backend, and a pipeline server deployment.
+External dependencies include the BaSyx Backend Services *==?==*, *==?==*, and *==?==*.
