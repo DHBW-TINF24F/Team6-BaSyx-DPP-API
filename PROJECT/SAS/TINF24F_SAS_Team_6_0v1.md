@@ -40,4 +40,12 @@
 
 ### 1.1. Purpose and Scope
 
+This SAS defines the architectural design of the Digital Product Passport (DPP  &ndash; dt. *Digitaler Produkt Pass*) software, including API endpoint specifications, frontend integration with the BaSyx WebUI, component responsibilities, and deployment considerations.
+
+The SAS defines how the system fulfills the functional and non-functional requirements defined in the *[Software Requirements Specifications (SRS)]()*.
+
+#### **Scope:**  
+The architecture described here covers frontend, backend and API specifications.  
+The following areas are considered out of scope: external a
+
 ### 1.2. System Overview
