@@ -1,5 +1,5 @@
 # **System Architecture Specifications (SAS)**
-*TIN24F, Software Engineering &ndash; Practice project 2025/2026*
+*TIN24F, Software Engineering &mdash; Practice project 2025/2026*
 
 ---
 
@@ -13,26 +13,26 @@
 ---
 
 ## Table of Contents
-1. [Introduction](#1-introduction)
-    1.1. [Purpose and Scope](#11-purpose-and-scope)
-    1.2. [System Overview](#12-system-overview)
-2. [Stakeholders and Concerns]()
-3. [Architectural Overview]()
-    3.1. [System Context]()
-    3.2. [Design Approach]()
-4. [Structural Views]()
-    4.1. [Grey-Box View]()
-    4.2. [White-Box View]()
-5. [Behavioral Views]()
-    5.1. [Communication Diagram]()
-    5.2. [Sequence Diagrams]()
-6. [Data View]()
-    6.1. [ERM Diagram]()
-    6.2. [Data Model]()
-7. [Deployment View]()
-8. [Rationale and Traceability]()
-9. [Summary and Outlook]()
-10. [Appendices]()
+1. [Introduction](#1-introduction)  
+    1.1. [Purpose and Scope](#11-purpose-and-scope)  
+    1.2. [System Overview](#12-system-overview)  
+2. [Stakeholders and Concerns]()  
+3. [Architectural Overview]()  
+    3.1. [System Context]()  
+    3.2. [Design Approach]()  
+4. [Structural Views]()  
+    4.1. [Grey-Box View]()  
+    4.2. [White-Box View]()  
+5. [Behavioral Views]()  
+    5.1. [Communication Diagram]()  
+    5.2. [Sequence Diagrams]()  
+6. [Data View]()  
+    6.1. [ERM Diagram]()  
+    6.2. [Data Model]()  
+7. [Deployment View]()  
+8. [Rationale and Traceability]()  
+9. [Summary and Outlook]()  
+10. [Appendices]()  
 
 ---
 
@@ -45,7 +45,8 @@ This SAS defines the architectural design of the Digital Product Passport (DPP  
 The SAS defines how the system fulfills the functional and non-functional requirements defined in the *[Software Requirements Specifications (SRS)]()*.
 
 #### **Scope:**  
+
 The architecture described here covers frontend, backend and API specifications.  
-The following areas are considered out of scope: external a
+The following areas are considered out of scope:
 
 ### 1.2. System Overview
