@@ -1,4 +1,4 @@
-# **System Architecture Specifications (SAS)**
+# **System Architecture Specification (SAS)**
 *TIN24F, Software Engineering &mdash; Practice project 2025/2026*
 
 ---
