@@ -47,6 +47,18 @@ The SAS defines how the system fulfills the functional and non-functional requir
 #### **Scope:**  
 
 The architecture described here covers frontend, backend and API specifications.  
-The following areas are considered out of scope:
+The following areas are considered out of scope: ==*to be done*==
 
 ### 1.2. System Overview
+
+The system comprises two primary components: the *DPP Viewer* and the *DPP API*.
+
+- ***DPP Viewer*** &mdash; A web application that presents DPP-related AAS submodels in a clear, responsive UI. It emphasises usability and maintainability and integrates into the BaSyx WebUI as a navigation module.
+- ***DPP API*** &mdash; A RESTful API exposing DPP data and submodel elements to developers and integrators. It offers JSON responses, query/filter endpoints, and machine-readable API documentation (OpenAPI/Swagger).
+
+Key capabilities:
+
+- Visualisation of DPP-related AAS submodels for end users
+- Programmatic access to DPP data via REST endpoints
+- Easy-to-use API documentation through Swagger/OpenAPI
+- Integration with the BaSyx WebUI navigation and existing authentication mechanisms
