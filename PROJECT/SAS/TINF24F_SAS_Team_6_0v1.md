@@ -24,7 +24,9 @@
     1.1. [Purpose and Scope](#11-purpose-and-scope)  
     1.2. [System Overview](#12-system-overview) 
     1.3. [References](#13-references) 
-2. [Stakeholders and Concerns]()  
+2. [Stakeholders and Concerns](#2-stakeholders-and-concerns)  
+    2.1. [Stakeholder Overview](#21-stakeholder-overview)  
+    2.2. [Stakeholder Concerns and Architectural Impact](#22-stakeholder-concerns-and-architectural-impact)  
 3. [Architectural Overview]()  
     3.1. [System Context]()  
     3.2. [Design Approach]()  
@@ -91,6 +93,8 @@ Addressing these concerns ensures that the architecture meets the expectations a
 
 Stakeholders are individuals or groups with an interest in the system's structure, behavior, or performance. They influence architectural decisions and serve as reference points for validation and design trade-offs.
 
+### 2.1. Stakeholder Overview
+
 | **Stakeholder Role** | **Description** | **Example Person/Group** |
 |----------------------|-----------------|--------------------------|
 | Project Manager      | Oversees project planning, scheduling, ressources, and delivery milestones. Ensures the project stays on time and within budget. | Nataliia Chubak |
@@ -100,3 +104,15 @@ Stakeholders are individuals or groups with an interest in the system's structur
 | Technical Editor     | Prepares and maintains project documentation, ensuring clarity, consistency, and compliance with organizational or academic standards. | Fabian Steiß |
 | End Users            | Use the system to perform daily tasks or consume its output. Their satisfaction determines usability and acceptance. | &ndash; |
 | External Systems / API Consumers | Interact with the system via APIs or data interfaces. Depend on stable, well-documented external endpoints. | &ndash; |
+
+### 2.2. Stakeholder Concerns and Architectural Impact
+
+| **Stakeholder** | **Key Concerns** | **Architectural Impact / Response** |
+|-----------------|------------------|-------------------------------------|
+| Project Manager | - | - |
+| Product Manager | - | - |
+| Test Manager | - | - |
+| System Architect | - | - |
+| Technical Editor | - | - |
+| End Users | - | - |
+| External Systems / API Consumers | - | - |
