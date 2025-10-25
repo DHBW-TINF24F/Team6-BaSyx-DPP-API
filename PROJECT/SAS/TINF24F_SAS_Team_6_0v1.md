@@ -109,10 +109,10 @@ Stakeholders are individuals or groups with an interest in the system's structur
 
 | **Stakeholder** | **Key Concerns** | **Architectural Impact / Response** |
 |-----------------|------------------|-------------------------------------|
-| Project Manager | - | - |
-| Product Manager | - | - |
-| Test Manager | - | - |
-| System Architect | - | - |
-| Technical Editor | - | - |
-| End Users | - | - |
-| External Systems / API Consumers | - | - |
+| Project Manager | &bull; Meeting deadlines and budgets <br> &bull; Predictable development progress <br> &bull; Risk management | &rArr; Use modular design for parallel development <br> &rArr; Support incremental delivery (CI/CD) <br> &rArr; Provide clear component responsibilities |
+| Product Manager | &bull; Product fulfills functional goals <br> &bull; Scalability for future features <br> &bull; Alignment with user need | &rArr; Maintain flexible architecture (e.g. layered or service-oriented) <br> &rArr; Separate domain logic from UI for easier feature extension |
+| Test Manager | &bull; Testability and reproducibility <br> &bull; Automation support <br> &bull; Traceability from requirements to components | &rArr; Provide decoupled modules with mockable interfaces <br> &rArr; Use standardized test environments and CI integration <br> &rArr; Document traceability in SAS |
+| System Architect | &bull; Technical feasibility and consistency <br> &bull; Performance and maintainability <br> &bull; Compliance with standards | &rArr; Define architecture views (Grey-Box/White-Box) <br> &rArr; Enforce coding and interface standards <br> &rArr; Use clear component interfaces and versioned APIs |
+| Technical Editor | &bull; Up-to-date and accurate documentation <br> &bull; Consistency between design and implementation | &rArr; Use architecture diagrams as single source of truth <br> &rArr; Maintain auto-generated API and data documentation (OpenAPI, ERM) |
+| End Users | &bull; Usability and responsiveness <br> &bull; Reliability and data integrity <br> &bull; Accessibility and support | &rArr; Emphasize performance in deployment design <br> &rArr; Apply UI/UX consistency standards <br> &rArr; Include validation and fallback mechanisms. |
+| External Systems / API Consumers | &bull; Stable, versioned interfaces <br> &bull; Predictable behavior and error handling <br> &bull; Secure access and data formats | &rArr; Define REST/GraphQL endpoints and schemas <br> &rArr; Apply authentication (OAuth, API keys) <br> &rArr; Provide versioned API documentation |
