@@ -8,7 +8,7 @@
 | **Version** | **Date**   | **Author**                                     | **Comment**                         |
 |-------------|------------|------------------------------------------------|-------------------------------------|
 | 1.0         | 22.10.2025 | [Noah Becker](https://github.com/noahdbecker)  | First sketch of contents & setting up Table of Contents  |
-| 1.1         | 22.10.2025 | [Noah Becker](https://github.com/noahdbecker)  | ...  |
+| 1.1         | 22.10.2025 | [Noah Becker](https://github.com/noahdbecker)  | Introduction  |
 
 ---
 
