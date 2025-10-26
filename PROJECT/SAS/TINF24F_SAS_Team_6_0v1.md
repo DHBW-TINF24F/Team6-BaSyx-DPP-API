@@ -125,7 +125,7 @@ Stakeholders are individuals or groups with an interest in the system's structur
 
 The BaSyx DPP API operates as part of a broader environment that includes external users, services, and data sources.
 
-*This section provides a Black-Box perspective, showing the system's boundaries, inputs, outputs, and primary interactions without exposing internal implementation details.*
+*This section provides a Black-Box perspective, showing the system's boundaries, inputs, outputs, and primary interactions.*
 
 **Purpose:**
 To define what the system communicates with &ndash; *who* or *what* it depends on, and *what* depends on it.
@@ -138,6 +138,6 @@ The system receives user requests via a web frontend, processes this data throug
 | **End User**          | Human actor  | Submits requests via UI and receives Feedback  | Web UI / Browser          |
 | **External System A** | System / API | Provides ==?== to the system                   | REST API / HTTPS          |
 | **External System B** | Services     | ==AAS Backend Service==                        | API                       |
-| **Administrator**     | Human actor  | Monitors, configures, and maintains the system | SHH                       |
+| **Administrator**     | Human actor  | Monitors, configures, and maintains the system | SSH                       |
 
 ==***[TBD]** Context diagram (Black-Box-View) &mdash; Data flow chart***==
