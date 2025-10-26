@@ -16,6 +16,8 @@
 |-------------|------------|-------------|-------------------------------------|
 | 1.0         | 2025-10-22 | Noah Becker | First sketch of contents & setting up Table of Contents  |
 | 1.1         | 2025-10-22 | Noah Becker | Introduction  |
+| 1.2         | 2025-10-25 | Noah Becker | Stakeholders and Concerns |
+| 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &ndash; System Context |
 
 ---
 
@@ -27,8 +29,8 @@
 2. [Stakeholders and Concerns](#2-stakeholders-and-concerns)  
     2.1. [Stakeholder Overview](#21-stakeholder-overview)  
     2.2. [Stakeholder Concerns and Architectural Impact](#22-stakeholder-concerns-and-architectural-impact)  
-3. [Architectural Overview]()  
-    3.1. [System Context]()  
+3. [Architectural Overview](#3-architectural-overview)  
+    3.1. [System Context](#31-system-context)  
     3.2. [Design Approach]()  
 4. [Structural Views]()  
     4.1. [Grey-Box View]()  
