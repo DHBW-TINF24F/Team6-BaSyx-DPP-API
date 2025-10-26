@@ -141,4 +141,6 @@ The system receives user requests via a web frontend, processes this data throug
 | **AAS Environment API** | API          | Provides necessary AAS content                 | REST API / HTTPS          |
 | **Administrator**       | Human actor  | Monitors, configures, and maintains the system | SSH                       |
 
-==***[TBD]** Context diagram (Black-Box-View) &mdash; Data flow chart***==
+<img src="./TINF24F_SAS_Team_6_Black-Box-View.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
+
+*Figure 3-1 &ndash; System Context Diagram (Black-Box-View) of the BaSyx DPP API showing external actors and data flows.*
