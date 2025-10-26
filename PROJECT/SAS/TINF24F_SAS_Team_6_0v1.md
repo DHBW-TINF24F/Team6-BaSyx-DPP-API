@@ -91,9 +91,9 @@ External dependencies include the BaSyx Backend Services *==?==*, *==?==*, and *
 *This section identifies the primary stakeholders involved in the development, deployment, and maintenance of the BaSyx DPP API, along with their main architectural concerns.  
 Addressing these concerns ensures that the architecture meets the expectations and constraints of everyone affected by the system's design.*
 
-Stakeholders are individuals or groups with an interest in the system's structure, behavior, or performance. They influence architectural decisions and serve as reference points for validation and design trade-offs.
-
 ### 2.1. Stakeholder Overview
+
+Stakeholders are individuals or groups with an interest in the system's structure, behavior, or performance. They influence architectural decisions and serve as reference points for validation and design trade-offs.
 
 | **Stakeholder Role** | **Description** | **Example Person/Group** |
 |----------------------|-----------------|--------------------------|
@@ -116,3 +116,28 @@ Stakeholders are individuals or groups with an interest in the system's structur
 | Technical Editor | &bull; Up-to-date and accurate documentation <br> &bull; Consistency between design and implementation | &rArr; Use architecture diagrams as single source of truth <br> &rArr; Maintain auto-generated API and data documentation (OpenAPI, ERM) |
 | End Users | &bull; Usability and responsiveness <br> &bull; Reliability and data integrity <br> &bull; Accessibility and support | &rArr; Emphasize performance in deployment design <br> &rArr; Apply UI/UX consistency standards <br> &rArr; Include validation and fallback mechanisms. |
 | External Systems / API Consumers | &bull; Stable, versioned interfaces <br> &bull; Predictable behavior and error handling <br> &bull; Secure access and data formats | &rArr; Define REST/GraphQL endpoints and schemas <br> &rArr; Apply authentication (OAuth, API keys) <br> &rArr; Provide versioned API documentation |
+
+<br>
+
+## 3. Architectural Overview
+
+### 3.1. System Context
+
+The BaSyx DPP API operates as part of a broader environment that includes external users, services, and data sources.
+
+*This section provides a Black-Box perspective, showing the system's boundaries, inputs, outputs, and primary interactions without exposing internal implementation details.*
+
+**Purpose:**
+To define what the system communicates with &ndash; *who* or *what* it depends on, and *what* depends on it.
+
+**Context Description:**
+The system receives user requests via a web frontend, processes this data through the exisiting AAS API, maps these responses to the DPP requirements, and produces an API response.
+
+| **External Entity**   | **Type**     | **Interaction / Data Flow**                    | **Communication Channel** |
+|-----------------------|--------------|------------------------------------------------|---------------------------|
+| **End User**          | Human actor  | Submits requests via UI and receives Feedback  | Web UI / Browser          |
+| **External System A** | System / API | Provides ==?== to the system                   | REST API / HTTPS          |
+| **External System B** | Services     | ==AAS Backend Service==                        | API                       |
+| **Administrator**     | Human actor  | Monitors, configures, and maintains the system | SHH                       |
+
+==***[TBD]** Context diagram (Black-Box-View) &mdash; Data flow chart***==
