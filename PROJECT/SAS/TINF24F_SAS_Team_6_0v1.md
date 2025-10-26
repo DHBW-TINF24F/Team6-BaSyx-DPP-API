@@ -133,11 +133,10 @@ To define what the system communicates with &ndash; *who* or *what* it depends o
 **Context Description:**
 The system receives user requests via a web frontend, processes this data through the exisiting AAS API, maps these responses to the DPP requirements, and produces an API response.
 
-| **External Entity**   | **Type**     | **Interaction / Data Flow**                    | **Communication Channel** |
-|-----------------------|--------------|------------------------------------------------|---------------------------|
-| **End User**          | Human actor  | Submits requests via UI and receives Feedback  | Web UI / Browser          |
-| **External System A** | System / API | Provides ==?== to the system                   | REST API / HTTPS          |
-| **External System B** | Services     | ==AAS Backend Service==                        | API                       |
-| **Administrator**     | Human actor  | Monitors, configures, and maintains the system | SSH                       |
+| **External Entity**     | **Type**     | **Interaction / Data Flow**                    | **Communication Channel** |
+|-------------------------|--------------|------------------------------------------------|---------------------------|
+| **End User**            | Human actor  | Submits requests via UI and receives Feedback  | Web UI / Browser          |
+| **AAS Environment API** | API          | Provides necessary AAS content                 | REST API / HTTPS          |
+| **Administrator**       | Human actor  | Monitors, configures, and maintains the system | SSH                       |
 
 ==***[TBD]** Context diagram (Black-Box-View) &mdash; Data flow chart***==
