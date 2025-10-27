@@ -68,7 +68,7 @@ The SAS defines how the system fulfills the functional and non-functional requir
 #### **Scope:**  
 
 The architecture described here covers frontend, backend and API specifications.  
-The following areas are considered out of scope: ==*to be done*==
+The following areas are considered out of scope: BaSyx software architecture *(mainly Vue.js & Java SpringBoot)*.
 
 <br>
 
@@ -87,8 +87,8 @@ Key capabilities:
 - Integration with the BaSyx WebUI navigation and existing authentication mechanisms
 
 The system follows a microservices (Docker) architecture.  
-Primary technologies include a *==?==*-sided Frontend, Python-sided Backend, and a pipeline server deployment.  
-External dependencies include the BaSyx Backend Services *==?==*, *==?==*, and *==?==*.
+Primary technologies include a React-sided Frontend, Python-sided Backend, and a pipeline server deployment.  
+External dependencies include the BaSyx Backend Services *BaSyx AAS Environment*, *BaSyx AAS Registry*, *BaSyx Submodel Registry* and *BaSyx AAS Discovery*.
 
 <br>
 
