@@ -1,5 +1,9 @@
 # **System Architecture Specification (SAS)**
+
 *TIN24F, Software Engineering &mdash; Practice project 2025/2026*
+
+
+<br>
 
 | **Metadata**    | **Value**                           |
 |-----------------|-------------------------------------|
@@ -20,6 +24,8 @@
 | 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &ndash; System Context |
 
 ---
+
+<br>
 
 ## Table of Contents
 
@@ -46,6 +52,8 @@
 8. [Rationale and Traceability]()  
 9. [Summary and Outlook]()  
 10. [Appendices]()  
+
+<br>
 
 ---
 
