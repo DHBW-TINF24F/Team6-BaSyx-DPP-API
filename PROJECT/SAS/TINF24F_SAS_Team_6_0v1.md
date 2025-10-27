@@ -22,10 +22,11 @@
 ---
 
 ## Table of Contents
+
 1. [Introduction](#1-introduction)  
     1.1. [Purpose and Scope](#11-purpose-and-scope)  
-    1.2. [System Overview](#12-system-overview) 
-    1.3. [References](#13-references) 
+    1.2. [System Overview](#12-system-overview)  
+    1.3. [References](#13-references)  
 2. [Stakeholders and Concerns](#2-stakeholders-and-concerns)  
     2.1. [Stakeholder Overview](#21-stakeholder-overview)  
     2.2. [Stakeholder Concerns and Architectural Impact](#22-stakeholder-concerns-and-architectural-impact)  
@@ -61,6 +62,8 @@ The SAS defines how the system fulfills the functional and non-functional requir
 The architecture described here covers frontend, backend and API specifications.  
 The following areas are considered out of scope: ==*to be done*==
 
+<br>
+
 ### 1.2. System Overview
 
 The system comprises two primary components: the *DPP Viewer* and the *DPP API*.
@@ -79,6 +82,8 @@ The system follows a microservices (Docker) architecture.
 Primary technologies include a *==?==*-sided Frontend, Python-sided Backend, and a pipeline server deployment.  
 External dependencies include the BaSyx Backend Services *==?==*, *==?==*, and *==?==*.
 
+<br>
+
 ### 1.3. References
 
 | **Ref ID**  | **Document Title**                                                                                   | **Version/Date** | **Source** |
@@ -86,7 +91,7 @@ External dependencies include the BaSyx Backend Services *==?==*, *==?==*, and *
 | [SRS]       | Software Requirements Specification                                                                  | &ndash;          | Internal   |
 | [IEEE 1471] | IEEE Std 1471-2000: Recommended Practice for Architectural Description of Software-intensive Systems | &ndash;          | IEEE       |
 
-<br>
+<br><br>
 
 ## 2. Stakeholders and Concerns
 
@@ -106,6 +111,8 @@ Stakeholders are individuals or groups with an interest in the system's structur
 | Technical Editor     | Prepares and maintains project documentation, ensuring clarity, consistency, and compliance with organizational or academic standards. | Fabian Steiß |
 | End Users            | Use the system to perform daily tasks or consume its output. Their satisfaction determines usability and acceptance. | &ndash; |
 | External Systems / API Consumers | Interact with the system via APIs or data interfaces. Depend on stable, well-documented external endpoints. | &ndash; |
+
+<br>
 
 ### 2.2. Stakeholder Concerns and Architectural Impact
 
@@ -146,3 +153,7 @@ The system receives user requests via a web frontend, processes this data throug
 <img src="./TINF24F_SAS_Team_6_Black-Box-View.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
 
 *Figure 3-1 &ndash; System Context Diagram (Black-Box-View) of the BaSyx DPP API showing external actors and data flows.*
+
+<br>
+
+### 3.2. Design Approach
