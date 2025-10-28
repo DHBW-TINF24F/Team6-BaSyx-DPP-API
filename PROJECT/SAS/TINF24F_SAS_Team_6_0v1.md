@@ -2,7 +2,6 @@
 
 *TIN24F, Software Engineering &mdash; Practice project 2025/2026*
 
-
 <br>
 
 | **Metadata**    | **Value**                           |
@@ -18,11 +17,11 @@
 
 | **Version** | **Date**   | **Author**  | **Comment**                         |
 |-------------|------------|-------------|-------------------------------------|
-| 1.0         | 2025-10-22 | Noah Becker | First sketch of contents & setting up Table of Contents |
+| 1.0         | 2025-10-22 | Noah Becker | Initialize and first sketch of content |
 | 1.1         | 2025-10-22 | Noah Becker | Introduction |
 | 1.2         | 2025-10-25 | Noah Becker | Stakeholders and Concerns |
 | 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &mdash; System Context |
-| 1.4         | 2025-10-28 | Noah Becker | Architectural Overview &mdash; Design Approach |
+| 1.4         | 2025-10-28 | Noah Becker | &bull; Architectural Overview &mdash; Design Approach <br> &bull; Structural Views &mdash; Grey-Box View <br> &bull; Behavioral Views &mdash; Communication Diagram |
 
 ---
 
@@ -40,11 +39,11 @@
 3. [Architectural Overview](#3-architectural-overview)  
     3.1. [System Context](#31-system-context)  
     3.2. [Design Approach](#32-design-approach)  
-4. [Structural Views]()  
-    4.1. [Grey-Box View]()  
-    4.2. [White-Box View]()  
-5. [Behavioral Views]()  
-    5.1. [Communication Diagram]()  
+4. [Structural Views](#4-structural-views)  
+    4.1. [Grey-Box View](#41-grey-box-view)  
+    4.2. [White-Box View](#42-white-box-view)  
+5. [Behavioral Views](#5-behavioral-views)  
+    5.1. [Communication Diagram](#51-communication-diagram)  
     5.2. [Sequence Diagrams]()  
 6. [Data View]()   
 7. [Deployment View]()  
@@ -157,7 +156,7 @@ The system receives user requests via a web frontend, processes this data throug
 
 <br>
 
-<img src="./TINF24F_SAS_Team_6_Black-Box-View.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
+<img src="./src/black-box-view/TINF24F_SAS_Team_6_Black-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
 
 *Figure 3-1 &ndash; System Context Diagram (Black-Box-View) of the BaSyx DPP API showing external actors and data flows.*
 
@@ -165,7 +164,7 @@ The system receives user requests via a web frontend, processes this data throug
 
 ### 3.2. Design Approach
 
-*This subsection outlines the architectural style, principles, and technologies used to implement the system.*
+*This section outlines the architectural style, principles, and technologies used to implement the system.*
 
 **Architectural Style**  
 The system follows a microservice architecture.  
@@ -223,3 +222,97 @@ Using Docker ensures consistent environments across development and production.
 Traefik dynamically routes requests between containers and provides secure HTTPS access.  
 The GitHub Actions pipeline ensures continuous integration and deployment, improving code quality and deployment speed.  
 *This design was selected to meet key stakeholder concerns regarding scalability, maintainability, and automation.*
+
+<br><br>
+
+## 4. Structural Views
+
+*This section provides the structural architecture of the BaSyx DPP API.*  
+
+It presents the system at different abstraction levels to illustrate how the main subsystems are organized and how their internal components collaborate.  
+The Grey-Box view describes subsystem boundaries and interactions, while the White-Box view details internal components and class-level structure.
+
+### 4.1. Grey-Box View
+
+The BaSyx DPP API system is decomposed into multiple independent submodules to support scalability, maintainability, and modular development. Each submodule encapsulates a distinct responsibility and communicates through well-defined interfaces.  
+This decomposition enables parallel development, reduces coupling, and allows individual servies to be deployed and scaled independently.
+
+<br>
+
+<img src="./src/grey-box-view/TINF24F_SAS_Team_6_Grey-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Grey Box View" width="100%" height="100%">
+
+*Figure 4-1 &ndash; Subsystem architecture overview of the BaSyx DPP (API), showing the central microservices and their integration points with existing BaSyx backend services.*
+
+<br>
+
+**Subsystem Responsibilities:**
+
+| **Submodule**         | **Responsibility**                                                                 | **Technology**             |
+|-----------------------|------------------------------------------------------------------------------------|----------------------------|
+| React Frontend        | User interface rendering, interaction handling, form validation, HTTP request flow | React                      |
+| Djano Backend         | Business logic, request validation, domain mapping, REST endpoints                 | Django (Python)            |
+| BaSyx Environment API | Provides access to persisted AAS-related product information and submodel data     | &ndash; (external service) |
+| Traefik               | Routes incoming requests, performs SSL termination, and handles service discovery  | Traefik                    |
+
+<br>
+
+**Subsystem Collaboration**  
+
+The React Frontend communicates with the Django Backend through RESTful HTTP requests routed via the Docker internal networking. 
+The Django Backend retrieves product- and submodel-related information by querying the BaSyx Environment API, which internally connects to a MongoDB database. 
+Traefik dynamically routes traffic based on container labels, ensuring request isolation and secure HTTPS access.
+
+<br>
+
+**Subsystem Boundaries**  
+
+- Presentation concerns are strictly contained within the React Frontend.  
+- Domain logic, schema mapping, and validation remain inside the Django Backend.  
+- Persistence and AAS service interaction are delegated to the BaSyx Environment API.  
+- Infrastructure-level routing and TLS termination are handled centrally by Traefik.
+
+All interfaces are language-agnostic, promoting loose coupling and long-term interoperability.
+
+<br>
+
+**Rationale**
+
+This subsystem decomposition addresses several stakeholder concerns:
+
+- Scalability &mdash; services can scale independently based on workload  
+- Maintainability &mdash; isolated responsibilities reduce change impact  
+- Testability &mdash; each service can be validated separately in CI/CD  
+- Extensibility &mdash; new submodules can be added without modifying existing ones
+
+Furthermore, it aligns with the BaSyx microservice ecosystem, ensuring seamless integration with existing AAS infrastructure.
+
+<br>
+
+**Known Limitations**  
+
+- The BaSyx Environment API is treated as a black-box dependency. Changes to its data schema may require adaptation layers in the backend.
+- Runtime coupling exists with the BaSyx Environment availability; fallback strategies are limited in the current state.
+
+<br>
+
+### 4.2. White-Box View
+
+==tbd==
+
+<br><br>
+
+## 5. Behavioral Views
+
+### 5.1. Communication Diagram
+
+<img src="./src/communication-diagram/TINF24F_SAS_Team_6_Communication-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Communication Diagram" width="100%" height="100%">
+
+*Figure 5-1 &ndash; Communication flow between user, frontend, Traefik, backend, and the BaSyx Environment API during a Digital Product Passport (DPP) request.*
+
+<br>
+
+The user triggers the request via the React frontend. The frontend calls the Django backend service using RESTful HTTP requests. 
+*Traefik routes the request to the correct container based on service labels. (On server deployment)* The backend queries the BaSyx Environent API to retrieve AAS and submodel data and then maps the result to the internal DPP schema. 
+The processed data is returned to the frontend as a JSON payload and finally rendered in the UI.
+
+If the BaSyx Environment API is unavailable, the backend returns a descriptive error response.
