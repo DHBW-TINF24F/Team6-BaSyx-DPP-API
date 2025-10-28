@@ -47,7 +47,7 @@
     5.1. [Communication Diagram]()  
     5.2. [Sequence Diagrams]()  
 6. [Data View]()  
-    6.1. [ERM Diagram]()  
+    6.1. [UML Diagram]()  
     6.2. [Data Model]()  
 7. [Deployment View]()  
 8. [Rationale and Traceability]()  
