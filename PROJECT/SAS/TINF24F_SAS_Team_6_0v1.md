@@ -95,7 +95,7 @@ External dependencies include the BaSyx Backend Services *BaSyx AAS Environment*
 | **Ref ID**  | **Document Title**                                                                                   | **Version/Date** | **Source** |
 |-------------|------------------------------------------------------------------------------------------------------|------------------|------------|
 | [SRS]       | Software Requirements Specification                                                                  | &ndash;          | Internal   |
-| [IEEE 1471] | IEEE Std 1471-2000: Recommended Practice for Architectural Description of Software-intensive Systems | &ndash;          | IEEE       |
+| [IEEE 1471] | IEEE Std 1471-2000: Recommended Practice for Architectural Description of Software-intensive Systems | 10/2000          | IEEE       |
 
 <br><br>
 
