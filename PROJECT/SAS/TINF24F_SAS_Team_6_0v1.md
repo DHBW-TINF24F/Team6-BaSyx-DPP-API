@@ -8,7 +8,7 @@
 | **Metadata**    | **Value**                           |
 |-----------------|-------------------------------------|
 | **Projectname** | Team 6 BaSyx DPP API (DIN EN 18222) |
-| **Version**     | 1.2                                 |
+| **Version**     | 1.4                                 |
 | **Date**        | 2025-10-22                          |
 | **Author**      | [Noah Becker](https://github.com/noahdbecker) |
 
@@ -18,10 +18,11 @@
 
 | **Version** | **Date**   | **Author**  | **Comment**                         |
 |-------------|------------|-------------|-------------------------------------|
-| 1.0         | 2025-10-22 | Noah Becker | First sketch of contents & setting up Table of Contents  |
-| 1.1         | 2025-10-22 | Noah Becker | Introduction  |
+| 1.0         | 2025-10-22 | Noah Becker | First sketch of contents & setting up Table of Contents |
+| 1.1         | 2025-10-22 | Noah Becker | Introduction |
 | 1.2         | 2025-10-25 | Noah Becker | Stakeholders and Concerns |
-| 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &ndash; System Context |
+| 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &mdash; System Context |
+| 1.4         | 2025-10-28 | Noah Becker | Architectural Overview &mdash; Design Approach |
 
 ---
 
@@ -38,7 +39,7 @@
     2.2. [Stakeholder Concerns and Architectural Impact](#22-stakeholder-concerns-and-architectural-impact)  
 3. [Architectural Overview](#3-architectural-overview)  
     3.1. [System Context](#31-system-context)  
-    3.2. [Design Approach]()  
+    3.2. [Design Approach](#32-design-approach)  
 4. [Structural Views]()  
     4.1. [Grey-Box View]()  
     4.2. [White-Box View]()  
@@ -134,7 +135,7 @@ Stakeholders are individuals or groups with an interest in the system's structur
 | End Users | &bull; Usability and responsiveness <br> &bull; Reliability and data integrity <br> &bull; Accessibility and support | &rArr; Emphasize performance in deployment design <br> &rArr; Apply UI/UX consistency standards <br> &rArr; Include validation and fallback mechanisms. |
 | External Systems / API Consumers | &bull; Stable, versioned interfaces <br> &bull; Predictable behavior and error handling <br> &bull; Secure access and data formats | &rArr; Define REST/GraphQL endpoints and schemas <br> &rArr; Apply authentication (OAuth, API keys) <br> &rArr; Provide versioned API documentation |
 
-<br>
+<br><br>
 
 ## 3. Architectural Overview
 
@@ -165,3 +166,62 @@ The system receives user requests via a web frontend, processes this data throug
 <br>
 
 ### 3.2. Design Approach
+
+*This subsection outlines the architectural style, principles, and technologies used to implement the system.*
+
+**Architectural Style**  
+The system follows a microservice architecture.  
+This approach separates the system into independently deployable services &mdash; primarily a React-based frontend and a Django-based backend &mdash; managed and orchestrated through Docker and Traefik.  
+This approach was selected to ensure seamless integration with the existing BaSyx microservices architecure, enabling modular expansion of the system.
+
+<br>
+
+This microservice architectural style emphasizes:
+
+- **Service Isolation:** Each service (frontend, backend) runs it its own container.
+- **Scalability:** Individual services can be scaled horizontally as needed.
+- **Independent Deployment:** Updates can be applied to each component separately via CI/CD pipelines.
+- **Loose Coupling:** Services communicate through well-defined HTTP APIs.
+
+<br>
+
+**Logical Layers**  
+
+| **Layer**                | **Description**                                          | **Implementation** |
+|--------------------------|----------------------------------------------------------|--------------------|
+| **Presentation Layer**   | Provides the user interface and hanles client-side logic | React (TypeScript) |
+| **Application Layer**    | Implements the core business logic and RESTful API       | Django (Python) |
+| **Data Layer**           | Manages persistent data and ensures data integrity       | mongoDB *via BaSyx Environment API* |
+| **Infrastructure Layer** | Handles routing, deployment, and orchestration           | Docker, Traefik Reverse Proxy, GitHub Actions CI/CD |
+
+<br>
+
+**Architectural Principles**  
+
+- **Separation of Concerns:** UI, logic, and data are clearly divided across independent services.  
+- **Loose Coupling / High Cohesion:** Components interact only via HTTP interfaces, maintaining clear boundaries.  
+- **Containerization:** All services are encapsulated as Docker containers for consistent runtime environments.  
+- **Automated Deployment:** GitHub Actions automates build, test, and deployment processes to ensure reliability and traceability.  
+- **Security:** Traefik enforces HTTPS routing, and Django handles authentication and role-based access control.  
+- **Scalability & Maintainability:** Each microservice can be updated or scaled independently without system downtime.  
+
+<br>
+
+**Technology Stack**  
+
+| **Layer / Aspect**   | **Technology**   | **Purpose** |
+|----------------------|------------------|-------------|
+| **Frontend**         | React            | User interface and interaction |
+| **Backend**          | Django (Python)  | Application logic and API gateway |
+| **Proxy / Router**   | Traefik          | Reverse proxy, SSL termination, routing |
+| **Containerization** | Docker           | Service packaging and isolation |
+| **CI/CD Pipeline**   | GitHub Actions   | Automated build, test, and deployment |
+
+<br>
+
+**Design Justification**  
+The chosen microservice-based architecture allows modular development and simplifies maintenance by separating concerns across independent components.  
+Using Docker ensures consistent environments across development and production.  
+Traefik dynamically routes requests between containers and provides secure HTTPS access.  
+The GitHub Actions pipeline ensures continuous integration and deployment, improving code quality and deployment speed.  
+*This design was selected to meet key stakeholder concerns regarding scalability, maintainability, and automation.*
