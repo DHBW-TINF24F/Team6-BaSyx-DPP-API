@@ -137,9 +137,11 @@ Stakeholders are individuals or groups with an interest in the system's structur
 
 ## 3. Architectural Overview
 
-### 3.1. System Context
-
 The BaSyx DPP API operates as part of a broader environment that includes external users, services, and data sources.
+
+<br>
+
+### 3.1. System Context
 
 *This section provides a Black-Box perspective, showing the system's boundaries, inputs, outputs, and primary interactions.*
 
@@ -339,13 +341,13 @@ Once processing is complete, the backend returns the consolidated JSON response 
 
 <br>
 
-**Rationale**
+**Rationale**  
 
 This sequence demonstrates a clear separation of concerns: user interaction and rendering are handled by the frontend, data orchestration and processing by the backend, and AAS data retrieval by the BaSyx Environment API. This separation improves maintainability, testability, and supports the modular microservice architecture.
 
 <br>
 
-**Known Limitations**
+**Known Limitations**  
 
 If the BaSyx Environment API fails to respond, the backend returns an appropriate error message to the frontend to prevent partial or incorrect data from being displayed.
 
