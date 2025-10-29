@@ -7,7 +7,7 @@
 | **Metadata**    | **Value**                           |
 |-----------------|-------------------------------------|
 | **Projectname** | Team 6 BaSyx DPP API (DIN EN 18222) |
-| **Version**     | 1.4                                 |
+| **Version**     | 1.5                                 |
 | **Date**        | 2025-10-22                          |
 | **Author**      | [Noah Becker](https://github.com/noahdbecker) |
 
@@ -22,6 +22,7 @@
 | 1.2         | 2025-10-25 | Noah Becker | Stakeholders and Concerns |
 | 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &mdash; System Context |
 | 1.4         | 2025-10-28 | Noah Becker | &bull; Architectural Overview &mdash; Design Approach <br> &bull; Structural Views &mdash; Grey-Box View <br> &bull; Behavioral Views &mdash; Communication Diagram |
+| 1.5         | 2025-10-29 | Noah Becker | &bull; Behavioral Views &mdash; Sequence Diagram |
 
 ---
 
@@ -44,7 +45,7 @@
     4.2. [White-Box View](#42-white-box-view)  
 5. [Behavioral Views](#5-behavioral-views)  
     5.1. [Communication Diagram](#51-communication-diagram)  
-    5.2. [Sequence Diagrams]()  
+    5.2. [Sequence Diagrams](#52-sequence-diagram)  
 6. [Data View]()   
 7. [Deployment View]()  
 8. [Rationale and Traceability]()  
@@ -158,7 +159,7 @@ The system receives user requests via a web frontend, processes this data throug
 
 <img src="./src/black-box-view/TINF24F_SAS_Team_6_Black-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
 
-*Figure 3-1 &ndash; System Context Diagram (Black-Box-View) of the BaSyx DPP API showing external actors and data flows.*
+*Figure 3-1 &mdash; System Context Diagram (Black-Box-View) of the BaSyx DPP API showing external actors and data flows.*
 
 <br>
 
@@ -241,7 +242,7 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 <img src="./src/grey-box-view/TINF24F_SAS_Team_6_Grey-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Grey Box View" width="100%" height="100%">
 
-*Figure 4-1 &ndash; Subsystem architecture overview of the BaSyx DPP (API), showing the central microservices and their integration points with existing BaSyx backend services.*
+*Figure 4-1 &mdash; Subsystem architecture overview of the BaSyx DPP (API), showing the central microservices and their integration points with existing BaSyx backend services.*
 
 <br>
 
@@ -307,7 +308,7 @@ Furthermore, it aligns with the BaSyx microservice ecosystem, ensuring seamless 
 
 <img src="./src/communication-diagram/TINF24F_SAS_Team_6_Communication-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Communication Diagram" width="100%" height="100%">
 
-*Figure 5-1 &ndash; Communication flow between user, frontend, Traefik, backend, and the BaSyx Environment API during a Digital Product Passport (DPP) request.*
+*Figure 5-1 &mdash; Communication Diagram for the DPP Data Retrieval &ndash; Communication flow between user, frontend, Traefik, backend, and the BaSyx Environment API during a Digital Product Passport (DPP) request.*
 
 <br>
 
@@ -317,10 +318,35 @@ The processed data is returned to the frontend as a JSON payload and finally ren
 
 If the BaSyx Environment API is unavailable, the backend returns a descriptive error response.
 
+<br>
+
 ### 5.2. Sequence Diagram
+
+The following sequence diagram provides a detailed view of the runtime behavior of the system when a user requests Digital Product Passport (DPP) data.
+It shows the chronological order of messages exchanged between the involved components and highlights the responsibilities of each subsystem during the request-response lifecycle.
+
+<br>
 
 <img src="./src/sequence-diagram/TINF24F_SAS_Team_6_Sequence-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Sequence Diagram" width="100%" height="100%">
 
-*Figure 5-2 &ndash; …*
+*Figure 5-2 &mdash; Sequence Diagram for DPP Data Retrieval &ndash; chronological interaction between the user, frontend, Traefik, backend, and the BaSyx Environment API during a Digital Product Passport (DPP) request.*
+
+<br>
+
+When a user initiates a DPP data request through the frontend, the React application sends an HTTP request to the Django backend service via the Traefik reverse proxy. Traefik forwards the request to the appropriate backend container based on routing rules.
+The backend validates the request, queries the BaSyx Environment API for the required AAS and submodel information, and maps the received data to the internal DPP schema.
+Once processing is complete, the backend returns the consolidated JSON response to the frontend, which then renders the corresponding product information to the user.
+
+<br>
+
+**Rationale**
+
+This sequence demonstrates a clear separation of concerns: user interaction and rendering are handled by the frontend, data orchestration and processing by the backend, and AAS data retrieval by the BaSyx Environment API. This separation improves maintainability, testability, and supports the modular microservice architecture.
+
+<br>
+
+**Known Limitations**
+
+If the BaSyx Environment API fails to respond, the backend returns an appropriate error message to the frontend to prevent partial or incorrect data from being displayed.
 
 <br>
