@@ -250,7 +250,7 @@ This decomposition enables parallel development, reduces coupling, and allows in
 | **Submodule**         | **Responsibility**                                                                 | **Technology**             |
 |-----------------------|------------------------------------------------------------------------------------|----------------------------|
 | React Frontend        | User interface rendering, interaction handling, form validation, HTTP request flow | React                      |
-| Djano Backend         | Business logic, request validation, domain mapping, REST endpoints                 | Django (Python)            |
+| Django Backend        | Business logic, request validation, domain mapping, REST endpoints                 | Django (Python)            |
 | BaSyx Environment API | Provides access to persisted AAS-related product information and submodel data     | &ndash; (external service) |
 | Traefik               | Routes incoming requests, performs SSL termination, and handles service discovery  | Traefik                    |
 
