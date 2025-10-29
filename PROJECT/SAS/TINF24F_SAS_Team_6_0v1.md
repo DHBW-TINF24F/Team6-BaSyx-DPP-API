@@ -316,3 +316,11 @@ The user triggers the request via the React frontend. The frontend calls the Dja
 The processed data is returned to the frontend as a JSON payload and finally rendered in the UI.
 
 If the BaSyx Environment API is unavailable, the backend returns a descriptive error response.
+
+### 5.2. Sequence Diagram
+
+<img src="./src/sequence-diagram/TINF24F_SAS_Team_6_Sequence-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Sequence Diagram" width="100%" height="100%">
+
+*Figure 5-2 &ndash; …*
+
+<br>

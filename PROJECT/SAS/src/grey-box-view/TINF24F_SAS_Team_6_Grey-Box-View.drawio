@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
   <diagram name="Seite-1" id="UkBF2IA1nVewKtl1MVlG">
-    <mxGraphModel dx="657" dy="471" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="869" dy="623" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -34,70 +34,70 @@
         <mxCell id="af9-jJ4EHfEPUA4PKaTa-7" value="BaSyx Environment API" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="640" y="391" width="170" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-8" value="" style="endArrow=none;html=1;rounded=0;shadow=0;flowAnimation=0;curved=0;jumpSize=6;dashed=1;dashPattern=1 4;" parent="1" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-8" value="" style="endArrow=none;html=1;rounded=0;shadow=0;flowAnimation=0;curved=0;jumpSize=6;dashed=1;dashPattern=1 4;strokeColor=#F59121;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="130" y="480" as="sourcePoint" />
             <mxPoint x="130" y="413" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-9" value="" style="endArrow=classic;html=1;rounded=0;startArrow=none;startFill=0;endFill=1;dashed=1;dashPattern=1 4;" parent="1" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-9" value="" style="endArrow=classic;html=1;rounded=0;startArrow=none;startFill=0;endFill=1;dashed=1;dashPattern=1 4;strokeColor=#F59121;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="480" y="480" as="sourcePoint" />
             <mxPoint x="479.77" y="437" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-12" value="Traefik*" style="rounded=0;whiteSpace=wrap;html=1;rotation=0;dashed=1;dashPattern=1 4;" parent="1" vertex="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-12" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Traefik&lt;/font&gt;&lt;font style=&quot;color: rgb(245, 145, 33);&quot;&gt;*&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;rotation=0;dashed=1;dashPattern=1 4;strokeColor=#F59121;" parent="1" vertex="1">
           <mxGeometry x="200" y="457" width="210" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-13" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;dashPattern=1 4;" parent="1" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-13" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;dashPattern=1 4;strokeColor=#F59121;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="130" y="479.92" as="sourcePoint" />
             <mxPoint x="200" y="480" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-14" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;dashPattern=1 4;" parent="1" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-14" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;dashPattern=1 4;strokeColor=#F59121;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="480" y="480" as="sourcePoint" />
             <mxPoint x="410" y="479.75" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-15" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.239;exitY=0.01;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-12" target="af9-jJ4EHfEPUA4PKaTa-3" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-15" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.239;exitY=0.01;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#F59121;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-12" target="af9-jJ4EHfEPUA4PKaTa-3" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="240" y="457" as="sourcePoint" />
             <mxPoint x="240" y="440" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-16" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.469;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="af9-jJ4EHfEPUA4PKaTa-17" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-16" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.469;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#04B1EF;" parent="1" target="af9-jJ4EHfEPUA4PKaTa-17" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="680" y="391" as="sourcePoint" />
             <mxPoint x="680" y="360" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-17" value="BaSyx AAS Registry" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-17" value="BaSyx AAS Registry" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;strokeColor=#04B1EF;" parent="1" vertex="1">
           <mxGeometry x="600" y="300" width="170" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-18" value="BaSyx AAS Discovery" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-18" value="BaSyx AAS Discovery" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;strokeColor=#04B1EF;" parent="1" vertex="1">
           <mxGeometry x="840" y="320" width="170" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-19" value="BaSyx Submodel Registry" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-19" value="BaSyx Submodel Registry" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;strokeColor=#04B1EF;" parent="1" vertex="1">
           <mxGeometry x="600" y="490" width="170" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-20" value="MongoDB" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-20" value="MongoDB" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;strokeColor=#04B1EF;" parent="1" vertex="1">
           <mxGeometry x="840" y="457" width="170" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-21" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0;exitDx=0;exitDy=0;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-7" target="af9-jJ4EHfEPUA4PKaTa-18" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-21" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0;exitDx=0;exitDy=0;strokeColor=#04B1EF;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-7" target="af9-jJ4EHfEPUA4PKaTa-18" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="730" y="405" as="sourcePoint" />
             <mxPoint x="730" y="360" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-22" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-7" target="af9-jJ4EHfEPUA4PKaTa-20" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-22" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=1;exitDx=0;exitDy=0;strokeColor=#04B1EF;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-7" target="af9-jJ4EHfEPUA4PKaTa-20" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="840" y="405" as="sourcePoint" />
             <mxPoint x="870" y="380" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-23" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.47;entryY=-0.011;entryDx=0;entryDy=0;exitX=0.235;exitY=1;exitDx=0;exitDy=0;entryPerimeter=0;exitPerimeter=0;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-7" target="af9-jJ4EHfEPUA4PKaTa-19" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-23" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.47;entryY=-0.011;entryDx=0;entryDy=0;exitX=0.235;exitY=1;exitDx=0;exitDy=0;entryPerimeter=0;exitPerimeter=0;strokeColor=#04B1EF;" parent="1" source="af9-jJ4EHfEPUA4PKaTa-7" target="af9-jJ4EHfEPUA4PKaTa-19" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="820" y="440" as="sourcePoint" />
             <mxPoint x="850" y="460" as="targetPoint" />
@@ -106,7 +106,7 @@
         <mxCell id="af9-jJ4EHfEPUA4PKaTa-28" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="50" y="300" width="280" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-24" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" parent="af9-jJ4EHfEPUA4PKaTa-28" edge="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-24" value="" style="endArrow=none;dashed=1;html=1;rounded=0;strokeColor=#04B1EF;" parent="af9-jJ4EHfEPUA4PKaTa-28" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint y="11" as="sourcePoint" />
             <mxPoint x="20" y="11" as="targetPoint" />
@@ -127,19 +127,19 @@
         <mxCell id="af9-jJ4EHfEPUA4PKaTa-27" value="BaSyx DPP API Module connection" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=11;" parent="af9-jJ4EHfEPUA4PKaTa-29" vertex="1">
           <mxGeometry x="30" width="290" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="af9-jJ4EHfEPUA4PKaTa-30" value="&lt;i&gt;* Traefik is used as a Reverse Proxy, handling the routing of server requests&lt;/i&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=10;" parent="1" vertex="1">
+        <mxCell id="af9-jJ4EHfEPUA4PKaTa-30" value="&lt;i&gt;&lt;font style=&quot;color: rgb(245, 145, 33);&quot;&gt;*&lt;/font&gt; Traefik is used as a Reverse Proxy, handling the routing of server requests&lt;/i&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=10;" parent="1" vertex="1">
           <mxGeometry x="50" y="530" width="380" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="O_DWvKUgb29VyJl0YRP6-1" value="" style="group" vertex="1" connectable="0" parent="1">
+        <mxCell id="O_DWvKUgb29VyJl0YRP6-1" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="50" y="281" width="310" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="O_DWvKUgb29VyJl0YRP6-2" value="" style="endArrow=none;dashed=1;html=1;rounded=0;dashPattern=1 4;" edge="1" parent="O_DWvKUgb29VyJl0YRP6-1">
+        <mxCell id="O_DWvKUgb29VyJl0YRP6-2" value="" style="endArrow=none;dashed=1;html=1;rounded=0;dashPattern=1 4;strokeColor=#F59121;" parent="O_DWvKUgb29VyJl0YRP6-1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint y="11" as="sourcePoint" />
             <mxPoint x="20" y="11" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="O_DWvKUgb29VyJl0YRP6-3" value="Traefik Reverse Proxy only in use on server deployment" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=11;" vertex="1" parent="O_DWvKUgb29VyJl0YRP6-1">
+        <mxCell id="O_DWvKUgb29VyJl0YRP6-3" value="Traefik Reverse Proxy only in use on server deployment" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=11;" parent="O_DWvKUgb29VyJl0YRP6-1" vertex="1">
           <mxGeometry x="30" width="280" height="20" as="geometry" />
         </mxCell>
       </root>
