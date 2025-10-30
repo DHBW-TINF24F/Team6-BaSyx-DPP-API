@@ -31,12 +31,7 @@
 ## Table of Contents
 
 1. [Introduction](#1-introduction)  
-    1.1. [Purpose and Scope](#11-purpose-and-scope)  
-    1.2. [System Overview](#12-system-overview)  
-    1.3. [References](#13-references)  
 2. [Stakeholders and Concerns](#2-stakeholders-and-concerns)  
-    2.1. [Stakeholder Overview](#21-stakeholder-overview)  
-    2.2. [Stakeholder Concerns and Architectural Impact](#22-stakeholder-concerns-and-architectural-impact)  
 3. [Architectural Overview](#3-architectural-overview)  
     3.1. [System Context](#31-system-context)  
     3.2. [Design Approach](#32-design-approach)  
@@ -46,9 +41,12 @@
 5. [Behavioral Views](#5-behavioral-views)  
     5.1. [Communication Diagram](#51-communication-diagram)  
     5.2. [Sequence Diagrams](#52-sequence-diagram)  
-6. [Data View]()   
+6. [Data View](#6-data-view)
+    6.1. [Purpose and Stakeholder Concerns](#61-purpose-and-stakeholder-concerns)
+    6.2. [Data Model and Data Flow](#62-data-model-and-data-flow)
+    6.3. [Data Formats, Constraints, and Key Decisions](#63-data-formats-constraints-and-key-decisions)
 7. [Deployment View]()  
-8. [Rationale and Traceability]()  
+8. [Architectural Decisions and Rationale]()  
 9. [Summary and Outlook]()  
 10. [Appendices]()  
 
@@ -351,4 +349,61 @@ This sequence demonstrates a clear separation of concerns: user interaction and 
 
 If the BaSyx Environment API fails to respond, the backend returns an appropriate error message to the frontend to prevent partial or incorrect data from being displayed.
 
+<br><br>
+
+## 6. Data View
+
+*This view provides an architectural understanding of how data is represented, transformed, and exchanged between system components and external services.*
+
+### 6.1. Purpose and Stakeholder Concerns
+
+**Purpose**  
+The purpose of the Data View is to describe the structure, flow, ownership, and constraints of the data that is relevant to the Digital Product Passport (DPP) system.
+It ensures transparency regarding data semantics and supports architectural decisions that impact maintainability, interoperability, and data integrity.
+
+This view is architecturally relevant because the system relies on external data sources (BaSyx AAS infrastructure) and performs internal data mapping to deliver DPP-specific information to end users and API consumers. As a result, data consistency, interpretation, and transformation are central architectural concerns.
+
+**Stakeholder Concerns**  
+
+| **Stakeholder**        | **Data-Related Concerns** |
+|------------------------|---------------------------|
+| System Architect       | Data consistency, integration with AAS data models, clarity of data transformations, compliance with architectural principles |
+| Product Manager        | Correctness and completeness of data presented to end users, alignment with DPP information requirements |
+| Test Manager           | Traceability of data through the system, verifiable and predictable data transformations, ability to validate data flows |
+| External API Consumers | Stability of data formats, versioning of schema, clear contract for data consumption |
+
 <br>
+
+### 6.2. Data Model and Data Flow
+
+The system does not maintain its own persistent storage. Instead, it retrieves product-related information from the BaSyx AAS infrastructure and converts this data into a DPP-specific format. The conceptual model is centred around four core entities:
+
+- **Asset Administration Shell (AAS):** Digital representation of a product and anchor point for related data.
+- **Submodels:** Semantically grouped data sets under the AAS (e.g., product characteristics, identification, lifecycle).
+- **DPP Data Object:** A structured representation derived from one or more Submodels, shaped into a DPP-aligned model for presentation and API exposure.
+- **Product:** Logical domain reference used to request and interpret DPP information for a specific product instance.
+
+<br>
+
+**Data Flow Overview:**  
+
+**1.** The frontend requests DPP data from the backend.
+**2.** The backend queries the BaSyx Environment API for AAS and Submodel data.
+**3.** The backend validates and maps this data into a unified DPP schema.
+**4.** The processed result is returned as JSON to the frontend (and optionally external API consumers).
+
+The backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
+
+<br>
+
+### 6.3. Data Formats, Constraints, and Key Decisions
+
+Data exchanged across system boundaries is represented in JSON format for interoperability. Incoming data adheres to BaSyx AAS and Submodel conventions, while outgoing data follows a DPP-specific schema that abstracts away BaSyx internals. This prevents coupling between consumer applications and the underlying AAS model.
+
+Key architectural decisions regarding data handling include:
+
+- Use of BaSyx as the authoritative data source to avoid redundancy and ensure that the latest product information is always served.
+- Centralization of mapping logic in the backend to prevent duplicated transformation logic and ensure testability, maintainability, and schema evolution control.
+- JSON as a uniform data exchange standard to provide compatibility with web frontends and external API consumers.
+
+Constraints influencing the architecture include the dependency on BaSyx data availability and schema stability, the requirement for valid DPP-relevant fields, and the need to provide clear error responses if incomplete data is received. Since no local persistence exists, offline access and historical comparison of product data are out of scope for the current architecture.
