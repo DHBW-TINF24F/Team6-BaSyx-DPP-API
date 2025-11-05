@@ -23,6 +23,7 @@
 | 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &mdash; System Context |
 | 1.4         | 2025-10-28 | Noah Becker | &bull; Architectural Overview &mdash; Design Approach <br> &bull; Structural Views &mdash; Grey-Box View <br> &bull; Behavioral Views &mdash; Communication Diagram |
 | 1.5         | 2025-10-29 | Noah Becker | &bull; Behavioral Views &mdash; Sequence Diagram |
+| 1.6         | 2025-11-05 | Noah Becker | Altering Frontend & Backend Technologies
 
 ---
 
@@ -65,7 +66,7 @@ The SAS defines how the system fulfills the functional and non-functional requir
 #### **Scope:**  
 
 The architecture described here covers frontend, backend and API specifications.  
-The following areas are considered out of scope: BaSyx software architecture *(mainly Vue.js & Java SpringBoot)*.
+The following areas are considered out of scope: BaSyx software architecture.
 
 <br>
 
@@ -84,7 +85,7 @@ Key capabilities:
 - Integration with the BaSyx WebUI navigation and existing authentication mechanisms
 
 The system follows a microservices (Docker) architecture.  
-Primary technologies include a React-sided Frontend, Java SpringBoot Backend, and a pipeline server deployment.  
+Primary technologies include a Vue.js-sided Frontend, Java SpringBoot Backend, and a pipeline server deployment.  
 External dependencies include the BaSyx Backend Services *BaSyx AAS Environment*, *BaSyx AAS Registry*, *BaSyx Submodel Registry* and *BaSyx AAS Discovery*.
 
 <br>
@@ -107,14 +108,14 @@ Addressing these concerns ensures that the architecture meets the expectations a
 
 Stakeholders are individuals or groups with an interest in the system's structure, behavior, or performance. They influence architectural decisions and serve as reference points for validation and design trade-offs.
 
-| **Stakeholder Role** | **Description** | **Example Person/Group** |
-|----------------------|-----------------|--------------------------|
-| Project Manager      | Oversees project planning, scheduling, ressources, and delivery milestones. Ensures the project stays on time and within budget. | Nataliia Chubak |
-| Product Manager      | Defines the product vision and feature priorities based on stakeholder and user needs. Aligns development goals with business objectives. | Luca Schmoll & Magnus Lörcher |
-| Test Manager         | Plans and manages verification & validation activities. Ensures test coverage for functional and non-functional requirements. | Manuel Lutz |
-| System Architect     | Designs and maintains the overall system architecture, ensuring alignment between requirements, design, and technology choices. | Noah Becker |
-| Technical Editor     | Prepares and maintains project documentation, ensuring clarity, consistency, and compliance with organizational or academic standards. | Fabian Steiß |
-| End Users            | Use the system to perform daily tasks or consume its output. Their satisfaction determines usability and acceptance. | &ndash; |
+| **Stakeholder Role**             | **Description** | **Example Person/Group** |
+|----------------------------------|-----------------|--------------------------|
+| Project Manager                  | Oversees project planning, scheduling, ressources, and delivery milestones. Ensures the project stays on time and within budget. | Nataliia Chubak |
+| Product Manager                  | Defines the product vision and feature priorities based on stakeholder and user needs. Aligns development goals with business objectives. | Luca Schmoll & Magnus Lörcher |
+| Test Manager                     | Plans and manages verification & validation activities. Ensures test coverage for functional and non-functional requirements. | Manuel Lutz |
+| System Architect                 | Designs and maintains the overall system architecture, ensuring alignment between requirements, design, and technology choices. | Noah Becker |
+| Technical Editor                 | Prepares and maintains project documentation, ensuring clarity, consistency, and compliance with organizational or academic standards. | Fabian Steiß |
+| End Users                        | Use the system to perform daily tasks or consume its output. Their satisfaction determines usability and acceptance. | &ndash; |
 | External Systems / API Consumers | Interact with the system via APIs or data interfaces. Depend on stable, well-documented external endpoints. | &ndash; |
 
 <br>
@@ -169,7 +170,7 @@ The system receives user requests via a web frontend, processes this data throug
 
 **Architectural Style**  
 The system follows a microservice architecture.  
-This approach separates the system into independently deployable services &mdash; primarily a React-based frontend and a Spring Boot-based backend &mdash; managed and orchestrated through Docker and Traefik.  
+This approach separates the system into independently deployable services &mdash; primarily a Vue.js-based frontend and a Spring Boot-based backend &mdash; managed and orchestrated through Docker and Traefik.  
 This approach was selected to ensure seamless integration with the existing BaSyx microservices architecure, enabling modular expansion of the system.
 
 <br>
@@ -187,7 +188,7 @@ This microservice architectural style emphasizes:
 
 | **Layer**                | **Description**                                          | **Implementation** |
 |--------------------------|----------------------------------------------------------|--------------------|
-| **Presentation Layer**   | Provides the user interface and hanles client-side logic | React (TypeScript) |
+| **Presentation Layer**   | Provides the user interface and hanles client-side logic | Vue.js (JavaScript) |
 | **Application Layer**    | Implements the core business logic and RESTful API       | Django (Python) |
 | **Data Layer**           | Manages persistent data and ensures data integrity       | mongoDB *via BaSyx Environment API* |
 | **Infrastructure Layer** | Handles routing, deployment, and orchestration           | Docker, Traefik Reverse Proxy, GitHub Actions CI/CD |
@@ -207,13 +208,13 @@ This microservice architectural style emphasizes:
 
 **Technology Stack**  
 
-| **Layer / Aspect**   | **Technology**     | **Purpose** |
-|----------------------|--------------------|-------------|
-| **Frontend**         | React              | User interface and interaction |
-| **Backend**          | Spring Boot (Java) | Application logic and API gateway |
-| **Proxy / Router**   | Traefik            | Reverse proxy, SSL termination, routing |
-| **Containerization** | Docker             | Service packaging and isolation |
-| **CI/CD Pipeline**   | GitHub Actions     | Automated build, test, and deployment |
+| **Layer / Aspect**   | **Technology**      | **Purpose** |
+|----------------------|---------------------|-------------|
+| **Frontend**         | Vue.js (JavaScript) | User interface and interaction |
+| **Backend**          | Spring Boot (Java)  | Application logic and API gateway |
+| **Proxy / Router**   | Traefik             | Reverse proxy, SSL termination, routing |
+| **Containerization** | Docker              | Service packaging and isolation |
+| **CI/CD Pipeline**   | GitHub Actions      | Automated build, test, and deployment |
 
 <br>
 
@@ -250,8 +251,8 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 | **Submodule**         | **Responsibility**                                                                 | **Technology**             |
 |-----------------------|------------------------------------------------------------------------------------|----------------------------|
-| React Frontend        | User interface rendering, interaction handling, form validation, HTTP request flow | React                      |
-| Spring Boot Backend   | Business logic, request validation, domain mapping, REST endpoints                 | Django (Python)            |
+| Vue.js Frontend       | User interface rendering, interaction handling, form validation, HTTP request flow | Vue.js (JavaScript)        |
+| Spring Boot Backend   | Business logic, request validation, domain mapping, REST endpoints                 | Spring Boot (Java)         |
 | BaSyx Environment API | Provides access to persisted AAS-related product information and submodel data     | &ndash; (external service) |
 | Traefik               | Routes incoming requests, performs SSL termination, and handles service discovery  | Traefik                    |
 
@@ -259,7 +260,7 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 **Subsystem Collaboration**  
 
-The React Frontend communicates with the Spring Boot Backend through RESTful HTTP requests routed via the Docker internal networking. 
+The Vue.js Frontend communicates with the Spring Boot Backend through RESTful HTTP requests routed via the Docker internal networking. 
 The Spring Boot Backend retrieves product- and submodel-related information by querying the BaSyx Environment API, which internally connects to a MongoDB database. 
 Traefik dynamically routes traffic based on container labels, ensuring request isolation and secure HTTPS access.
 
@@ -267,7 +268,7 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 **Subsystem Boundaries**  
 
-- Presentation concerns are strictly contained within the React Frontend.  
+- Presentation concerns are strictly contained within the Vue.js Frontend.  
 - Domain logic, schema mapping, and validation remain inside the Spring Boot Backend.  
 - Persistence and AAS service interaction are delegated to the BaSyx Environment API.  
 - Infrastructure-level routing and TLS termination are handled centrally by Traefik.
@@ -312,7 +313,7 @@ Furthermore, it aligns with the BaSyx microservice ecosystem, ensuring seamless 
 
 <br>
 
-The user triggers the request via the React frontend. The frontend calls the Spring Boot backend service using RESTful HTTP requests. 
+The user triggers the request via the Vue.js frontend. The frontend calls the Spring Boot backend service using RESTful HTTP requests. 
 *Traefik routes the request to the correct container based on service labels. (On server deployment)* The backend queries the BaSyx Environent API to retrieve AAS and submodel data and then maps the result to the internal DPP schema. 
 The processed data is returned to the frontend as a JSON payload and finally rendered in the UI.
 
@@ -333,7 +334,7 @@ It shows the chronological order of messages exchanged between the involved comp
 
 <br>
 
-When a user initiates a DPP data request through the frontend, the React application sends an HTTP request to the Spring Boot backend service via the Traefik reverse proxy. Traefik forwards the request to the appropriate backend container based on routing rules.
+When a user initiates a DPP data request through the frontend, the Vue.js application sends an HTTP request to the Spring Boot backend service via the Traefik reverse proxy. Traefik forwards the request to the appropriate backend container based on routing rules.
 The backend validates the request, queries the BaSyx Environment API for the required AAS and submodel information, and maps the received data to the internal DPP schema.
 Once processing is complete, the backend returns the consolidated JSON response to the frontend, which then renders the corresponding product information to the user.
 
