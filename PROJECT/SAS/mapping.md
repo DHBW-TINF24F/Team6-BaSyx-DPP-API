@@ -60,6 +60,8 @@ sequenceDiagram
 
 ### `GET` /dpps/{dppId}
 
+[KI example](https://mermaid.live/edit#pako:eNqVVclu2zAQ_ZUBTwmgeJO8RGhTZLELX1KjLnJoHAS0SMesJVElKceu4X_vaLPltakOAjV8b97McIZaEU8yTlyi-e-Yhx5_EPRN0WAUAj4RVUZ4IqKhgXtf8NAc2m8HfaAaelSbZNkNWSTFMWA3TKRUAr6jmrecwnIIfZDeLEPmqyFXc-HxDJm9s3iubm5Q1YWv3R9QZVGkv-Crzz4vFosMhruIyZXcXBJSUAbIt64KTzz9Zq8lSNlTFlAuqONxgGBfV1c7tHXGyLAbz9-5jmSoObwLM4WC2_V5gIno55ey2KM0HOQcU0-pA6qQpwoH2qjYM7Hin8aqenNh1BIYNbSy79OCQ4vEuipFl5dlOV_KCHq4xak3heEu6V76PveMkGEGPhJfd2EU9fDgBoMnrjRCwYiAa0ODaEuivoEn6gu23YSJjEO2hZzMvT_8Bp1WrQ5VmFDfH1NvhlwVUHOW3BMhS6IqUtLgHclmW4ji2S1IUUXoP4AId_zt0k53XMnFIeVUDxakV8EOSaeU_9WhJafrzf4VzxvkIzrJOfa4SQvjeVzrSewfoo5MQFG1tFuPM_bO75YxWAlmpYw1GLkp5GZgyg-aeR7ahAqfsw-F1VVKqv8LhyeUD8Sz39sHhrPdexcLP21fmOdTJce_sHnddO5XudHajpNVDme99Z3W5VHCfHf6zooPZyICMxU6CaDkqshgszh6Yw2lMtgofkLWMF6WRv4i5O-4hIlQ2lzuX7F4KNnV7sIqOXQXniuVyouFgxsnxnBNLPKmBCMu3oLcIgHHWyD5JKvEy4iYKbbyiLi4ZFTNRmSUcvDP8lPKoKApGb9NiYuXicavOEKt4ue3gWCKXN0nusTttBqpD-KuyIK4jbZdaTfqdqdds22n7tRsiyyJ67Qrtt1qNq_bDcdp1R1nbZE_qWq9YjdqzXan6didVvu6XnfWfwEHPUAO)
+
 ```mermaid
 sequenceDiagram
   actor User
@@ -74,18 +76,17 @@ sequenceDiagram
     Note right of API: submodelIdentifier = [base64 encoded] dppId
     API->>Env: /submodels/{submodelIdentifier}
     alt success
-        Env-->>API: return HTTP 204: All DPP Versions
-        Note right of API: idShortPath = Newest Version of DPP Versions
-        API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}
-        Env-->>API: return HTTP 204: All submodel elements of DPP versioned submodel element
+        Env-->>API: return whole submodel tree
     else failed
         Env-->>API: return HTTP Errorcode
     end
   end
 
+  API->>API: Re-model Submodel tree sorted by version and their corresponding DPPSubmodels (only "value" important)
+
   loop
-  Note right of API: submodelIdentifiers = [base64 encoded] Value of property in "DPPSubmodels"
-    API->>Env: GET /submodels/{submodelIdentifiers}/submodel-elements
+  Note right of API: submodelIdentifier = [base64 encoded] Parameter "value"
+    API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements
     alt success
       Env-->>API: return HTTP 204: All DPP-relevant submodel data (JSON)
     else failed
