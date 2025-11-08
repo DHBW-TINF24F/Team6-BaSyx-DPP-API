@@ -298,6 +298,8 @@ sequenceDiagram
 
 ### `GET` /dpps/{dppId}/collections/{elementId}
 
+> Meine Vermutung: elementId ist idShort eines Submodels. Somit ist API Call richtig (um an alle SubmodelElements eines Submodels zu kommen). Mapping am Ende fehlt jedoch noch --> Filtern nach der elementId und nur diese SubmodelElementCollection zurückgeben.
+
 ```mermaid
 sequenceDiagram
   actor User
@@ -309,7 +311,7 @@ sequenceDiagram
   Web->>API: GET /dpps/{dppId}
 
   rect purple
-    Note right of API: submodelIdentifier = dppId
+    Note right of API: submodelIdentifier = [base64 encoded] dppId
     API->>Env: /submodels/{submodelIdentifier}
     alt success
         Env-->>API: return HTTP 204: All DPP-relevant submodelIdentifiers (JSON)
