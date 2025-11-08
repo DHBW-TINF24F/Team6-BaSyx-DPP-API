@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
   <diagram name="Seite-1" id="kSZL9XZ3l5jv9jZUYMf_">
-    <mxGraphModel dx="1254" dy="514" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1309" dy="537" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -16,7 +16,7 @@
         <mxCell id="JikjJ0p1adLa2uhM40UA-5" value="(1) Request DPP" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="JikjJ0p1adLa2uhM40UA-4" connectable="0" vertex="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="JikjJ0p1adLa2uhM40UA-6" value="Vue.js Frontend" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="JikjJ0p1adLa2uhM40UA-6" value="Frontend" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="210" y="395" width="130" height="37" as="geometry" />
         </mxCell>
         <mxCell id="JikjJ0p1adLa2uhM40UA-7" value="" style="endArrow=none;html=1;rounded=0;endFill=0;" parent="1" edge="1">
@@ -49,7 +49,7 @@
         <mxCell id="JikjJ0p1adLa2uhM40UA-19" value="Traefik Reverse Proxy" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;strokeColor=#F59121;" parent="1" vertex="1">
           <mxGeometry x="570" y="370" width="150" height="37" as="geometry" />
         </mxCell>
-        <mxCell id="JikjJ0p1adLa2uhM40UA-22" value="Spring Boot Backend&lt;div&gt;(DPP API)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="JikjJ0p1adLa2uhM40UA-22" value="Backend&lt;div&gt;(DPP API)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="470" y="460" width="130" height="37" as="geometry" />
         </mxCell>
         <mxCell id="JikjJ0p1adLa2uhM40UA-23" value="" style="endArrow=none;html=1;rounded=0;exitX=0.16;exitY=0.977;exitDx=0;exitDy=0;exitPerimeter=0;dashed=1;endFill=0;strokeColor=#F59121;" parent="1" edge="1">
@@ -78,7 +78,7 @@
             <mxPoint x="540" y="497" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="JikjJ0p1adLa2uhM40UA-28" value="(3) Query AAS via REST" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="JikjJ0p1adLa2uhM40UA-27" connectable="0" vertex="1">
+        <mxCell id="JikjJ0p1adLa2uhM40UA-28" value="(3) Query AAS internally" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="JikjJ0p1adLa2uhM40UA-27" connectable="0" vertex="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="JikjJ0p1adLa2uhM40UA-29" value="" style="endArrow=none;html=1;rounded=0;startArrow=classic;startFill=1;endFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="JikjJ0p1adLa2uhM40UA-31" edge="1">
@@ -90,7 +90,7 @@
         <mxCell id="JikjJ0p1adLa2uhM40UA-30" value="(4) Return Submodel Data" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="JikjJ0p1adLa2uhM40UA-29" connectable="0" vertex="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="JikjJ0p1adLa2uhM40UA-31" value="Spring Boot Backend" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="JikjJ0p1adLa2uhM40UA-31" value="Backend&lt;div&gt;(DPP API)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="190" y="560" width="130" height="37" as="geometry" />
         </mxCell>
         <mxCell id="JikjJ0p1adLa2uhM40UA-32" value="" style="endArrow=classic;html=1;rounded=0;startArrow=none;startFill=0;endFill=1;" parent="1" edge="1">
@@ -111,7 +111,7 @@
         <mxCell id="JikjJ0p1adLa2uhM40UA-38" value="(6) Render UI Data" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="JikjJ0p1adLa2uhM40UA-37" connectable="0" vertex="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="JikjJ0p1adLa2uhM40UA-34" value="Vue.js Frontend" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="JikjJ0p1adLa2uhM40UA-34" value="Frontend" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="190" y="480" width="130" height="37" as="geometry" />
         </mxCell>
         <mxCell id="JikjJ0p1adLa2uhM40UA-42" value="" style="group" parent="1" vertex="1" connectable="0">
