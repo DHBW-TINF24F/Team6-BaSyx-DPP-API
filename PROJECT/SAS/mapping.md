@@ -227,7 +227,7 @@ sequenceDiagram
 
 > ==**Auch hier Datum beachten!** Es wird ein DPP gefordert der zu dem angegeben Datum der aktuellste war/ist. Nur dieser darf zurückgegeben werden – kein vorrangegangener & kein zukünftig angelegter DPP==
 
-> Möglicher Ansatz: GET /dpps/{dppId} mit der productId + /dpp/ anfragen, nach Property "DPPVersion" in allen SubmodelElementCollections ("DPP YYYY-MM-DD HH-MM-SS") filtern, anschließend auf DPP Rückgabeschale (?) mappen
+> Möglicher Ansatz: GET /dpps/{dppId} mit der productId + /dpp/ anfragen & anschließend Base64 encoden für weitere API Anfragen als "submodelIdentifier", nach Property "DPPVersion" in allen SubmodelElementCollections ("DPP YYYY-MM-DD HH-MM-SS") filtern, anschließend auf DPP Rückgabeschale (?) mappen
 
 ```mermaid
 %%Mit Rentschler besprechen
@@ -258,6 +258,10 @@ sequenceDiagram
 
 ### `POST` /dppsByProductIds
 
+> Nach Blick in die DIN18222 Norm muss das wohl kein POST sondern GET sein ("ReadDPPIdsByProductIds" --> Keywort "Read")
+
+> Nochmal Blick in die Norm werfen – insbesondere für die Umsetzung der Parameter *limit* und *cursor*
+
 ```mermaid
 sequenceDiagram
   actor User
@@ -267,7 +271,6 @@ sequenceDiagram
 
   User->>Web: Wants to get a list of dppIds by productIds
   Web->>API: POST /dppsByProductIds
-  Note right of API: aasIdentifier = productId encoded in base64
   Note right of API: dppId = productId + /DPP/ + (neueste) Version base64-encoded
   
   loop for all productIds
