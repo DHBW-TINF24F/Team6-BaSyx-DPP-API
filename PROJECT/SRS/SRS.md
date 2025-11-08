@@ -4,24 +4,23 @@
 |---|---|---|---|
 |1.0|Luca Schmoll|04.11.2025|Ersterstellung der Grundstruktur|
 
----
 
-1. Zweck, Geltungsbereich und Referenzen
-    1. Zweck
-    2. Anwendungsbereich
-    3. Begrifflichkeiten und Abkürzungen
-2. Systemarchitektur
-3. Anwendungsfälle
-4. Funktionale Anforderungen
-    1. Daten und API Anforderungen
-    2. Frontend-Anforderungen
-5. Nicht-funktionale Anforderungen
-6. Externe Schnittstellen
-7. Datenmodell und Semantik
-8. Usability Konzept & Workflows
-9. Qualitätssicherung & Tests
-10. Build & Deployment-Vorgaben
-11. Dokumentation
+1. [Zweck, Geltungsbereich und Referenzen](#1-zweck-geltungsbereich-und-referenzen)
+    1. [Zweck](#11-zweck)
+    2. [Anwendungsbereich](#12-geltungsbereich)
+    3. [Begrifflichkeiten und Abkürzungen](#13-begrifflichkeiten-und-abkürzungen)
+2. [Systemarchitektur](#2-systemarchitektur)
+3. [Anwendungsfälle](#3-anwendungsfälle)
+4. [Funktionale Anforderungen](#4-funktionale-anforderungen-fr)
+    1. [Daten und API Anforderungen](#41-daten-und-api-anforderungen)
+    2. [Frontend-Anforderungen](#42-frontend-anforderungen)
+5. [Nicht-funktionale Anforderungen](#5-nicht-funktionale-anforderungen-nfr)
+6. [Externe Schnittstellen](#6-externe-schnittstellen)
+7. [Datenmodell und Semantik](#7-datenmodell-und-semantik)
+8. [Usability Konzept & Workflows](#8-usability-konzept--workflows)
+9. [Qualitätssicherung & Tests](#9-qualitätssicherung--tests)
+10. [Build & Deployment-Vorgaben](#10-build--deployment-vorgaben)
+11. [Dokumentation](#11-dokumentation)
 
 ---
 
@@ -71,6 +70,8 @@ graph LR
   Spec --> |spezifiziert|API
   API --- Templates
 ```
+<p align="center"> <i>Abbildung 1: Visuelle Übersicht des Projekts</i> </p>
+
 
 ### 1.3 Begrifflichkeiten und Abkürzungen
 |Abkürzung|Bedeutung|
@@ -93,11 +94,11 @@ graph TB
 subgraph DPP_API_Service
 Router[HTTP Router /dpp/*]
 Mapping[Mapping Layer AAS Adapter]
-Search[Discovery Client + Filter]
+Search[AAS Environment API]
 Serializer[Serializer und JSON Schemas]
 end
 
-Router  --> Mapping --> Serializer
+Mapping --> Serializer
 Router --> Search
 
 AASRepo[(AAS Repository)]
@@ -105,11 +106,14 @@ SMRepo[(Submodel Repository)]
 Registry[(AAS Registry)]
 Discovery[(Discovery Service)]
 
-Mapping --> AASRepo
-Mapping --> SMRepo
-Mapping --> Registry
+Search --> Mapping
+
+Search --> AASRepo
+Search --> SMRepo
+Search --> Registry
 Search --> Discovery
 ```
+<p align="center"> <i>Abbildung 2: Flow der API</i> </p>
 
 ## 3. Anwendungsfälle
 
@@ -182,7 +186,7 @@ sequenceDiagram
   API-->>Web: 200 OK (DPP-Daten)
   Web-->>User: Tabs rendern und Downloads
 ```
-
+<p align="center"> <i>Abbildung 3: Beispielhafter Durchlauf eines API-Calls</i> </p>
 
 ### UC05 Usability Konzept und Workflows definieren.
 |||
@@ -272,7 +276,7 @@ flowchart LR
   Tabs --> Preview[Preview/Download eingebetteter Dateien]
   Detail --> Share[Teilen/Deep‑Link]
 ```
-
+<p align="center"> <i>Abbildung 4: Workflow für das Suchen eines DPP</i> </p>
 
 ## 9. Qualitätssicherung & Tests
 Die Qualitätssicherung für dieses Produkt muss mindestens folgendes umfassen:
@@ -294,7 +298,7 @@ Contract[Contract‑Tests DIN EN 18222]
   Performance[Leistungstests] --> Integration
   Unit[Unit‑Tests Mapping/Validation] --> |kontinuierlich|Unit[Unit‑Tests Mapping/Validation]
 ```
-
+<p align="center"> <i>Abbildung 5: Teststrategie</i> </p>
 
 ## 10. Build & Deployment-Vorgaben
 |Umgebung|Vorgabe|Tooling|
