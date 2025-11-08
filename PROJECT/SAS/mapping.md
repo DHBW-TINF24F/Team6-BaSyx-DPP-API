@@ -114,7 +114,7 @@ sequenceDiagram
   User->>Web: Want to update a submodel within the DPP by ID
   Web->>API: PATCH /dpps/{dppId}
 
-  rect lightgray
+  rect purple
     Note right of API: submodelIdentifier = [base64 encoded] dppId
     API->>Env: GET /submodels/{submodelIdentifier}
     alt success
