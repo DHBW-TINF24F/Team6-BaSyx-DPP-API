@@ -194,6 +194,12 @@ sequenceDiagram
 
 ### `GET` /dppsByProductId/{productId}
 
+> ==Hier noch unbedingt beachten, dass nur die NEUESTE DPP Version zurückgegeben wird!==
+
+> Environment API wird hier vermutlich auch gebraucht – GET /ddps/ call auf sich selbst wird nicht funktionieren :(
+
+> Ich nehme an, dass mit ProduktID/productId die ID der AAS Shell gemeint ist (bspw. "https://dpp40.harting.com/shells/ZSN1" für die HARTING AAS Shell)
+
 ```mermaid
 sequenceDiagram
   actor User
