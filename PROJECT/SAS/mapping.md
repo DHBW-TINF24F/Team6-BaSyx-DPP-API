@@ -225,6 +225,10 @@ sequenceDiagram
 
 ### `GET` /dppsByProductIdAndDate/{productId}
 
+> ==**Auch hier Datum beachten!** Es wird ein DPP gefordert der zu dem angegeben Datum der aktuellste war/ist. Nur dieser darf zurückgegeben werden – kein vorrangegangener & kein zukünftig angelegter DPP==
+
+> Möglicher Ansatz: GET /dpps/{dppId} mit der productId + /dpp/ anfragen, nach Property "DPPVersion" in allen SubmodelElementCollections ("DPP YYYY-MM-DD HH-MM-SS") filtern, anschließend auf DPP Rückgabeschale (?) mappen
+
 ```mermaid
 %%Mit Rentschler besprechen
 sequenceDiagram
