@@ -21,7 +21,7 @@
 # 1. Einleitung
 ## 1.1 Zweck
 ## 1.2 Scope
-## 1.3 Referenzen
+## 1.3 Referenze
 ## 1.4 Übersicht
 # 2. Generelle Beschreibung
 ## 2.1 Produktperspektive
