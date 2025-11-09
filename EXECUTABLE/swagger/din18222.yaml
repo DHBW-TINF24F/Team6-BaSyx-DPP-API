@@ -165,7 +165,7 @@ paths:
           $ref: "#/components/responses/NotFound"
 
   /dppsByProductIds:
-    post:
+    get:
       tags:
         - "DPP Life Cycle API"
       summary: "DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)"

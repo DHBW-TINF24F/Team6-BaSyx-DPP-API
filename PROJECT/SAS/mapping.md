@@ -49,6 +49,10 @@ sequenceDiagram
     Env-->>API: return submodelIdentifier
     API->>Env: POST /submodels/{submodelIdentifier}/submodel-elements
     Env-->>API: return submodel JSON
+
+    Note right of API: aasIdentifier: [base64 encoded] AAS idShort
+    API->>Env: POST /shells/{aasIdentifier}/submodel-refs
+    Env->>API: return added Submodel reference (JSON)
   end
 
   API->>API: Store submodelIdentifier of the relevant submodels in {DPP Submodel + Version}
@@ -100,8 +104,6 @@ sequenceDiagram
 
 <br>
 
-%% rework tbd
-
 ### `PATCH` /dpps/{dppId}
 
 ```mermaid
@@ -115,27 +117,16 @@ sequenceDiagram
   Web->>API: PATCH /dpps/{dppId}
 
   rect purple
-    Note right of API: submodelIdentifier = [base64 encoded] dppId
-    API->>Env: GET /submodels/{submodelIdentifier}
+    API->>API: GET /dpps/{dppId}
     alt success
-        Env-->>API: return HTTP 204: All DPP versions and their relevant Submodels (JSON)
+        API-->>API: return HTTP 204: All DPP versions and their relevant Submodels (JSON)
     else failed
-        Env-->>API: return HTTP Errorcode
+        API-->>API: return HTTP Errorcode
     end
   end
 
-  loop for n submodelIdentifiers
+  loop for n submodels
     API->>API: Fetch Submodel Identifier from Request body
-
-    loop
-        API->>API: Check submodelIdentifier match with dppSubmodels
-
-        opt
-            API-->>Web: return HTTP Errorcode
-            Web-->>User: Displays Error Message
-        end
-    end
-
     API->>Env: PUT /submodels/{submodelIdentifier} mit Request body
     
     alt success
@@ -165,16 +156,15 @@ sequenceDiagram
 
 
   rect purple
-    Note right of API: submodelIdentifier = [base64 encoded] dppId
-    API->>Env: GET /submodels/{submodelIdentifier}
+    API->>API: GET /dpp/{dppId}
     alt success
-        Env-->>API: return HTTP 204: All DPP versions and their relevant Submodels (JSON)
+        API-->>API: return HTTP 204: All DPP versions and their relevant Submodels (JSON)
     else failed
-        Env-->>API: return HTTP Errorcode
+        API-->>API: return HTTP Errorcode
     end
   end
 
-  loop
+  loop for every (DPP-)submodel
     API->>Env: DELETE /submodels/{submodelIdentifier}
     
     alt success
@@ -182,6 +172,13 @@ sequenceDiagram
     else failed
         Env-->>API: return HTTP Errorcode
     end
+  end
+
+  API->>Env: DELETE /submodels/dppId/
+  alt success
+    Env-->>API: return HTTP 204
+  else failed
+    Env-->>API: return HTTP Errorcode
   end
   
   API-->>Web: return Status
@@ -194,12 +191,6 @@ sequenceDiagram
 
 ### `GET` /dppsByProductId/{productId}
 
-> ==Hier noch unbedingt beachten, dass nur die NEUESTE DPP Version zurückgegeben wird!==
-
-> Environment API wird hier vermutlich auch gebraucht – GET /ddps/ call auf sich selbst wird nicht funktionieren :[
-
-> Ich nehme an, dass mit ProduktID/productId die ID der AAS Shell gemeint ist (bspw. "https://dpp40.harting.com/shells/ZSN1" für die HARTING AAS Shell)
-
 ```mermaid
 sequenceDiagram
   actor User
@@ -208,13 +199,17 @@ sequenceDiagram
 
   User->>Web: Wants to get a DPP with a specific productId.
   Web->>API: GET /dppsByProductId/{productId}
-  Note right of API: Per definition: productId = dppId
-  API->>API: GET /dpps/{dppId}
-  
-  alt success
-    API-->>API: return HTTP 204
-  else failed
-    API-->>API: return HTTP Errorcode
+  Note right of API: Per definition: dppId = productId + /DPP/
+  loop for each productId
+    Note right of API: dppId: Add "/DPP/" to productId
+    API->>API: GET /dpps/{dppId}
+    Note left of API: Choose the newest version ([0]) of DPP
+
+    alt success
+        API-->>API: add DPP to return array
+    else failed
+        API-->>API: do not add DPP to return array
+    end
   end
   
   API-->>Web: return DPP JSON
@@ -225,40 +220,30 @@ sequenceDiagram
 
 ### `GET` /dppsByProductIdAndDate/{productId}
 
-> ==**Auch hier Datum beachten!** Es wird ein DPP gefordert der zu dem angegeben Datum der aktuellste war/ist. Nur dieser darf zurückgegeben werden – kein vorrangegangener & kein zukünftig angelegter DPP==
-
-> Möglicher Ansatz: GET /dpps/{dppId} mit der productId + /dpp/ anfragen & anschließend Base64 encoden für weitere API Anfragen als "submodelIdentifier", nach Property "DPPVersion" in allen SubmodelElementCollections ("DPP YYYY-MM-DD HH-MM-SS") filtern, anschließend auf DPP Rückgabeschale (?) mappen
-
 ```mermaid
 %%Mit Rentschler besprechen
 sequenceDiagram
   actor User
   participant Web as AAS Web UI (DPP Viewer)
   participant API as DPP-API
-  participant Env as AAS Environment API
 
   User->>Web: Wants to get a DPP with a specific productId and timeStamp.
-  Web->>API: PATCH /dppsByProductId/{productId}
-  API->>API: Search for productId in DPP Submodels and map with dppId
-  API->>Env:
-  API->>Env: GET /dpps/{dppId}
-  
-  alt success
-    Env-->>API: return HTTP 204
-  else failed
-    Env-->>API: return HTTP Errorcode
+  Web->>API: GET /dppsByProductId/{productId}
+  Note right of API: dppId = productId + /DPP/
+  API->>API: GET /dpps/{dppId}
+  rect red
+    Note right of API: Search for correct TimeStamp (No future Version & only 1 !!)
   end
-  
+
   API-->>Web: return DPP Json
   Web-->>User: Display all relevant dpp data
-
 ```
 
 <br>
 
-### `POST` /dppsByProductIds
+### `GET` /dppsByProductIds/{prodcutId}?limit&cursor
 
-> Nach Blick in die DIN18222 Norm muss das wohl kein POST sondern GET sein ("ReadDPPIdsByProductIds" --> Keywort "Read")
+> DIN 18222 hier unschlüssig: Siehe Seite 19 in PDF Tabelle HTTP-Methode für Methode "ReadDPPIdsByProductIds" ist "POST", während Seite 11 sagt "gibt eine Liste [...] zurück"
 
 > Nochmal Blick in die Norm werfen – insbesondere für die Umsetzung der Parameter *limit* und *cursor*
 
@@ -298,8 +283,6 @@ sequenceDiagram
 
 ### `GET` /dpps/{dppId}/collections/{elementId}
 
-> Meine Vermutung: elementId ist idShort eines Submodels. Somit ist API Call richtig (um an alle SubmodelElements eines Submodels zu kommen). Mapping am Ende fehlt jedoch noch --> Filtern nach der elementId und nur diese SubmodelElementCollection zurückgeben.
-
 ```mermaid
 sequenceDiagram
   actor User
@@ -307,20 +290,16 @@ sequenceDiagram
   participant API as DPP-API
   participant Env as AAS Environment API
 
-  User->>Web: Wants a specific Submodel in a DPP with dppId and elementPath
-  Web->>API: GET /dpps/{dppId}
+  User->>Web: Wants a specific Submodel in a DPP with dppId and elementId
+  Web->>API: GET /dpps/{dppId}/collections/{elementId}
 
   rect purple
-    Note right of API: submodelIdentifier = [base64 encoded] dppId
-    API->>Env: /submodels/{submodelIdentifier}
-    alt success
-        Env-->>API: return HTTP 204: All DPP-relevant submodelIdentifiers (JSON)
-    else failed
-        Env-->>API: return HTTP Errorcode
-    end
+    API->>API: /dpp/{dppId}
+    Note right of API: elementId = submodelIdentifier
   end
 
-  loop
+  loop for every dpp version
+    API-->>API: Check if elementId/submodel exists in DPP submodel list
     API->>Env: GET /submodels/{submodelIdentifiers}/submodel-elements
     alt success
       Env-->>API: return HTTP 204: All DPP-relevant submodel data (JSON)
@@ -329,7 +308,8 @@ sequenceDiagram
     end
   end
 
-  API-->>Web: return Submodel JSON
+  Note right of Web: Structure: "Version > Data | Version > Data"
+  API-->>Web: return Submodel JSON (Version + Data)
   Web-->>User: Display all relevant data
 ```
 
@@ -337,9 +317,68 @@ sequenceDiagram
 
 ### `PATCH` /dpps/{dppId}/collections/{elementId}
 
+```mermaid
+sequenceDiagram
+  actor User
+  participant Web as AAS Web UI (DPP Viewer)
+  participant API as DPP-API
+  participant Env as AAS Environment API
+
+  User->>Web: Wants to update a specific Submodel in a DPP with dppId and elementId
+  Web->>API: PATCH /dpps/{dppId}/collections/{elementId}
+
+  rect purple
+    API->>API: /dpp/{dppId}
+    Note right of API: elementId = submodelIdentifier
+  end
+
+  loop for whole dpp list
+    API-->>API: Check if elementId/submodel exists in DPP submodel list
+    opt
+      API-->>Web: return error
+    end
+
+    Note right of API: submodelIdentifier has to be base64-encoded
+    API->>Env: PATCH /submodels/{submodelIdentifier}/$values
+    Env-->>API: Returns updated Submodel 
+  end
+
+  API-->>Web: return updated Submodel
+  Web-->>User: Display all relevant data
+```
+
 <br>
 
 ### `GET` /dpps/{dppId}/elements/{elementPath}
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant Web as AAS Web UI (DPP Viewer)
+  participant API as DPP-API
+  participant Env as AAS Environment API
+
+  User->>Web: Wants a specific Value of a Submodel in a DPP with dppId and elementPath
+  Web->>API: GET /dpps/{dppId}/elements/{elementPath}
+
+  rect purple
+    API-->>API: /dpp/{dppId}
+  end
+
+  loop for every dpp version
+    loop for every submodel of a version
+        API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements/{elementPath}
+        alt
+            Env-->>API: Error
+        else
+            Env-->>API: HTTP 204: Value of Element
+        end
+    end
+  end
+
+  API-->>Web: return Submodel JSON (Version + Data)
+  Web-->>User: Display all relevant data
+```
 
 <br>
 
