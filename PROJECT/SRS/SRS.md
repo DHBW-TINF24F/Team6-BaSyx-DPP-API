@@ -4,23 +4,20 @@
 |---|---|---|---|
 |1.0|Luca Schmoll|04.11.2025|Ersterstellung der Grundstruktur|
 
+---
 
-1. [Zweck, Geltungsbereich und Referenzen](#1-zweck-geltungsbereich-und-referenzen)
-    1. [Zweck](#11-zweck)
-    2. [Anwendungsbereich](#12-geltungsbereich)
-    3. [Begrifflichkeiten und Abkürzungen](#13-begrifflichkeiten-und-abkürzungen)
-2. [Systemarchitektur](#2-systemarchitektur)
-3. [Anwendungsfälle](#3-anwendungsfälle)
-4. [Funktionale Anforderungen](#4-funktionale-anforderungen-fr)
-    1. [Daten und API Anforderungen](#41-daten-und-api-anforderungen)
-    2. [Frontend-Anforderungen](#42-frontend-anforderungen)
-5. [Nicht-funktionale Anforderungen](#5-nicht-funktionale-anforderungen-nfr)
-6. [Externe Schnittstellen](#6-externe-schnittstellen)
-7. [Datenmodell und Semantik](#7-datenmodell-und-semantik)
-8. [Usability Konzept & Workflows](#8-usability-konzept--workflows)
-9. [Qualitätssicherung & Tests](#9-qualitätssicherung--tests)
-10. [Build & Deployment-Vorgaben](#10-build--deployment-vorgaben)
-11. [Dokumentation](#11-dokumentation)
+### Begrifflichkeiten und Abkürzungen
+|Abkürzung|Bedeutung|
+|---|---|
+|DPP|Digitaler Produktpass|
+|AAS|Asset Administration Shell|
+|BaSyx|Open-Source Framework|
+|Submodel|Teilstruktur eines AAS|
+|OpenAPI|Industriestandard zur Beschreibung von API's|
+
+---
+
+Inhaltsverzeichnis
 
 ---
 
@@ -72,162 +69,64 @@ graph LR
 ```
 <p align="center"> <i>Abbildung 1: Visuelle Übersicht des Projekts</i> </p>
 
+### 1.3 Referenzen
+-
 
-### 1.3 Begrifflichkeiten und Abkürzungen
-|Abkürzung|Bedeutung|
-|---|---|
-|DPP|Digitaler Produktpass|
-|AAS|Asset Administration Shell|
-|BaSyx|Open-Source Framework|
-|Submodel|Teilstruktur eines AAS|
-|OpenAPI|Industriestandard zur Beschreibung von API's|
-
-## 2. Systemarchitektur
-Die Lösung besteht aus den folgenden Architekturen:
-1. **DPP-API Service:** Stellt die nach DIN EN 18222 definierten REST-Endpunkte bereit und mappt die Operationen auf BaSyx Kernfunktionen (Repository, Submodel, Registry, Discovery)
-2. **BaSyx Kernkomponenten:** (Containerisiert via Docker): AAS Enviroment, AAS & Sumodel Registry, Discovery Service
-3. **DPP Viewer im BaSyx Web UI:** Geführte Anzeige, Suche, Routing
-
-Nahezu alle der REST-Endpunkte sollen auf bestehende BaSyx-API Aufrufe gemappt werden. Dieses Diagramm visualisiert, wie dieser Flow aussehen könnte.
-```mermaid
-graph TB
-subgraph DPP_API_Service
-Router[HTTP Router /dpp/*]
-Mapping[Mapping Layer AAS Adapter]
-Search[AAS Environment API]
-Serializer[Serializer und JSON Schemas]
-end
-
-Mapping --> Serializer
-Router --> Search
-
-AASRepo[(AAS Repository)]
-SMRepo[(Submodel Repository)]
-Registry[(AAS Registry)]
-Discovery[(Discovery Service)]
-
-Search --> Mapping
-
-Search --> AASRepo
-Search --> SMRepo
-Search --> Registry
-Search --> Discovery
-```
-<p align="center"> <i>Abbildung 2: Flow der API</i> </p>
-
-## 3. Anwendungsfälle
-
-### UC01 OpenAPI Spezifikation nach DIN EN 18222 erstellen
-|||
-|---|---|
-|ID|UC01|
-|Description|Der Entwickler erstellt eine syntaktisch und semantisch korrekte OpenAPI Spezifikation, die alle in der DIN EN 18222 genannten Resourcen, Endpunkte und Datenmodelle abbildet.|
-|Roles involved|Entwickler (Backend)|
-|Precondition|Die relevanten Abschnitte der DIn EN 18222 wurden analysiert und verstanden (FR-02)|
-|Postcondition|Eine validierte .yaml Datei liegt im Repository vor und dient als Grundlage für die Implementierung (FR-01)|
-|Triggering Event|Start des Projekts|
-
-### UC02 Beispiel-Verwaltungsschalen (AAS/DPP) anlegen und registrieren
-|||
-|---|---|
-|ID|UC02|
-|Description|Der Entwickler lädt mindestens drei DPP-Beispiel-Verwaltungsschalen unter Verwendung der IDTA Submodel-Vorlagen (Nameplate, Techdata, etc.) hoch und registriert diese auf der lokalen BaSyx Umgebung|
-|Roles involved|Entwickler (Backend)|
-|Precondition|Die lokale BaSyx Infrastruktur ist lauffähig und die IDTA Submodel-Vorlagen sind bekannt.|
-|Postcondition|Drei AAS-Instanzen mit für die DPP relevanten Submodellen (FR-08)|
-|Triggering Event|Datenbasis notwendig für API-Mapping|
-
-### UC03 DPP-API implementieren und BaSyx Mapping
-|||
-|---|---|
-|ID|UC03|g
-|Description|Die DPP-API wird implementiert und stellt die Endpunkte nach DIN EN 18222 bereit. Jede Anfrage wird intern auf die Standard AAS Endpunkte gemappt.|
-|Roles involved|Entwickler (Backend)|
-|Precondition|Die OpenAPI-Spezifikation (UC01) und die lokale BaSyx-Infrastruktur (UC06) sind vorhanden.|
-|Postcondition|Ein Aufruf der DPP-Endpunkte löst eine korrekte Abfrage beim AAS Repository aus und liefert die DPP-Daten im erwarteten JSON-Format zurück (FR-02, FR-03).|
-|Triggering Event|Implementierung der DPP-Funktionalität.|
-
-### UC04 DPP-Daten im Viewer suchen und in Detailansicht anzeigen
-|||
-|---|---|
-|ID|UC04|
-|Description|Der Endnutzer navigiert im BaSyx AAS Web UI zur DPP-Ansicht, sucht nach einem Asset (z.B. nach Produktnamen) und wählt es aus. Das System ruft die Daten über die DPP-API ab und visualisiert die Submodelle (Nameplate, TechData, PCF) hierarchisch (FR-07, FR-UI-02).|
-|Roles involved|Entwickler (Backend), Kunde, Entwickler (Frontend)|
-|Precondition|Die DPP-API und der Viewer sind erfolgreich im BaSyx Web UI integriert.|
-|Postcondition|Die Detailansicht des DPP ist geladen, Submodel-Tabs funktionieren und die Daten sind gemäß dem Usability-Konzept übersichtlich dargestellt.|
-|Triggering Event|Notwendigkeit, einen Produktpass einzusehen|
-
-Eine Suchanfrage innerhalb unseres Projektes könnte dann wie folgt aussehen:
+## 2. Anwendungsfälle
+### UC-01: Digitalen Produktpass abrufen
+|**ID**|UC-01|
+|**Name**|Digitalen Produktpass abrufen|
+|**Beteiligter Nutzer**|Endnutzer (Client)|
+|**Beschreibung**|Der Endnutzer erhält die aktuellen, vollständigen Lebenszyklusdaten eines bestimmten Produktes über die BaSyx-API.|
+|**Bedingung**|Das Produkt ist in der Verwaltungsschale (AAS) registriert und dem Nutzer ist die ID bekannt.|
+|**Nachbedingung**|Der Nutzer erhält die aktuellen DPP Daten.|
+|**Ablauf**|Nutzer sendet Anfrage an |
 ```mermaid
 sequenceDiagram
-  participant User as Endnutzer
-  participant Web as AAS Web UI (DPP Viewer)
-  participant API as DPP-API
-  participant Disc as Discovery
-  participant AAS as AAS Repository
-  participant SM as Submodel Repository
+    autonumber
+    actor C as Client-System
+    participant API as DPP-API
+    participant AAS as AAS-Enviroment
 
-  User->>Web: Suchbegriff eingeben
-  Web->>API: GET /dpp/search?q=...
-  API->>Disc: queryByAttribute(...)
-  Disc-->>API: Trefferliste
-  API-->>Web: 200 OK (Assets)
-
-  User->>Web: Asset auswählen
-  Web->>API: GET /dpp/{aasId}
-  API->>AAS: GET SHELL BY ID
-  AAS-->>API: AAS und Submodel-Refs
-
-  loop je Submodel
-    API->>SM: GET SUBMODEL
-    SM-->>API: Submodel JSON
-  end
-
-  API-->>Web: 200 OK (DPP-Daten)
-  Web-->>User: Tabs rendern und Downloads
+    C->>API: API-Call (dpps/{dppId})
+    API->>API: Anfrage validieren
+    API->>AAS: DPP-Daten für Produkt-ID abrufen
+    AAS-->>API: DPP-Daten zurückgeben
+    API-->>C: Antwort im Standardformat (JSON)
 ```
-<p align="center"> <i>Abbildung 3: Beispielhafter Durchlauf eines API-Calls</i> </p>
 
-### UC05 Usability Konzept und Workflows definieren.
-|||
-|---|---|
-|ID|UC05|
-|Description|Definition eines Usability Konzepts um den DPP Viewer gemäß den Best Practices und der HARTING Lösung zu optimieren.|
-|Roles involved|Product Owner, Entwickler (Frontend), UX-Designer|
-|Precondition|Die Kernanforderungen an die Datenvisualisierung (FR-UI-02) sind bekannt.|
-|Postcondition|Ein Usability-Konzept (z.B. Wireframes und eine Workflow-Beschreibung) liegt vor und dient als verbindliche Vorlage für die Frontend-Implementierung (FR-UI-01).|
-|Triggering Event|Start der Frontend-Designphase.|
+### UC-01 Digitalen Produktpass abrufen
+|**ID**|UC-01|
+|**Beschreibung**|Ein Client-System fordert die aktuellen, vollständigen Lebenszyklusdaten eines bestimmten Produktes über die DPP-API an.|
+|**Beteiligt**|Client-System|
+|**Precondition**|Das Produkt ist in der Verwaltungsschale (AAS) registriert und dem System ist die ID bekannt.|
+|**Postcondition**|Das System erhält die aktuellen DPP Daten im JSON Format.|
+|**Triggering Event**|Eine Software/Maschine benötigt Informationen aus dem DPP|
 
-### UC06 Lokale Buildchain einrichten und beherrschen
-|||
-|---|---|
-|ID|UC06|
-|Description|Das Team forkt die benötigten BaSyx-Repositories, richtet die lokale Buildchain (Docker) ein und verifiziert, dass lokale Code-Änderungen erfolgreich gebaut und im Livesystem sichtbar werden|
-|Roles involved|Entwickler, Systemarchitekt|
-|Precondition|Die benötigten BaSyx-Repositories sind identifiziert (FR-11).|
-|Postcondition|Der End-to-End-Zyklus (Ändern, Bauen, Testen) funktioniert und das Team ist mit der Buildchain vertraut.|
-|Triggering Event|Start des Projekts.|
-
-### UC07 Dokumentation erstellen
-|||
-|---|---|
-|ID|UC07|
-|Description|Die Lösung wird auf einem Demo-Server gehostet (NFR-04). Die Online-Dokumentation wird erstellt und im BaSyx-GitHub verlinkt.|
-|Roles involved|Entwickler, Dokumentator|
-|Precondition|Implementierung, Tests und Code-Reviews sind abgeschlossen.|
-|Postcondition|Die Lösung ist öffentlich erreichbar. Die Dokumentation ist strukturiert verlinkt (FR-09). Pull Requests werden akzeptiert und die Lösung wird Teil des BaSyx-Projekts.|
-|Triggering Event|Projektabschluss und Übergabe.|
+### UC-02 Produktpass-Details im Viewer
+|**ID**|UC-02|
+|**Beschreibung**|Der Endnutzer gibt eine ProduktID ein, um sich die im DPP angelegten Daten visuell übersichtlich und verständlich anzeigen zu lassen.|
+|**Beteiligt**|Endnutzer|
+|**Precondition**|Das Produkt ist in der Verwaltungsschale (AAS) registriert und dem Nutzer ist die ID bekannt.|
+|**Postcondition**|Der Nutzer erhält die aktuellen DPP Daten im WebUI angezeigt.|
+|**Triggering Event**|Der Nutzer benötigt Informationen aus dem DPP und möchte diese visuell sehen.|
 
 ## 4. Funktionale Anforderungen (FR)
 ### 4.1 Daten und API-Anforderungen
-|ID|Anforderung|Priorität|Kriterium|
-|---|---|---|---|
-|FR-01|Es muss eine OpenAPI‑Spezifikation für die DPP‑API erstellt und im Repository hinterlegt werden|5 - Sehr hoch|Die Datei ist im Swagger-Editor anschaubar, bearbeitbar und ausführbar|
-|FR-02|Die DPP‑API muss die in DIN EN 18222 beschriebenen Ressourcen, Operationen und Antwortcodes implementieren.|5 - Sehr hoch|Endpunkte/Parameter werden 1:1 aus dem Normtext abgeleitet und in OpenAPI abgebildet.|
-|FR-03|DPP‑Operationen müssen auf AAS Endpunkte (Repository, Registry, Discovery) gemappt werden.|5 - Sehr hoch|Beispiel-Mapping: GET /dpp/{id} → AAS lesen (AAS Repository); POST /dpp → AAS/Submodel erstellen, Registrierung & Discovery-Eintrag.|
-|FR-04|Volltext/Filter‑Suche über DPP‑Felder muss bereitgestellt werden; die Implementierung nutzt AAS Discovery.|4 - Mittel|Suche liefert Ergebnisse in unter 800 ms (NFR-03); Filterung nach mindestens zwei Attributen (z.B. Hersteller, Submodel-Name) ist möglich.|
-|FR-05|Die API muss DPP‑Daten als JSON exportieren|4 - Mittel|Exportiere Dateien sind validierbar|
-|FR-06|Mindestens drei Beispiel‑AAS mit DPP‑Submodellen (basierend auf IDTA-Vorlagen wie Nameplate, TechData, PCF) müssen geladen werden.|5 - Sehr hoch|Drei eigenständige AAS-Dateien existieren und sind im Demo-System registriert.|
+|ID|Name|Beschreibung|Priorität|Akzeptanzkriterium|
+|---|---|---|---|---|
+|FR-01|Erstellung eines DPP|Das Backend muss in der Lage sein, einen neuen Digitalen Produktpass (DPP) entgegenzunehmen, die Gültigkeit der Datenstruktur zu prüfen und diesen innerhalb der Verwaltungsschale (AAS) im BaSyx-System zu speichern.|5 - Sehr hoch|Ein neuer DPP findet sich innerhalb der AAS Shell.|
+|FR-02|Abrufen eines DPP per ID|Das Backend muss in der Lage sein, einen DPP anhand seiner eindeutigen dppId aus dem BaSyx-Speicher abzurufen und die vollständigen Daten im definierten Format zurückzugeben.|5 - Sehr hoch|Die Daten des DPP mit der ID liegen vollständig vor.|
+|FR-03|Updaten eines DPP per ID|Das Backend muss in der Lage sein, Aktualisierungen für einen bestehenden DPP entgegenzunehmen, die Datenintegrität zu gewährleisten und die entsprechende AAS teilweise zu aktualisieren.|5 - Sehr hoch|Die Daten werden aktualisiert in der Datenbank gespeichert.|
+|FR-04|Löschen eines DPP per ID|Das Backend muss in der Lage sein, einen DPP (Seine Submodells) anhand seiner dppId permanent aus dem BaSyx-System zu löschen.|5 - Sehr hoch|Der DPP ist nicht mehr auffindbar in der Datenbank und im BaSyx System.|
+|FR-05|Abrufen eines DPP per productID|Das Backend muss in der Lage sein, den aktuellen DPP anhand der productId abzurufen. Hierfür muss eine interne Zuordnung von productId zu dppId erfolgen.|5 - Sehr hoch|Die Daten eines DPP, der die angegebene productID besitzt, liegen vollständig vor.|
+|FR-06|Abrufen eines älteren DPP per Zeitstempel und productID|Das Backend muss in der Lage sein, die historische Version eines DPP abzurufen, die zum angegebenen productId und Datum/Zeitpunkt gültig war.|5 - Sehr hoch|Der DPP zu dem angegeben Zeitpunkt mit der ID liegt vollständig vor.|
+|FR-07|Abrufen mehrerer DPPS per productID Liste|Das Backend muss in der Lage sein, eine Liste von productIds entgegenzunehmen und eine entsprechende Liste der zugehörigen dppIds als Antwort zurückzugeben|5 - Sehr hoch|Eine Liste an DPPS mit den entsprechenden ID's liegt vollständig vor.|
+|FR-08|Registrierung eines DPP im AAS Registry|Das Backend muss in der Lage sein, die Registrierung eines neuen DPP im zentralen BaSyx-Register (AAS Registry) durchzuführen.|5 - Sehr hoch|Der DPP ist im AAS Registry auffindbar.|
+|FR-09|Abrufen der DPP Daten eines bestimmten Submodels per dppID und elementID|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung (Submodell-Element) eines DPP anhand der dppId und der elementId auszulesen und diese Daten zurückzugeben.|5 - Sehr hoch|Die Daten wurden entsprechend angepasst innerhalb des Submodels.|
+|FR-10|Updaten der DPP Daten eines bestimmten Submodels per ID und elementID|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung in einem DPP zu aktualisieren|5 - Sehr hoch|Die Sammlung an Daten wurde erfolgreich innerhalb des Submodels angepasst.|
+|FR-11|Abrufen eines Elements aus dem DPP per ID und elementPath|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP anhand eines spezifischen elementPath auszulesen.|5 - Sehr hoch|Das abgefragte Element liegt korrekt vor.|
+|FR-12|Updaten eines Elements aus dem DPP per ID und elementPath|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP zu aktualisieren.|5 - Sehr hoch|Das einzelne Element wurde alleine innerhalb des DPP geupdated|
 
 ### 4.2 Frontend-Anforderungen
 |ID|Anforderung|Priorität|Kriterium|
@@ -254,9 +153,13 @@ sequenceDiagram
 
 ## 7. Datenmodell und Semantik
 Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die grob folgenden Aufbau haben:
-1. Digital Nameplate:Identifikationsnummer/Regelungsinformation
-2. Technical Data: Strukturierte, technische Eigenschaften
-3. Carbon Footprint: CO2 Fußabdruck
+1. Digital Nameplate (IDTA-02035-1):
+2. Handcover Documentation (IDTA-02035-2):
+3. Product Carbon Footprint (IDTA-02035-3):
+4. Technical Data (IDTA-02035-4):
+5. Product Condition (IDTA-02035-5):
+6. Material Composition (IDTA-02035-6):
+7. Circularity (IDTA-02035-7):
 
 ## 8. Usability Konzept & Workflows
 Das Usability-Konzept muss auf der Analyse des BaSyx-UI's basieren.
@@ -300,12 +203,4 @@ Contract[Contract‑Tests DIN EN 18222]
 ```
 <p align="center"> <i>Abbildung 5: Teststrategie</i> </p>
 
-## 10. Build & Deployment-Vorgaben
-|Umgebung|Vorgabe|Tooling|
-|---|---|---|
-|Lokal (Dev)|Isolierte Entwicklungsumgebung für den gesamten BaSyx-Stack.|Docker-Compose File|
-|Demo‑Server|Öffentliche, internet-zugängliche Hosting-Instanz|Docker-Compose File|
-|Konfiguration|Einfache Anpassung von Konfigurationen (Datenbanklinks, Passwörter, etc.)|Verwendung einer .env Datei|
-
-## 11. Dokumentation
-Eine Benutzerdokumentation muss im Repo zur Verfügung gestellt werden. Ebenfalls bedarf es einer technischen Dokumentation der entwickelten Features, welche dann auch im Repo verfügbar gemacht werden muss.
+## 10. Quellen
