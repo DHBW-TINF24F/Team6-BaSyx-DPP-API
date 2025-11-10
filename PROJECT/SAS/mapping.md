@@ -18,6 +18,8 @@ Dieses Dokument dient der Nachvollziehbarkeit der internen DPP API Abläufe, ins
 
 ### `POST` /dpps
 
+> DIN Dokument hier ungenau: Tabelle 5 &mdash; Create DPP gibt als Ausgabeparameter `dppId` an, während Tabelle 17 &mdash; Lebensweg-API als Ausgabe `DPP`(-Objekt) fordert.
+
 ```mermaid
 sequenceDiagram
   participant Web as AAS Web UI (DPP Viewer)
