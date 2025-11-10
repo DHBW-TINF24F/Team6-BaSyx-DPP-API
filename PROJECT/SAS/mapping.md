@@ -4,9 +4,10 @@ Dieses Dokument dient der Nachvollziehbarkeit der internen DPP API Abläufe, ins
 
 <br>
 
-| Version | Datum      | Autoren                    |
-|---------|------------|----------------------------|
-| 1.0     | 2025-11-08 | Luca Schmoll & Noah Becker |
+| Version | Datum      | Autoren                    | Bemerkung |
+|---------|------------|----------------------------|-----------|
+| 1.0     | 2025-11-08 | Luca Schmoll & Noah Becker | Inital thoughts & diagrams |
+| 1.1     | 2025-11-09 | Luca Schmoll & Noah Becker | Refactor sequences & write down open questions |
 
 ---
 
@@ -59,6 +60,16 @@ sequenceDiagram
 
   API-->>Web: return JSON
 ```
+
+<br>
+
+**Erläuterung**  
+
+| **Actor**      | **API-Call** | **Recipient** | **Parameters** | **Body expected?** | **Return element** | **Note** |
+|----------------|--------------|---------------|----------------|--------------------|--------------------|----------|
+| **AAS Web UI** | `POST` /dpps | DPP-API | - | *Yes* <br> dppId <br> productId^*^ | JSON | Initial Frontend call <br> dppId can be empty <br> productId has to be idShort of AAS Shell <br> *Both base64-encoded!* <br> **Return: JSON** |
+| **DPP-API**    | `GET` /submodels | Environment API | idShort | No | JSON | idShort is productId <br> **Return: Array of submodels** |
+|                | `POST` /submodels | Environment API | 
 
 <br>
 
