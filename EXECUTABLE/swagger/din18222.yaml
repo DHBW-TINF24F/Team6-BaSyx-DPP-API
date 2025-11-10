@@ -14,7 +14,7 @@ info:
     email: "samarkhel-khan.yahya@din.de"
 
 servers:
-  - url: http://srv01.noah-becker.de/uni/swe/api
+  - url: https://srv01.noah-becker.de/uni/swe/api
     description: "Produktiv-Server"
   - url: http://localhost:8081
     description: "Lokale Entwicklungsumgebung"
@@ -504,6 +504,7 @@ components:
             
             
             
+
     # Nachrichtenstruktur
     Message:
       type: object
@@ -540,14 +541,8 @@ components:
         - Warning
         - Error
         - Exception
-      x-enum-descriptions:
-        Info: "dient zum Informieren des Benutzers über eine bestimmte Tatsache"
-        Warning: "verwendet für Warnungen; Warnungen können zu Fehlern in der anschließenden Ausführung führen"
-        Error: "verwendet zur Fehlerbehandlung"
-        Exception: "verwendet bei einer internen und/oder unbehandelten Ausnahme"
     
-    
-    # Erfolgs-Response
+    # Erfolgs-Response (Standard)
     SuccessResponse:
       type: object
       description: "Erfolgreiche API-Antwort ohne Ergebnisobjekt"
@@ -556,7 +551,6 @@ components:
           type: string
           enum:
             - Success
-            - SuccessCreated
             - SuccessAccepted
             - SuccessNoContent
           description: "HTTP Success Status"
@@ -564,6 +558,26 @@ components:
           $ref: "#/components/schemas/Message"
       required:
         - status
+    
+    # Spezielle Response für SuccessCreated mit dppId
+    SuccessCreatedResponse:
+      type: object
+      description: "Erfolgreiche Erstellung mit Ressourcen-ID"
+      properties:
+        status:
+          type: string
+          enum:
+            - SuccessCreated
+          description: "HTTP Success Status"
+        dppId:
+          type: string
+          description: "ID des erstellten Digitalen Produktpasses"
+          example: "dpp-12345-abcde"
+        message:
+          $ref: "#/components/schemas/Message"
+      required:
+        - status
+        - dppId
     
     # Fehler-Response mit Ergebnisobjekt
     ErrorResponse:
@@ -589,7 +603,7 @@ components:
         - message
 
   responses:
-    # 2xx Success Responses (weist KEIN Ergebnisobjekt auf)
+    # 2xx Success Responses
     Success:
       description: "Erfolg"
       content:
@@ -610,12 +624,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/SuccessResponse"
+            $ref: "#/components/schemas/SuccessCreatedResponse"
           example:
             status: "SuccessCreated"
+            dppId: "dpp-12345-abcde"
             message:
               messageType: "Info"
-              text: "Die Ressource wurde erfolgreich erstellt."
+              text: "Der Digitale Produktpass wurde erfolgreich erstellt."
               code: "DPP_CREATED"
               correlationId: "550e8400-e29b-41d4-a716-446655440000"
               timestamp: "2025-11-10T14:30:00Z"
