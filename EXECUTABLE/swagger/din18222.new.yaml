@@ -70,6 +70,7 @@ paths:
 
 components:
   schemas:
+    # Identifier
     IdentifierAAS:
       type: string
       description: "Ein base64-encodierter String"
@@ -79,6 +80,7 @@ components:
       description: "productId + /DPP/ --> base64-encodiert"
       example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAv"
   
+    # DPP Schemas
     DPPRequestScheme:
       type: object
       description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
@@ -88,21 +90,33 @@ components:
         submodels:
           type: array
           items:
-            $ref: "#/components/schemas/SubmodelElement"
-            
+            $ref: "#/components/schemas/DPPSubmodelElement"
     DPPScheme:
       type: object
       description: "Repräsentiert den Digitalen Produktpass. Die genaue logische Struktur ist in 'Modul 4: Systeminteroperabilität' der Normungsreihe definiert und wird hier als generisches Objekt dargestellt."
       properties:
         dppId:
-          type: object
           $ref: "#/components/schemas/IdentifierDPP"
-    PartialDPP:
+        versions:
+          type: array
+          items:
+            $ref: "#/components/schemas/DPPVersionScheme"      
+    DPPVersionScheme:
       type: object
-      description: "Eine partielle Repräsentation des DPP für PATCH-Operationen."
-      
-    
-    SubmodelElement:
+      description: "Repräsentiert eine Version des Digitalen Produktpasses."
+      properties:
+        version:
+          type: string
+          example: "DPP_v20251108-143000"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-11-08T14:30:00Z"
+        submodels:
+          type: array
+          items:
+            $ref: "#/components/schemas/DPPSubmodelElement"
+    DPPSubmodelElement:
       type: object
       properties:
         displayName:
@@ -135,6 +149,80 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Qualifier"
+      example:
+        displayName:
+          - language: "string"
+            text: "string"
+        description:
+          - language: "string"
+            text: "string"
+        category: "string"
+        idShort: "string"
+        extensions:
+          - name: "string"
+            value: "string"
+            valueType: "ANY_URI"
+            refersTo:
+              - type: "EXTERNAL_REFERENCE"
+                keys:
+                  - value: "string"
+                    type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+                referredSemanticId: "string"
+            semanticId:
+              type: "EXTERNAL_REFERENCE"
+              keys:
+                - value: "string"
+                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+              referredSemanticId: "string"
+            supplementalSemanticIds:
+              - type: "EXTERNAL_REFERENCE"
+                keys:
+                  - value: "string"
+                    type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+                referredSemanticId: "string"
+        embeddedDataSpecifications:
+          - dataSpecification:
+              type: "EXTERNAL_REFERENCE"
+              keys:
+                - value: "string"
+                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+              referredSemanticId: "string"
+            dataSpecificationContent: {}
+        semanticId:
+          type: "EXTERNAL_REFERENCE"
+          keys:
+            - value: "string"
+              type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+          referredSemanticId: "string"
+        supplementalSemanticIds:
+          - type: "EXTERNAL_REFERENCE"
+            keys:
+              - value: "string"
+                type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+            referredSemanticId: "string"
+        qualifiers:
+          - type: "string"
+            value: "string"
+            kind: "CONCEPT_QUALIFIER"
+            valueType: "ANY_URI"
+            valueId:
+              type: "EXTERNAL_REFERENCE"
+              keys:
+                - value: "string"
+                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+              referredSemanticId: "string"
+            semanticId:
+              type: "EXTERNAL_REFERENCE"
+              keys:
+                - value: "string"
+                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+              referredSemanticId: "string"
+            supplementalSemanticIds:
+              - type: "EXTERNAL_REFERENCE"
+                keys:
+                  - value: "string"
+                    type: "ANNOTATED_RELATIONSHIP_ELEMENT"
+                referredSemanticId: "string"
             
     
 
@@ -324,6 +412,11 @@ components:
     #DPP
     DPP:
       description: "Erfolg"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DPPScheme"
+              
   
   
   
