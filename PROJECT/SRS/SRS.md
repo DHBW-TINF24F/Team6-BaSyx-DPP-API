@@ -70,49 +70,25 @@ graph LR
 <p align="center"> <i>Abbildung 1: Visuelle Übersicht des Projekts</i> </p>
 
 ### 1.3 Referenzen
--
+Dieses Kapitel enthält Referenzen auf Dokumentationen, Quellen und Dateien, die zum Verständnis dieses SRS Dokument benötigt werden.
+
+|NR.|Referenz|Titel/Beschreibung|Version|
+|---|---|---|---|
+|1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|
+|2|IDTA-02035-1|Digital Battery Passport - Part 3|2025|
+|3||||
+|4||||
+|2||||
+|2||||
+|2||||
+|2||||
+|2||||
 
 ## 2. Anwendungsfälle
-### UC-01: Digitalen Produktpass abrufen
-|**ID**|UC-01|
-|**Name**|Digitalen Produktpass abrufen|
-|**Beteiligter Nutzer**|Endnutzer (Client)|
-|**Beschreibung**|Der Endnutzer erhält die aktuellen, vollständigen Lebenszyklusdaten eines bestimmten Produktes über die BaSyx-API.|
-|**Bedingung**|Das Produkt ist in der Verwaltungsschale (AAS) registriert und dem Nutzer ist die ID bekannt.|
-|**Nachbedingung**|Der Nutzer erhält die aktuellen DPP Daten.|
-|**Ablauf**|Nutzer sendet Anfrage an |
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Client-System
-    participant API as DPP-API
-    participant AAS as AAS-Enviroment
+Use Cases for this Software can be found in our Customer Requirement Specification (CRS).
 
-    C->>API: API-Call (dpps/{dppId})
-    API->>API: Anfrage validieren
-    API->>AAS: DPP-Daten für Produkt-ID abrufen
-    AAS-->>API: DPP-Daten zurückgeben
-    API-->>C: Antwort im Standardformat (JSON)
-```
-
-### UC-01 Digitalen Produktpass abrufen
-|**ID**|UC-01|
-|**Beschreibung**|Ein Client-System fordert die aktuellen, vollständigen Lebenszyklusdaten eines bestimmten Produktes über die DPP-API an.|
-|**Beteiligt**|Client-System|
-|**Precondition**|Das Produkt ist in der Verwaltungsschale (AAS) registriert und dem System ist die ID bekannt.|
-|**Postcondition**|Das System erhält die aktuellen DPP Daten im JSON Format.|
-|**Triggering Event**|Eine Software/Maschine benötigt Informationen aus dem DPP|
-
-### UC-02 Produktpass-Details im Viewer
-|**ID**|UC-02|
-|**Beschreibung**|Der Endnutzer gibt eine ProduktID ein, um sich die im DPP angelegten Daten visuell übersichtlich und verständlich anzeigen zu lassen.|
-|**Beteiligt**|Endnutzer|
-|**Precondition**|Das Produkt ist in der Verwaltungsschale (AAS) registriert und dem Nutzer ist die ID bekannt.|
-|**Postcondition**|Der Nutzer erhält die aktuellen DPP Daten im WebUI angezeigt.|
-|**Triggering Event**|Der Nutzer benötigt Informationen aus dem DPP und möchte diese visuell sehen.|
-
-## 4. Funktionale Anforderungen (FR)
-### 4.1 Daten und API-Anforderungen
+## 3. Funktionale Anforderungen (FR)
+### 3.1 Daten und API-Anforderungen
 |ID|Name|Beschreibung|Priorität|Akzeptanzkriterium|
 |---|---|---|---|---|
 |FR-01|Erstellung eines DPP|Das Backend muss in der Lage sein, einen neuen Digitalen Produktpass (DPP) entgegenzunehmen, die Gültigkeit der Datenstruktur zu prüfen und diesen innerhalb der Verwaltungsschale (AAS) im BaSyx-System zu speichern.|5 - Sehr hoch|Ein neuer DPP findet sich innerhalb der AAS Shell.|
@@ -128,14 +104,21 @@ sequenceDiagram
 |FR-11|Abrufen eines Elements aus dem DPP per ID und elementPath|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP anhand eines spezifischen elementPath auszulesen.|5 - Sehr hoch|Das abgefragte Element liegt korrekt vor.|
 |FR-12|Updaten eines Elements aus dem DPP per ID und elementPath|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP zu aktualisieren.|5 - Sehr hoch|Das einzelne Element wurde alleine innerhalb des DPP geupdated|
 
-### 4.2 Frontend-Anforderungen
+
+|FR-01|Es muss eine OpenAPI‑Spezifikation für die DPP‑API erstellt und im Repository hinterlegt werden|5 - Sehr hoch|Die Datei ist im Swagger-Editor anschaubar, bearbeitbar und ausführbar|
+|FR-02|Die DPP‑API muss die in DIN EN 18222 beschriebenen Ressourcen, Operationen und Antwortcodes implementieren.|5 - Sehr hoch|Endpunkte/Parameter werden 1:1 aus dem Normtext abgeleitet und in OpenAPI abgebildet.|
+|FR-03|DPP‑Operationen müssen auf AAS Endpunkte (Repository, Registry, Discovery) gemappt werden.|5 - Sehr hoch|Beispiel-Mapping: GET /dpp/{id} → AAS lesen (AAS Repository); POST /dpp → AAS/Submodel erstellen, Registrierung & Discovery-Eintrag.|
+|FR-04|Volltext/Filter‑Suche über DPP‑Felder muss bereitgestellt werden; die Implementierung nutzt AAS Discovery.|4 - Mittel|Suche liefert Ergebnisse in unter 800 ms (NFR-03); Filterung nach mindestens zwei Attributen (z.B. Hersteller, Submodel-Name) ist möglich.|
+|FR-05|Die API muss DPP‑Daten als JSON exportieren|4 - Mittel|Exportiere Dateien sind validierbar|
+|FR-06|Mindestens drei Beispiel‑AAS mit DPP‑Submodellen (basierend auf IDTA-Vorlagen wie Nameplate, TechData, PCF) müssen geladen werden.|5 - Sehr hoch|Drei eigenständige AAS-Dateien existieren und sind im Demo-System registriert.|
+### 3.2 Frontend-Anforderungen
 |ID|Anforderung|Priorität|Kriterium|
 |---|---|---|---|
 |FR-07|Das BaSyx AAS Web UI muss einen DPP‑Viewer bereitstellen, der Submodel‑spezifische Ansichten (Nameplate/TechData/PCF) mit Previews und Routing‑Deep‑Links unterstützt.|5 - Sehr hoch|Ein Deep-Link (URL) zur DPP-Ansicht eines spezifischen Assets funktioniert und die Submodel-Daten werden strukturiert und nutzerfreundlich angezeigt|
 |FR-08|Eine strukturierte Online‑Benutzerdoku (How‑to, Screenshots, API‑Referenz) muss im BaSyx‑Wiki/GitHub verlinkt werden.|4 - Mittel|Doku ist über das BaSyx-Wiki zugänglich und enthält Anleitungen für alle UC-01 bis UC-04.|
 |FR-09|Die lokale Buildchain (Forken, Kompilieren, lokale Ausführung) muss etabliert sein.|5 - Sehr hoch|Eine minimale Code-Änderung (z.B. im UI-Titel) ist nach lokalem Build und Neustart des Docker-Stacks sichtbar.|
 
-## 5. Nicht-funktionale Anforderungen (NFR)
+## 4. Nicht-funktionale Anforderungen (NFR)
 |ID|Anforderung|Priorität|Kriterium|
 |---|---|---|---|
 |NFR-01|p95 Lesezugriffe < 300 ms bei 100 gleichzeitigen Requests.|4 - Mittel|Lasttestprotokoll weist eine Latenz unter 300 ms für 95% der Abfragen nach.|
@@ -143,13 +126,6 @@ sequenceDiagram
 |NFR-03|Containerisierte Bereitstellung via Docker Compose ist zwingend notwendig.|5 - Sehr hoch|Das gesamte Projekt ist über einen einzelnen Docker Befehl deploybar|
 |NFR-04|Unterstützung BaSyx V2 und AAS V3 (insbesondere UI‑Kompatibilität und API‑Profile).|4 - Mittel|DPP-Daten, die AAS V2 oder V3 entsprechen, werden vom Viewer korrekt verarbeitet.|
 |NFR-05|Das Projekt wird auf einem Public Server gehostet und ist darüber abrufbar und nutzbar.|4 - Sehr hoch|Das Projekt ist abrufbar über das Web.|
-
-## 6. Externe Schnittstellen
-|Schnittstelle|Standard|Nutzung durch DPP-API|
-|---|---|---|
-|AAS Repository/Submodel Repository|REST‑APIs|Kernfunktion: Speicherung und Abruf der DPP-Daten (Submodels).|
-|AAS Registry/Discovery|REST-APIs|Zentrale Funktion: Registrierung des AAS und Suche nach AAS (DPP).|
-|BaSyx AAS Web UI|Vue.js/Routing|Frontend nutzt die DPP-API Endpunkte.|
 
 ## 7. Datenmodell und Semantik
 Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die grob folgenden Aufbau haben:
