@@ -1,5 +1,35 @@
 # Software Requirement Specification (SRS)
+
 ## Projekt 6: API für den Digitalen Produktpass (DPP) im BaSyx Framework
+
+### Customer
+|Name|Mail|
+|---|---|
+|Markus Rentschler|rentschler@lehre.dhbw-stuttgart.de|
+|Pawel Wojcik|pawel.wojcik@lehre.dhbw-stuttgart.de|
+
+---
+
+### Aufgabenstellung
+Die **DIN EN 18222** "Digitaler Produktpass - Programmierschnittstellen (APIs) für das Lebenszyklusmanagement und die Durchsuchbarkeit vom Produktpass" beschreibt eine REST-API, welche im Rahmen dieser Aufgabe im BaSyx-Framework implementiert werden soll, sowohl Backend- als auch Frontendseitig. Die genaue Aufgabenstellung kann <a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">hier</a> gefunden werden.
+
+---
+
+### Teamaufteilung
+|Name|Mail|Rolle|
+|---|---|---|
+|Nataliia Chubak|inf24271@lehre.dhbw-stuttgart.de |Projektleitung|
+|Luca Schmoll|inf24137@lehre.dhbw-stuttgart.de|Product Owner|
+|Magnus Lörcher|inf24155@lehre.dhbw-stuttgart.de|Product Owner|
+|Noah Becker|inf24038@lehre.dhbw-stuttgart.de|Systemarchitekt|
+|Fabian Steiß|inf24138@lehre.dhbw-stuttgart.de |Dokumentation|
+|Felix Schulz|inf24075@lehre.dhbw-stuttgart.de|UI/UX Design|
+|Manuel Lutz|Inf24224@lehre.dhbw-stuttgart.de|Testmanagement|
+
+---
+
+### Dokumenthistorie
+
 |Version|Autor|Datum|Kommentar|
 |---|---|---|---|
 |1.0|Luca Schmoll|04.11.2025|Ersterstellung der Grundstruktur|
@@ -14,14 +44,31 @@
 |BaSyx|Open-Source Framework|
 |Submodel|Teilstruktur eines AAS|
 |OpenAPI|Industriestandard zur Beschreibung von API's|
+|CRS|Customer Requirement Specification|
+|SRS|Software Requirement Specification|
 
 ---
 
-Inhaltsverzeichnis
+### Inhaltsverzeichnis
+1. XX
+    1. XX
+    2. XX
+    3. XX
+2. XX
+    1. XX
+    2. XX
+    3. XX
+3. XX 
+    1. XX
+    2. XX
+    3. XX
+4. XX
 
 ---
 
 ## 1. Zweck, Geltungsbereich und Referenzen
+Dieses SRS Dokument wurde im Rahmen der Vorlesung "Software-Engineering" erstellt. Die Aufgabenstellung lautet, eine RestAPI auf Basis der DIN EN 18222 zu entwickeln und in das BaSyx Framework zu implementieren. 
+
 ### 1.1 Zweck
 Dieses Dokument spezifiziert die funktionalen und nicht-funktionalen Anforderungen, die durch die Aufgabenstellung und die DIN EN 18222 vorgegeben werden und den Rahmen dieser Rest-API innerhalb der BaSyx Struktur bilden. Ziel ist eine konforme, testbare und hostbare Implementierung eines Backends und Frontends, samt OpenAPI-Spezifikation, Demoinstanz und Dokumentation.
 Die primärem Ziele lassen sich wie folgt definieren:
@@ -72,22 +119,24 @@ graph LR
 ### 1.3 Referenzen
 Dieses Kapitel enthält Referenzen auf Dokumentationen, Quellen und Dateien, die zum Verständnis dieses SRS Dokument benötigt werden.
 
-|NR.|Referenz|Titel/Beschreibung|Version|
-|---|---|---|---|
-|1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|
-|2|IDTA-02035-1|Digital Battery Passport - Part 3|2025|
-|3||||
-|4||||
-|2||||
-|2||||
-|2||||
-|2||||
-|2||||
+|NR.|Referenz|Titel|Version|Beschreibung|
+|---|---|---|---|---|
+|1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|Dokument, dass die Anforderungen an eine API für den Digitalen Produktpass enthält.|
+|2|IDTA-02035-1|Digital Battery Passport - Part 1|2025|Enthält Informationen über den Tab Digital Nameplate, der innerhalb des Projekts umgesetzt wird.|
+|3|IDTA-02035-5|Digital Battery Passport - Part 5|2025|Enthält Informationen über den Tab Product Condition, der innerhalb des Projekts umgesetzt wird.|
+|4|IDTA-02035-2|Digital Battery Passport - Part 2|2025|Enthält Informationen über den Tab Documentation, der innerhalb des Projekts umgesetzt wird.|
+|5|IDTA-02035-3|Digital Battery Passport - Part 3|2025|Enthält Informationen über den Tab Carbon Footprint, der innerhalb des Projekts umgesetzt wird.|
+|6|IDTA-02035-4|Digital Battery Passport - Part 4|2025|Enthält Informationen über den Tab Technical Data, der innerhalb des Projekts umgesetzt wird.|
+|7|IDTA-02035-6|Digital Battery Passport - Part 6|2025|Enthält Informationen über den Tab Material Composition, der innerhalb des Projekts umgesetzt wird.|
+|8|IDTA-02035-7|Digital Battery Passport - Part 7|2025|Enthält Informationen über den Tab Circularity, der innerhalb des Projekts umgesetzt wird.|
+|9|DPP-Lösung Harting|https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ|-|Dient als Orientierung und Vorlage für eine schöne, bereits bestehende DPP Lösung.|
+|10|CRS|Customer Requirement Specification|2025|Wurde innerhalb dieses Projekts erstellt und dient als Grundlage fur vielerlei Themen innerhalb dieses Dokuments.|
 
 ## 2. Anwendungsfälle
-Use Cases for this Software can be found in our Customer Requirement Specification (CRS).
+Die Anwendungsfälle für diese Software können innerhalb des CRS (Kapitel XX) gefunden werden.
 
 ## 3. Funktionale Anforderungen (FR)
+Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt definiert. Diese unterteilen sich in Anforderungen an das Backend (Daten und API) und Anforderungen an das Frontend.
 ### 3.1 Daten und API-Anforderungen
 |ID|Name|Beschreibung|Priorität|Akzeptanzkriterium|
 |---|---|---|---|---|
@@ -129,13 +178,13 @@ Use Cases for this Software can be found in our Customer Requirement Specificati
 
 ## 7. Datenmodell und Semantik
 Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die grob folgenden Aufbau haben:
-1. Digital Nameplate (IDTA-02035-1):
-2. Handcover Documentation (IDTA-02035-2):
-3. Product Carbon Footprint (IDTA-02035-3):
-4. Technical Data (IDTA-02035-4):
-5. Product Condition (IDTA-02035-5):
-6. Material Composition (IDTA-02035-6):
-7. Circularity (IDTA-02035-7):
+1. **Digital Nameplate (IDTA-02035-1):** Beinhaltet Informations und Stammdaten.
+2. **Handcover Documentation (IDTA-02035-2):** Beinhaltet Dokumente und Nachweise.
+3. **Product Carbon Footprint (IDTA-02035-3):** Beinhaltet Informationen über die CO2 Emission.
+4. **Technical Data (IDTA-02035-4):** Beinhaltet technische Parameter.
+5. **Product Condition (IDTA-02035-5):** Beinhaltet Informationen über den Zustand des Produkts.
+6. **Material Composition (IDTA-02035-6):** Beinhaltet Informationen über die Zusammensetung des Produkts.
+7. **Circularity (IDTA-02035-7):** Beinhaltet Informationen zur Wiederverwendbarkeit und Nachhaltigkeit.
 
 ## 8. Usability Konzept & Workflows
 Das Usability-Konzept muss auf der Analyse des BaSyx-UI's basieren.
