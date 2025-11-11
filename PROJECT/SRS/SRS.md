@@ -66,7 +66,7 @@
 
 ---
 
-## 1. Zweck, Geltungsbereich und Referenzen
+## 1. Zweck, Geltungsbereich und Datenmodell & Semantik
 Dieses SRS Dokument wurde im Rahmen der Vorlesung "Software-Engineering" erstellt. Die Aufgabenstellung lautet, eine RestAPI auf Basis der DIN EN 18222 zu entwickeln und in das BaSyx Framework zu implementieren. 
 
 ### 1.1 Zweck
@@ -116,41 +116,201 @@ graph LR
 ```
 <p align="center"> <i>Abbildung 1: Visuelle Übersicht des Projekts</i> </p>
 
+### 1.3 Datenmodell und Semantik
+Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die grob folgenden Aufbau haben:
+1. **Digital Nameplate (IDTA-02035-1):** Beinhaltet Informations und Stammdaten.
+2. **Handcover Documentation (IDTA-02035-2):** Beinhaltet Dokumente und Nachweise.
+3. **Product Carbon Footprint (IDTA-02035-3):** Beinhaltet Informationen über die CO2 Emission.
+4. **Technical Data (IDTA-02035-4):** Beinhaltet technische Parameter.
+5. **Product Condition (IDTA-02035-5):** Beinhaltet Informationen über den Zustand des Produkts.
+6. **Material Composition (IDTA-02035-6):** Beinhaltet Informationen über die Zusammensetung des Produkts.
+7. **Circularity (IDTA-02035-7):** Beinhaltet Informationen zur Wiederverwendbarkeit und Nachhaltigkeit.
+
 ## 2. Anwendungsfälle
 Die Anwendungsfälle für diese Software können innerhalb des CRS (Kapitel XX) gefunden werden.
 
 ## 3. Funktionale Anforderungen (FR)
 Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt definiert. Diese unterteilen sich in Anforderungen an das Backend (Daten und API) und Anforderungen an das Frontend.
 ### 3.1 Daten und API-Anforderungen
-|ID|Name|Beschreibung|Priorität|Akzeptanzkriterium|
-|---|---|---|---|---|
-|FR-01|Erstellung eines DPP|Das Backend muss in der Lage sein, einen neuen Digitalen Produktpass (DPP) entgegenzunehmen, die Gültigkeit der Datenstruktur zu prüfen und diesen innerhalb der Verwaltungsschale (AAS) im BaSyx-System zu speichern.|5 - Sehr hoch|Ein neuer DPP findet sich innerhalb der AAS Shell.|
-|FR-02|Abrufen eines DPP per ID|Das Backend muss in der Lage sein, einen DPP anhand seiner eindeutigen dppId aus dem BaSyx-Speicher abzurufen und die vollständigen Daten im definierten Format zurückzugeben.|5 - Sehr hoch|Die Daten des DPP mit der ID liegen vollständig vor.|
-|FR-03|Updaten eines DPP per ID|Das Backend muss in der Lage sein, Aktualisierungen für einen bestehenden DPP entgegenzunehmen, die Datenintegrität zu gewährleisten und die entsprechende AAS teilweise zu aktualisieren.|5 - Sehr hoch|Die Daten werden aktualisiert in der Datenbank gespeichert.|
-|FR-04|Löschen eines DPP per ID|Das Backend muss in der Lage sein, einen DPP (Seine Submodells) anhand seiner dppId permanent aus dem BaSyx-System zu löschen.|5 - Sehr hoch|Der DPP ist nicht mehr auffindbar in der Datenbank und im BaSyx System.|
-|FR-05|Abrufen eines DPP per productID|Das Backend muss in der Lage sein, den aktuellen DPP anhand der productId abzurufen. Hierfür muss eine interne Zuordnung von productId zu dppId erfolgen.|5 - Sehr hoch|Die Daten eines DPP, der die angegebene productID besitzt, liegen vollständig vor.|
-|FR-06|Abrufen eines älteren DPP per Zeitstempel und productID|Das Backend muss in der Lage sein, die historische Version eines DPP abzurufen, die zum angegebenen productId und Datum/Zeitpunkt gültig war.|5 - Sehr hoch|Der DPP zu dem angegeben Zeitpunkt mit der ID liegt vollständig vor.|
-|FR-07|Abrufen mehrerer DPPS per productID Liste|Das Backend muss in der Lage sein, eine Liste von productIds entgegenzunehmen und eine entsprechende Liste der zugehörigen dppIds als Antwort zurückzugeben|5 - Sehr hoch|Eine Liste an DPPS mit den entsprechenden ID's liegt vollständig vor.|
-|FR-08|Registrierung eines DPP im AAS Registry|Das Backend muss in der Lage sein, die Registrierung eines neuen DPP im zentralen BaSyx-Register (AAS Registry) durchzuführen.|5 - Sehr hoch|Der DPP ist im AAS Registry auffindbar.|
-|FR-09|Abrufen der DPP Daten eines bestimmten Submodels per dppID und elementID|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung (Submodell-Element) eines DPP anhand der dppId und der elementId auszulesen und diese Daten zurückzugeben.|5 - Sehr hoch|Die Daten wurden entsprechend angepasst innerhalb des Submodels.|
-|FR-10|Updaten der DPP Daten eines bestimmten Submodels per ID und elementID|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung in einem DPP zu aktualisieren|5 - Sehr hoch|Die Sammlung an Daten wurde erfolgreich innerhalb des Submodels angepasst.|
-|FR-11|Abrufen eines Elements aus dem DPP per ID und elementPath|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP anhand eines spezifischen elementPath auszulesen.|5 - Sehr hoch|Das abgefragte Element liegt korrekt vor.|
-|FR-12|Updaten eines Elements aus dem DPP per ID und elementPath|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP zu aktualisieren.|5 - Sehr hoch|Das einzelne Element wurde alleine innerhalb des DPP geupdated|
+
+### FR-BE-01
+|ID|FR-BE-01|
+|---|---|
+|Name|Erstellung eines DPP|
+|Beschreibung|Das Backend muss in der Lage sein, einen neuen Digitalen Produktpass (DPP) entgegenzunehmen, die Gültigkeit der Datenstruktur zu prüfen und diesen innerhalb der Verwaltungsschale (AAS) im BaSyx-System zu speichern.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Ein neuer DPP findet sich innerhalb der AAS Shell.|
+
+### FR-BE-02
+|ID|FR-BE-02|
+|---|---|
+|Name|Abrufen eines DPP per ID|
+|Beschreibung|Das Backend muss in der Lage sein, einen DPP anhand seiner eindeutigen dppId aus dem BaSyx-Speicher abzurufen und die vollständigen Daten im definierten Format zurückzugeben.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die Daten des DPP mit der ID liegen vollständig vor.|
+
+### FR-BE-03
+|ID|FR-BE-03|
+|---|---|
+|Name|Updaten eines DPP per ID|
+|Beschreibung|Das Backend muss in der Lage sein, Aktualisierungen für einen bestehenden DPP entgegenzunehmen, die Datenintegrität zu gewährleisten und die entsprechende AAS teilweise zu aktualisieren.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die Daten werden aktualisiert in der Datenbank gespeichert.|
+
+### FR-BE-04
+|ID|FR-BE-04|
+|---|---|
+|Name|Löschen eines DPP per ID|
+|Beschreibung|Das Backend muss in der Lage sein, einen DPP (Seine Submodells) anhand seiner dppId permanent aus dem BaSyx-System zu löschen.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Der DPP ist nicht mehr auffindbar in der Datenbank und im BaSyx System.|
+
+### FR-BE-05
+|ID|FR-BE-05|
+|---|---|
+|Name|Abrufen eines DPP per productID|
+|Beschreibung|Das Backend muss in der Lage sein, den aktuellen DPP anhand der productId abzurufen. Hierfür muss eine interne Zuordnung von productId zu dppId erfolgen.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die Daten eines DPP, der die angegebene productID besitzt, liegen vollständig vor.|
+
+### FR-BE-06
+|ID|FR-BE-06|
+|---|---|
+|Name|Abrufen eines älteren DPP per Zeitstempel und productID|
+|Beschreibung|Das Backend muss in der Lage sein, die historische Version eines DPP abzurufen, die zum angegebenen productId und Datum/Zeitpunkt gültig war.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Der DPP zu dem angegeben Zeitpunkt mit der ID liegt vollständig vor.|
+
+### FR-BE-07
+|ID|FR-BE-07|
+|---|---|
+|Name|Abrufen mehrerer DPPS per productID Liste|
+|Beschreibung|Das Backend muss in der Lage sein, eine Liste von productIds entgegenzunehmen und eine entsprechende Liste der zugehörigen dppIds als Antwort zurückzugeben|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Eine Liste an DPPS mit den entsprechenden ID's liegt vollständig vor.|
+
+### FR-BE-08
+|ID|FR-BE-08|
+|---|---|
+|Name|Registrierung eines DPP im AAS Registry|
+|Beschreibung|Das Backend muss in der Lage sein, die Registrierung eines neuen DPP im zentralen BaSyx-Register (AAS Registry) durchzuführen.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Der DPP ist im AAS Registry auffindbar.|
+
+### FR-BE-09
+|ID|FR-BE-09|
+|---|---|
+|Name|Abrufen der DPP Daten eines bestimmten Submodels per dppID und elementID|
+|Beschreibung|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung (Submodell-Element) eines DPP anhand der dppId und der elementId auszulesen und diese Daten zurückzugeben.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die Daten wurden entsprechend angepasst innerhalb des Submodels.|
+
+### FR-BE-10
+|ID|FR-BE-10|
+|---|---|
+|Name|Updaten der DPP Daten eines bestimmten Submodels per ID und elementID|
+|Beschreibung|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung in einem DPP zu aktualisieren|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die Sammlung an Daten wurde erfolgreich innerhalb des Submodels angepasst.|
+
+### FR-BE-11
+|ID|FR-BE-11|
+|---|---|
+|Name|Abrufen eines Elements aus dem DPP per ID und elementPath|
+|Beschreibung|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP anhand eines spezifischen elementPath auszulesen.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Das abgefragte Element liegt korrekt vor.|
+
+### FR-BE-12
+|ID|FR-BE-12|
+|---|---|
+|Name|Updaten eines Elements aus dem DPP per ID und elementPath|
+|Beschreibung|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP zu aktualisieren.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Das einzelne Element wurde alleine innerhalb des DPP geupdated|
+
 
 ### 3.2 Frontend-Anforderungen
-|ID|Anforderung|Priorität|Kriterium|
-|---|---|---|---|
-|FR-13|Laden eines digitalen Produktpasses (DPP)|5 - Sehr hoch|Das System muss in der Lage sein, einen DPP anhand einer übermittelten AAS ID oder DPP-URL zu laden und die darin enthaltenen Submodelle anzuzeigen.|
-|FR-14|Navigation innerhalb des DPP|4 - Hoch|Das System muss die verfügbaren Submodelle, die zum DPP gehören in einer Seitenleiste anzeigen.|
-|FR-15|Klickbare Navigation|4 - Hoch|Durch das Klicken der Seitenleisten-Navigation müssen alle Informationen des Submodells angezeigt werden.|
-|FR-16|Highlighting des Submodells|3 - Mittel|Die Kategorie, in welcher sich der Nutzer befindet, muss hervorgehoben sein.|
-|FR-17|Hamburger Menu oberhalb des Viewers|4 - Hoch|Oberhalb des Viewers muss das Menü verfügbar sein, dass einen Wechsel zwischen DPP Viewer, AAS Viewer und Submodel Viewer möglich macht.|
-|FR-18|Informationen zum Produkt|3 - Mittel|Die productID und der Name des Produkts müssen im Head Bereich des Viewers stehen.|
-|FR-19|Anzeige der einzelnen Kategorien|5 - Sehr hoch|Das System muss eine übersichtliche, zweispaltige Darstellung der Informationen innerhalb des einzelen Modelle bieten.|
-|FR-20|Fehlende Daten|5 - Sehr hoch|Für fehlende Daten muss das System den Header "Daten nicht verfügbar" anzeigen.|
-|FR-21|Tooltipps für Daten|3 - Mittel|Das System muss Tooltips neben den einzelnen Daten anbieten, die Informationen aus der DIN EN 18222 und den IDTA Files zur Verfügung stellen.|
-|FR-22|Responsives Design|3 - Mittel|Das System sollte auf allen gängigen Desktop und Mobilgeräten dargestellt werden können.|
 
+### FR-FE-01
+|ID|FR-FE-01|
+|---|---|
+|Name|Laden eines digitalen Produktpasses (DPP)|
+|Beschreibung|Das System muss in der Lage sein, einen DPP anhand einer übermittelten AAS ID oder DPP-URL zu laden und die darin enthaltenen Submodelle anzuzeigen.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Durch Eingabe einer DPP ID bekommt man das vollständige DPP angezeigt.|
+
+### FR-FE-02
+|ID|FR-FE-02|
+|---|---|
+|Name|Navigation innerhalb des DPP|
+|Beschreibung|Das System muss die verfügbaren Submodelle, die zum DPP gehören in einer Seitenleiste anzeigen.|
+|Priorität|4 - Hoch|
+|Akzeptanzkriterium|Eine Seitenleiste mit den DPP relevanten Submodellen existiert.|
+
+### FR-FE-03
+|ID|FR-FE-03|
+|---|---|
+|Name|Klickbare Navigation|
+|Beschreibung|Durch das Klicken der Seitenleisten-Navigation müssen alle Informationen des Submodells angezeigt werden.|
+|Priorität|4 - Hoch|
+|Akzeptanzkriterium|Die Seitenleistenmodule sind klickbar und öffnen Informationen|
+
+### FR-FE-04
+|ID|FR-FE-04|
+|---|---|
+|Name|Highlighting des Submodells|
+|Beschreibung|Die Kategorie, in welcher sich der Nutzer befindet, muss hervorgehoben sein.|
+|Priorität|3 - Mittel|
+|Akzeptanzkriterium|Ein Highlighting der aktuellen Kategorie existiert|
+
+### FR-FE-05
+|ID|FR-FE-05|
+|---|---|
+|Name|Menu oberhalb des Viewers|
+|Beschreibung|Oberhalb des Viewers muss das Menü verfügbar sein, dass einen Wechsel zwischen DPP Viewer, AAS Viewer und Submodel Viewer möglich macht.|
+|Priorität|4 - Hoch|
+|Akzeptanzkriterium|Ein Menü mit Wechsel in die anderen Modi muss Verfügbar sein.|
+
+### FR-FE-06
+|ID|FR-FE-06|
+|---|---|
+|Name|Informationen zum Produkt|
+|Beschreibung|Die productID, DPP Version und der Name des Produkts müssen im Head Bereich des Viewers stehen.|
+|Priorität|3 - Mittel|
+|Akzeptanzkriterium|Die Informationen sind auffindbar.|
+
+### FR-FE-07
+|ID|FR-FE-07|
+|---|---|
+|Name|Anzeige der einzelnen Kategorien|
+|Beschreibung|Das System muss eine übersichtliche, zweispaltige Darstellung der Informationen innerhalb des einzelen Modelle bieten.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die Informationen sind im Viewer übersichtlich verfügbar.|
+
+### FR-FE-08
+|ID|FR-FE-08|
+|---|---|
+|Name|Fehlende Daten|
+|Beschreibung|Für fehlende Daten muss das System eine Information anzeigen.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Nicht verfügbare Daten werden markiert/angezeigt.|
+
+### FR-FE-09
+|ID|FR-FE-09|
+|---|---|
+|Name|Tooltipps für Daten|
+|Beschreibung|Das System muss Tooltips neben den einzelnen Daten anbieten, die Informationen aus der DIN EN 18222 und den IDTA Files zur Verfügung stellen.|
+|Priorität|3 - Mittel|
+|Akzeptanzkriterium|Tooltips sind auffindbars|
+
+### FR-FE-10
+|ID|FR-FE-10|
+|---|---|
+|Name|Responsives Design|
+|Beschreibung|Das System sollte auf allen gängigen Desktop und Mobilgeräten dargestellt werden können.|
+|Priorität|3 - Mittel|
+|Akzeptanzkriterium|Ein Mobilgerät hat eine Ansicht, eben wie ein Desktop|
 
 ## 4. Nicht-funktionale Anforderungen (NFR)
 |ID|Anforderung|Priorität|Kriterium|
@@ -161,16 +321,6 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |NFR-04|Unterstützung BaSyx V2 und AAS V3 (insbesondere UI‑Kompatibilität und API‑Profile).|4 - Mittel|DPP-Daten, die AAS V2 oder V3 entsprechen, werden vom Viewer korrekt verarbeitet.|
 |NFR-05|Das Projekt wird auf einem Public Server gehostet und ist darüber abrufbar und nutzbar.|4 - Sehr hoch|Das Projekt ist abrufbar über das Web.|
 
-## 7. Datenmodell und Semantik
-Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die grob folgenden Aufbau haben:
-1. **Digital Nameplate (IDTA-02035-1):** Beinhaltet Informations und Stammdaten.
-2. **Handcover Documentation (IDTA-02035-2):** Beinhaltet Dokumente und Nachweise.
-3. **Product Carbon Footprint (IDTA-02035-3):** Beinhaltet Informationen über die CO2 Emission.
-4. **Technical Data (IDTA-02035-4):** Beinhaltet technische Parameter.
-5. **Product Condition (IDTA-02035-5):** Beinhaltet Informationen über den Zustand des Produkts.
-6. **Material Composition (IDTA-02035-6):** Beinhaltet Informationen über die Zusammensetung des Produkts.
-7. **Circularity (IDTA-02035-7):** Beinhaltet Informationen zur Wiederverwendbarkeit und Nachhaltigkeit.
-
 ## 8. Usability Konzept & Workflows
 Das Usability-Konzept muss auf der Analyse des BaSyx-UI's basieren.
 |Anforderung|Ziel|
@@ -179,17 +329,6 @@ Das Usability-Konzept muss auf der Analyse des BaSyx-UI's basieren.
 |Kern-Workflows|1. Produkt finden -> 2. AAS auswählen -> 3. DPP-Ansicht|
 |Routing|Unterstützung von Teilen/Verlinken via Routing‑Deep‑Link.|
 |Previews|Implementierung der Vorschau und des Downloads eingebetteter Dateien|
-
-Grafisch modelliert könnte der Kern-Workflow wie folgt aussehen:
-```mermaid
-flowchart LR
-  Search[Suche] --> Results[Ergebnisliste]
-  Results --> Detail[DPP‑Detailansicht<br/>/dpp/:aasId]
-  Detail --> Tabs[Tabs: Nameplate  TechData  PCF]
-  Tabs --> Preview[Preview/Download eingebetteter Dateien]
-  Detail --> Share[Teilen/Deep‑Link]
-```
-<p align="center"> <i>Abbildung 4: Workflow für das Suchen eines DPP</i> </p>
 
 ## 9. Qualitätssicherung & Tests
 Die Qualitätssicherung für dieses Produkt muss mindestens folgendes umfassen:
@@ -224,5 +363,6 @@ Contract[Contract‑Tests DIN EN 18222]
 |6|IDTA-02035-4|Digital Battery Passport - Part 4|2025|Enthält Informationen über den Tab Technical Data, der innerhalb des Projekts umgesetzt wird.|
 |7|IDTA-02035-6|Digital Battery Passport - Part 6|2025|Enthält Informationen über den Tab Material Composition, der innerhalb des Projekts umgesetzt wird.|
 |8|IDTA-02035-7|Digital Battery Passport - Part 7|2025|Enthält Informationen über den Tab Circularity, der innerhalb des Projekts umgesetzt wird.|
-|9|DPP-Lösung Harting|https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ|-|Dient als Orientierung und Vorlage für eine schöne, bereits bestehende DPP Lösung.|
-|10|CRS|Customer Requirement Specification|2025|Wurde innerhalb dieses Projekts erstellt und dient als Grundlage fur vielerlei Themen innerhalb dieses Dokuments.|
+|9|Harting|<a href="https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ">DPP Lösung Harting<a/>|-|Dient als Orientierung und Vorlage für eine schöne, bereits bestehende DPP Lösung.|
+|10|CRS|<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/CRS">Customer Requirement Specification</a>|2025|Wurde innerhalb dieses Projekts erstellt und dient als Grundlage fur vielerlei Themen innerhalb dieses Dokuments.|
+|11|Aufgabenstellung|<a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">Team 6: BaSyx API Aufgabenstellung</a>|2025|Dient als Grundlage für dieses Projekt|
