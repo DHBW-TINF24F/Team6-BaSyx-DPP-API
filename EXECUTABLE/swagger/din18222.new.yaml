@@ -77,8 +77,8 @@ components:
       example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ=="
     IdentifierDPP:
       type: string
-      description: "productId + /DPP/ --> base64-encodiert"
-      example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAv"
+      description: "productId + /DPP/ + timestamp --> base64-encodiert"
+      example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA=="
   
     # DPP Schemas
     DPPRequestScheme:
@@ -97,17 +97,6 @@ components:
       properties:
         dppId:
           $ref: "#/components/schemas/IdentifierDPP"
-        versions:
-          type: array
-          items:
-            $ref: "#/components/schemas/DPPVersionScheme"      
-    DPPVersionScheme:
-      type: object
-      description: "Repräsentiert eine Version des Digitalen Produktpasses."
-      properties:
-        version:
-          type: string
-          example: "DPP_v20251108-143000"
         timestamp:
           type: string
           format: date-time
@@ -116,6 +105,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/DPPSubmodelElement"
+        
     DPPSubmodelElement:
       type: object
       properties:
