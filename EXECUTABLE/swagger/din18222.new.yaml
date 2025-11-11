@@ -137,6 +137,36 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /dppsByProductIdAndDate/{productId}:
+    get:
+      tags:
+        - "DPP Life Cycle API"
+      summary: "DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate)"
+      description: "Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Datum."
+      operationId: "readDPPVersionByProductIdAndDate"
+      parameters:
+        - $ref: "#/components/parameters/productId"
+        - name: date
+          in: query
+          required: true
+          description: "Der Zeitstempel (UTC-basiert), für den die DPP-Version angefordert wird."
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: "Erfolgreiche Antwort mit der angeforderten DPP-Version."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DPPScheme"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
 components:
   schemas:
     # Identifier
