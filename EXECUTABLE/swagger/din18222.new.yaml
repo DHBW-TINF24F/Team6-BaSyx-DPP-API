@@ -74,11 +74,11 @@ paths:
         - $ref: "#/components/parameters/dppId"
       requestBody:
         required: true
-        description: "Ein partielles DPP-Objekt, das die zu aktualisierenden Felder enthält. Implementierungen können RFC 7396 (JSON Merge Patch) berücksichtigen."
+        description: "Ein partielles DPP-Objekt, das die zu aktualisierenden Submodels enthält. Implementierungen können RFC 7396 (JSON Merge Patch) berücksichtigen."
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DPPScheme"
+              $ref: "#/components/schemas/DPPPatchScheme"
       responses:
         "200":
           description: "DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück."
@@ -137,12 +137,26 @@ components:
       type: object
       description: "Repräsentiert den Digitalen Produktpass. Die genaue logische Struktur ist in 'Modul 4: Systeminteroperabilität' der Normungsreihe definiert und wird hier als generisches Objekt dargestellt."
       properties:
-        dppId:
-          $ref: "#/components/schemas/IdentifierDPP"
-        timestamp:
+        status:
           type: string
-          format: date-time
-          example: "2025-11-08T14:30:00Z"
+          example: "Success"
+        payload:
+          type: object
+          properties:
+            dppId:
+              $ref: "#/components/schemas/IdentifierDPP"
+            timestamp:
+              type: string
+              format: date-time
+              example: "2025-11-08T14:30:00Z"
+            submodels:
+              type: array
+              items:
+                $ref: "#/components/schemas/DPPSubmodelElement"
+    DPPPatchScheme:
+      type: object
+      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
+      properties:
         submodels:
           type: array
           items:
@@ -461,12 +475,13 @@ components:
             $ref: "#/components/schemas/SuccessResponse"
           example:
             status: "Success"
-            message:
-              messageType: "Info"
-              text: "Die Anfrage wurde erfolgreich verarbeitet."
-              code: "DPP_SUCCESS"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Info"
+                text: "Die Anfrage wurde erfolgreich verarbeitet."
+                code: "DPP_SUCCESS"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     SuccessCreated:
       description: "Erfolgreiche Erstellung einer neuen Ressource"
@@ -477,12 +492,13 @@ components:
           example:
             status: "SuccessCreated"
             dppId: "dpp-12345-abcde"
-            message:
-              messageType: "Info"
-              text: "Der Digitale Produktpass wurde erfolgreich erstellt."
-              code: "DPP_CREATED"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Info"
+                text: "Der Digitale Produktpass wurde erfolgreich erstellt."
+                code: "DPP_CREATED"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     SuccessAccepted:
       description: "Der Empfang der Anforderung war erfolgreich"
@@ -492,13 +508,14 @@ components:
             $ref: "#/components/schemas/SuccessResponse"
           example:
             status: "SuccessAccepted"
-            message:
-              messageType: "Info"
-              text: "Die Anfrage wurde akzeptiert und wird verarbeitet."
-              code: "DPP_ACCEPTED"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
-    
+            result:
+              message:
+                messageType: "Info"
+                text: "Die Anfrage wurde akzeptiert und wird verarbeitet."
+                code: "DPP_ACCEPTED"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
+      
     SuccessNoContent:
       description: "Erfolg mit explizit keinem Inhalt in der Nutzlast"
       content:
@@ -507,13 +524,14 @@ components:
             $ref: "#/components/schemas/SuccessResponse"
           example:
             status: "SuccessNoContent"
-            message:
-              messageType: "Info"
-              text: "Die Anfrage wurde erfolgreich verarbeitet, kein Inhalt zurückgegeben."
-              code: "DPP_NO_CONTENT"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
-    
+            result:
+              message:
+                messageType: "Info"
+                text: "Die Anfrage wurde erfolgreich verarbeitet, kein Inhalt zurückgegeben."
+                code: "DPP_NO_CONTENT"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
+      
     # 4xx Client Error Responses (weist Ergebnisobjekt auf)
     BadRequest:
       description: "Schlechte oder fehlerhafte Anforderung"
@@ -523,12 +541,13 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ClientErrorBadRequest"
-            message:
-              messageType: "Error"
-              text: "Die Anfrage enthält ungültige Parameter."
-              code: "DPP_BAD_REQUEST"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Error"
+                text: "Die Anfrage enthält ungültige Parameter."
+                code: "DPP_BAD_REQUEST"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     Unauthorized:
       description: "Falsche oder fehlende Berechtigungsnachweise"
@@ -538,12 +557,13 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ClientNotAuthorized"
-            message:
-              messageType: "Error"
-              text: "Authentifizierung fehlgeschlagen."
-              code: "DPP_UNAUTHORIZED"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Error"
+                text: "Authentifizierung fehlgeschlagen."
+                code: "DPP_UNAUTHORIZED"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     Forbidden:
       description: "Autorisierung wurde verweigert"
@@ -553,12 +573,13 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ClientForbidden"
-            message:
-              messageType: "Error"
-              text: "Sie haben keine Berechtigung für diese Ressource."
-              code: "DPP_FORBIDDEN"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Error"
+                text: "Sie haben keine Berechtigung für diese Ressource."
+                code: "DPP_FORBIDDEN"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     MethodNotAllowed:
       description: "Methodenanforderung ist nicht zulässig"
@@ -568,12 +589,13 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ClientMethodNotAllowed"
-            message:
-              messageType: "Error"
-              text: "Diese HTTP-Methode ist nicht erlaubt."
-              code: "DPP_METHOD_NOT_ALLOWED"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Error"
+                text: "Diese HTTP-Methode ist nicht erlaubt."
+                code: "DPP_METHOD_NOT_ALLOWED"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     NotFound:
       description: "Ressource nicht gefunden"
@@ -583,12 +605,13 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ClientErrorResourceNotFound"
-            message:
-              messageType: "Error"
-              text: "Die angeforderte Ressource existiert nicht."
-              code: "DPP_NOT_FOUND"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Error"
+                text: "Die angeforderte Ressource existiert nicht."
+                code: "DPP_NOT_FOUND"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     Conflict:
       description: "Einen Konflikt verursachende Ressource (Ressource existiert bereits)"
@@ -598,12 +621,13 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ClientResourceConflict"
-            message:
-              messageType: "Error"
-              text: "Die Ressource existiert bereits."
-              code: "DPP_CONFLICT"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
+            result:
+              message:
+                messageType: "Error"
+                text: "Die Ressource existiert bereits."
+                code: "DPP_CONFLICT"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
     
     # 5xx Server Error Responses (weist Ergebnisobjekt auf)
     InternalServerError:
@@ -614,13 +638,14 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ServerInternalError"
-            message:
-              messageType: "Exception"
-              text: "Ein interner Serverfehler ist aufgetreten."
-              code: "DPP_INTERNAL_ERROR"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
-    
+            result:
+              message:
+                messageType: "Exception"
+                text: "Ein interner Serverfehler ist aufgetreten."
+                code: "DPP_INTERNAL_ERROR"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
+      
     BadGateway:
       description: "Schlechter Gateway"
       content:
@@ -629,13 +654,14 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
           example:
             status: "ServerErrorBadGateway"
-            message:
-              messageType: "Exception"
-              text: "Der Upstream-Server hat eine ungültige Antwort gesendet."
-              code: "DPP_BAD_GATEWAY"
-              correlationId: "550e8400-e29b-41d4-a716-446655440000"
-              timestamp: "2025-11-10T14:30:00Z"
-            
+            result:
+              message:
+                messageType: "Exception"
+                text: "Der Upstream-Server hat eine ungültige Antwort gesendet."
+                code: "DPP_BAD_GATEWAY"
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+                timestamp: "2025-11-10T14:30:00Z"
+              
             
             
             
