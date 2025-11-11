@@ -50,19 +50,18 @@
 ---
 
 ### Inhaltsverzeichnis
-1. XX
-    1. XX
-    2. XX
-    3. XX
-2. XX
-    1. XX
-    2. XX
-    3. XX
-3. XX 
-    1. XX
-    2. XX
-    3. XX
-4. XX
+1. [Zweck, Geltungsbereich und Datenmodell & Semantik](#1-zweck-geltungsbereich-und-datenmodell--semantik)
+    1. [Zweck](#11-zweck)
+    2. [Geltungsbereich](#12-geltungsbereich)
+    3. [Datenmodell und Semantik](#13-datenmodell-und-semantik)
+2. [Anwendungsfälle](#2-anwendungsfälle)
+3. [Funktionale Anforderungen (FR)](#3-funktionale-anforderungen-fr)
+    1. [Daten und API-Anforderungen](#31-daten-und-api-anforderungen)
+    2. [Frontend-Anforderungen](#32-frontend-anforderungen)
+4. [Nicht-funktionale Anforderungen (NFR)](#4-nicht-funktionale-anforderungen-nfr)
+5. [Usability Konzept & Workflows](#5-usability-konzept--workflows)
+6. [Qualitätssicherung & Tests](#6-qualitätssicherung--tests)
+7. [Quellen & Referenzen](#7-quellen--referenzen)
 
 ---
 
@@ -248,6 +247,8 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Eine Seitenleiste mit den DPP relevanten Submodellen existiert.|
 
+<img src="./screenshots/FR-FE-02.png" style="height: 300px; width: 500px">
+
 ### FR-FE-03
 |ID|FR-FE-03|
 |---|---|
@@ -264,6 +265,8 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|3 - Mittel|
 |Akzeptanzkriterium|Ein Highlighting der aktuellen Kategorie existiert|
 
+<img src="./screenshots/FR-FE-04.png" style="height: 300px; width: 500px">
+
 ### FR-FE-05
 |ID|FR-FE-05|
 |---|---|
@@ -271,6 +274,8 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Beschreibung|Oberhalb des Viewers muss das Menü verfügbar sein, dass einen Wechsel zwischen DPP Viewer, AAS Viewer und Submodel Viewer möglich macht.|
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Ein Menü mit Wechsel in die anderen Modi muss Verfügbar sein.|
+
+<img src="./screenshots/FR-FE-05.png" style="height: 300px; width: 500px">
 
 ### FR-FE-06
 |ID|FR-FE-06|
@@ -280,6 +285,8 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|3 - Mittel|
 |Akzeptanzkriterium|Die Informationen sind auffindbar.|
 
+<img src="./screenshots/FR-FE-06.png" style="height: 300px; width: 500px">
+
 ### FR-FE-07
 |ID|FR-FE-07|
 |---|---|
@@ -287,6 +294,8 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Beschreibung|Das System muss eine übersichtliche, zweispaltige Darstellung der Informationen innerhalb des einzelen Modelle bieten.|
 |Priorität|5 - Sehr hoch|
 |Akzeptanzkriterium|Die Informationen sind im Viewer übersichtlich verfügbar.|
+
+<img src="./screenshots/FR-FE-07.png" style="height: 300px; width: 500px">
 
 ### FR-FE-08
 |ID|FR-FE-08|
@@ -304,6 +313,8 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|3 - Mittel|
 |Akzeptanzkriterium|Tooltips sind auffindbars|
 
+<img src="./screenshots/FR-FE-09.png" style="height: 300px; width: 500px">
+
 ### FR-FE-10
 |ID|FR-FE-10|
 |---|---|
@@ -313,15 +324,32 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Akzeptanzkriterium|Ein Mobilgerät hat eine Ansicht, eben wie ein Desktop|
 
 ## 4. Nicht-funktionale Anforderungen (NFR)
-|ID|Anforderung|Priorität|Kriterium|
-|---|---|---|---|
-|NFR-01|p95 Lesezugriffe < 300 ms bei 100 gleichzeitigen Requests.|4 - Mittel|Lasttestprotokoll weist eine Latenz unter 300 ms für 95% der Abfragen nach.|
-|NFR-02|Suche p95 < 800 ms bei Index‑Treffer ≤ 10 k.|3 - Niedrig|Messung der Suchlatenz im Demo-Betrieb.|
-|NFR-03|Containerisierte Bereitstellung via Docker Compose ist zwingend notwendig.|5 - Sehr hoch|Das gesamte Projekt ist über einen einzelnen Docker Befehl deploybar|
-|NFR-04|Unterstützung BaSyx V2 und AAS V3 (insbesondere UI‑Kompatibilität und API‑Profile).|4 - Mittel|DPP-Daten, die AAS V2 oder V3 entsprechen, werden vom Viewer korrekt verarbeitet.|
-|NFR-05|Das Projekt wird auf einem Public Server gehostet und ist darüber abrufbar und nutzbar.|4 - Sehr hoch|Das Projekt ist abrufbar über das Web.|
 
-## 8. Usability Konzept & Workflows
+### NFR-01
+|ID|NFR-01|
+|---|---|
+|Name|OpenAPI-Konformität|
+|Beschreibung|Der Backend-Code und die Laufzeitumgebung müssen der OpenAPI-Spezifikation folgen, die aus der DIN EN 18222 abgeleitet wurde.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Die DIN EN 18222 ist auf das gesamte Projekt anwendbar|
+
+### NFR-02
+|ID|NFR-02|
+|---|---|
+|Name|BaSyx-Konformität|
+|Beschreibung|Die Implementierung muss die von BaSyx bereitgestellten APIs und Konnektoren für die Interaktion mit der Asset Administration Shell (AAS) verwenden|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Es werden nur API Calls aus dem AAS Enviroment verwendet.|
+
+### NFR-03
+|ID|NFR-03|
+|---|---|
+|Name|Automatisierte Tests|
+|Beschreibung|Die Implementierung des DPP muss durch geeignete Unit-Tests und Integrationstests automatisiert getestet werden.|
+|Priorität|4 - Hoch|
+|Akzeptanzkriterium|Es gibt Unit-Tests und Integrationstests.|
+
+## 5. Usability Konzept & Workflows
 Das Usability-Konzept muss auf der Analyse des BaSyx-UI's basieren.
 |Anforderung|Ziel|
 |---|---|
@@ -330,7 +358,7 @@ Das Usability-Konzept muss auf der Analyse des BaSyx-UI's basieren.
 |Routing|Unterstützung von Teilen/Verlinken via Routing‑Deep‑Link.|
 |Previews|Implementierung der Vorschau und des Downloads eingebetteter Dateien|
 
-## 9. Qualitätssicherung & Tests
+## 6. Qualitätssicherung & Tests
 Die Qualitätssicherung für dieses Produkt muss mindestens folgendes umfassen:
 |Art|Ziel|Methode|
 |---|---|---|
@@ -352,7 +380,7 @@ Contract[Contract‑Tests DIN EN 18222]
 ```
 <p align="center"> <i>Abbildung 5: Teststrategie</i> </p>
 
-## 10. Quellen & Referenzen
+## 7. Quellen & Referenzen
 |NR.|Referenz|Titel|Version|Beschreibung|
 |---|---|---|---|---|
 |1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|Dokument, dass die Anforderungen an eine API für den Digitalen Produktpass enthält.|
