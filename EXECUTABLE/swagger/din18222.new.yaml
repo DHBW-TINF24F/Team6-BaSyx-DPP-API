@@ -62,6 +62,10 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DPP"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
@@ -103,12 +107,35 @@ paths:
       responses:
         "204":
           description: "DPP erfolgreich gelöscht."
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
-
+  /dppsByProductId/{productId}:
+    get:
+      tags:
+        - "DPP Life Cycle API"
+      summary: "Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId)"
+      description: "Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte Produkt-Kennung zurück."
+      operationId: "readDPPByProductId"
+      parameters:
+        - $ref: "#/components/parameters/productId"
+      responses:
+        "200":
+          description: "Erfolgreiche Antwort mit dem angeforderten DPP."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DPPScheme"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
 components:
   schemas:
