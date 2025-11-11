@@ -64,6 +64,34 @@ paths:
           $ref: "#/components/responses/DPP"
         "404":
           $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - "DPP Life Cycle API"
+      summary: "DPP teilweise aktualisieren (UpdateDPPById)"
+      description: "Aktualisiert den Inhalt eines DPPs partiell (Patch). Der eingereichte DPP enthält nur die Daten, die aktualisiert oder hinzugefügt werden sollen. Die Aktualisierung ist atomar: Wenn ein Teil fehlschlägt, wird die gesamte Operation zurückgerollt."
+      operationId: "updateDPPById"
+      parameters:
+        - $ref: "#/components/parameters/dppId"
+      requestBody:
+        required: true
+        description: "Ein partielles DPP-Objekt, das die zu aktualisierenden Felder enthält. Implementierungen können RFC 7396 (JSON Merge Patch) berücksichtigen."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DPPScheme"
+      responses:
+        "200":
+          description: "DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DPPScheme"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
     
 
 
