@@ -92,7 +92,21 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-    
+    delete:
+      tags:
+        - "DPP Life Cycle API"
+      summary: "DPP löschen (DeleteDPPById)"
+      description: "Entfernt einen DPP anhand seiner ID, z.B. am Ende seines Lebenszyklus. Zugriffsregeln steuern, ob die Löschung erlaubt ist."
+      operationId: "deleteDPPById"
+      parameters:
+        - $ref: "#/components/parameters/dppId"
+      responses:
+        "204":
+          description: "DPP erfolgreich gelöscht."
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
 
 
