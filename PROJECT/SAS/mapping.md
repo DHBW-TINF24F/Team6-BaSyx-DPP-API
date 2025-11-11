@@ -119,6 +119,8 @@ sequenceDiagram
 
 ### `PATCH` /dpps/{dppId}
 
+> Zu klären: Soll hier der timestamp geändert werden?
+
 ```mermaid
 sequenceDiagram
   actor User
