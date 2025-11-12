@@ -167,6 +167,43 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /dppsByProductIds:
+    get:
+      tags:
+        - "DPP Life Cycle API"
+      summary: "DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)"
+      description: "Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen. Paginierung wird über 'limit' und 'cursor' unterstützt."
+      operationId: "readDPPIdsByProductIds"
+      parameters:
+        - name: productId
+          in: query
+          required: true
+          description: "Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen (UTF8-BASE64-URL-encoded). Mehrere IDs können durch wiederholte Verwendung dieses Parameters angegeben werden."
+          schema:
+            type: array
+            items:
+              type: string
+              example: "productId"
+        - name: limit
+          in: query
+          description: "Maximale Anzahl der zurückgegebenen Ergebnisse."
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: cursor
+          in: query
+          description: "Position, von der aus die Ergebnisliste fortgesetzt werden soll (für Paginierung)."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Eine Liste der passenden DPP-Kennungen."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductListScheme"
+
 components:
   schemas:
     # Identifier
@@ -327,7 +364,36 @@ components:
                     type: "ANNOTATED_RELATIONSHIP_ELEMENT"
                 referredSemanticId: "string"
             
-    
+    ProductListScheme:
+      type: object
+      description: "Repräsentiert eine Liste von Produkt-Kennungen."
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/DPPListScheme"
+
+    DPPListScheme:
+      type: object
+      description: "Repräsentiert eine Liste von DPP-Kennungen."
+      properties:
+        productId:
+          $ref: "#/components/schemas/IdentifierAAS"
+        dpps:
+          type: array
+          items:
+            $ref: "#/components/schemas/DPPListIdentiferScheme"
+
+    DPPListIdentiferScheme:
+      type: object
+      description: "Repräsentiert eine Liste von DPP-Kennungen."
+      properties:
+        dppId:
+          $ref: "#/components/schemas/IdentifierDPP"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-11-08T14:30:00Z"
 
         
     LangString:
