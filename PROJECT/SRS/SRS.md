@@ -169,7 +169,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Name|Abrufen eines DPP per productID|
 |Beschreibung|Das Backend muss in der Lage sein, den aktuellen DPP anhand der productId abzurufen. Hierfür muss eine interne Zuordnung von productId zu dppId erfolgen.|
 |Priorität|5 - Sehr hoch|
-|Akzeptanzkriterium|Die Daten der zu der angegebenen productId zugeordnete DPP liegt vollständig vor.|
+|Akzeptanzkriterium|Die Daten des zu der angegebenen productId zugeordnete DPP liegt vollständig vor.|
 
 ### FR-BE-06
 |ID|FR-BE-06|
@@ -177,7 +177,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Name|Abrufen eines älteren DPP per Zeitstempel und productID|
 |Beschreibung|Das Backend muss in der Lage sein, die historische Version eines DPP abzurufen, die zum angegebenen productId und Datum/Zeitpunkt gültig war.|
 |Priorität|5 - Sehr hoch|
-|Akzeptanzkriterium|Die Daten, der zu der angegebenen productId zugeordneten DPP zu dem angegeben Zeitpunkt liegt vollständig vor.|
+|Akzeptanzkriterium|Die Daten des DPP, das der angegebenen productId zugeordnet ist, liegen vollständig vor.|
 
 ### FR-BE-07
 |ID|FR-BE-07|
