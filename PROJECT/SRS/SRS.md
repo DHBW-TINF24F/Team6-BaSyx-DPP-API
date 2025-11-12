@@ -67,8 +67,6 @@
 ---
 
 ## 1. Zweck, Geltungsbereich und Datenmodell & Semantik
-Dieses SRS Dokument wurde im Rahmen der Vorlesung "Software-Engineering" erstellt. Die Aufgabenstellung lautet, eine RestAPI auf Basis der DIN EN 18222 zu entwickeln und in das BaSyx Framework zu implementieren. 
-
 ### 1.1 Zweck
 Dieses Dokument spezifiziert die funktionalen und nicht-funktionalen Anforderungen, die durch die Aufgabenstellung und die DIN EN 18222 vorgegeben werden und den Rahmen dieser Rest-API innerhalb der BaSyx Struktur bilden. Ziel ist eine konforme, testbare und hostbare Implementierung eines Backends und Frontends, samt OpenAPI-Spezifikation, Demoinstanz und Dokumentation.
 Die primärem Ziele lassen sich wie folgt definieren:
@@ -91,9 +89,9 @@ graph LR
     SMRepo[(Submodel Repository)]
     Registry[(AAS Registry)]
     Discovery[(Discovery Service)]
+    API[DPP-API Service]
   end
 
-  API[DPP-API Service]
   User[Endnutzer]
   Dev[Entwickler]
   Spec[OpenAPI Spec]
@@ -139,7 +137,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Name|Erstellung eines DPP|
 |Beschreibung|Das Backend muss in der Lage sein, einen neuen Digitalen Produktpass (DPP) entgegenzunehmen, die Gültigkeit der Datenstruktur zu prüfen und diesen innerhalb der Verwaltungsschale (AAS) im BaSyx-System zu speichern.|
 |Priorität|5 - Sehr hoch|
-|Akzeptanzkriterium|Ein neuer DPP findet sich innerhalb der AAS Shell.|
+|Akzeptanzkriterium|Ein neues referenzierendes DPP-Submodel findet sich innerhalb der AAS Shell.|
 
 ### FR-BE-02
 |ID|FR-BE-02|
@@ -153,7 +151,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |ID|FR-BE-03|
 |---|---|
 |Name|Updaten eines DPP per ID|
-|Beschreibung|Das Backend muss in der Lage sein, Aktualisierungen für einen bestehenden DPP entgegenzunehmen, die Datenintegrität zu gewährleisten und die entsprechende AAS teilweise zu aktualisieren.|
+|Beschreibung|Das Backend muss in der Lage sein, Aktualisierungen für einen bestehenden DPP entgegenzunehmen, die Datenintegrität zu gewährleisten und die entsprechende Submodelle teilweise zu aktualisieren.|
 |Priorität|5 - Sehr hoch|
 |Akzeptanzkriterium|Die Daten werden aktualisiert in der Datenbank gespeichert.|
 
@@ -171,7 +169,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Name|Abrufen eines DPP per productID|
 |Beschreibung|Das Backend muss in der Lage sein, den aktuellen DPP anhand der productId abzurufen. Hierfür muss eine interne Zuordnung von productId zu dppId erfolgen.|
 |Priorität|5 - Sehr hoch|
-|Akzeptanzkriterium|Die Daten eines DPP, der die angegebene productID besitzt, liegen vollständig vor.|
+|Akzeptanzkriterium|Die Daten der zu der angegebenen productId zugeordnete DPP liegt vollständig vor.|
 
 ### FR-BE-06
 |ID|FR-BE-06|
@@ -179,7 +177,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Name|Abrufen eines älteren DPP per Zeitstempel und productID|
 |Beschreibung|Das Backend muss in der Lage sein, die historische Version eines DPP abzurufen, die zum angegebenen productId und Datum/Zeitpunkt gültig war.|
 |Priorität|5 - Sehr hoch|
-|Akzeptanzkriterium|Der DPP zu dem angegeben Zeitpunkt mit der ID liegt vollständig vor.|
+|Akzeptanzkriterium|Die Daten, der zu der angegebenen productId zugeordneten DPP zu dem angegeben Zeitpunkt liegt vollständig vor.|
 
 ### FR-BE-07
 |ID|FR-BE-07|
@@ -203,7 +201,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Name|Abrufen der DPP Daten eines bestimmten Submodels per dppID und elementID|
 |Beschreibung|Das Backend muss in der Lage sein, eine spezifische Daten-Sammlung (Submodell-Element) eines DPP anhand der dppId und der elementId auszulesen und diese Daten zurückzugeben.|
 |Priorität|5 - Sehr hoch|
-|Akzeptanzkriterium|Die Daten wurden entsprechend angepasst innerhalb des Submodels.|
+|Akzeptanzkriterium|Die Daten, die unter der elementID zu finden sind, in der spezifischen DPP mit der ID liegen vor.|
 
 ### FR-BE-10
 |ID|FR-BE-10|
