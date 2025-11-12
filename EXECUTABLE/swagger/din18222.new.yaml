@@ -249,6 +249,27 @@ paths:
                   registryIdentifier:
                     $ref: "#/components/schemas/IdentifierDPP"
 
+  ## DPP Fine-Granular Life Cycle API
+  /dpps/{dppId}/collections/{elementId}:
+    get:
+      tags:
+        - "DPP Fine-Granular Life Cycle API"
+      summary: "Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection)"
+      description: "Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus einem bestimmten DPP zurück."
+      operationId: "readDataElementCollection"
+      parameters:
+        - $ref: "#/components/parameters/dppId"
+        - $ref: "#/components/parameters/elementId"
+      responses:
+        "200":
+          description: "Die angeforderte DataElementCollection."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DPPScheme"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
 components:
   schemas:
     # Identifier
@@ -855,3 +876,11 @@ components:
       description: "Eindeutige Kennung des Produkts / der AAS (UTF8-BASE64-URL-encoded)"
       schema:
         $ref: "#/components/schemas/IdentifierAAS"
+    elementId:
+      name: elementId
+      in: path
+      required: true
+      description: "Eindeutige Kennung des DataElementCollection (UTF8-BASE64-URL-encoded)"
+      schema:
+        type: string
+        example: "ZGF0YUVsZW1lbnRJRA=="
