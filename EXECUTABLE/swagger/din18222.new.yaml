@@ -1,654 +1,842 @@
 openapi: 3.0.3
+
 info:
-  title: "Digitaler Produktpass (DPP) API"
+  title: Digitaler Produktpass (DPP) API
+  version: 2.1.1
   description: |
     OpenAPI-Spezifikation basierend auf dem Entwurf der Norm DIN EN 18222:2025.
-    Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die Durchsuchbarkeit von Digitalen Produktpässen (DPP) im Einklang mit der European Sustainability Product Regulation (ESPR).
-    Sie umfasst drei Hauptbereiche:
-    1.  **Life Cycle API**: Hauptmethoden zum Erstellen, Lesen, Aktualisieren und Löschen von DPPs.
-    2.  **Registry API**: Eine Methode zur Registrierung eines neuen DPP im zentralen Register der EU-Kommission.
-    3.  **Fine-Granular API**: Optionale Methoden für den detaillierten Lese- und Schreibzugriff auf einzelne Datenelemente innerhalb eines DPP.
-  version: "2.0.0"
+    
+    Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die 
+    Durchsuchbarkeit von Digitalen Produktpässen (DPP) im Einklang mit der European 
+    Sustainability Product Regulation (ESPR).
+    
+    **Hauptbereiche:**
+    1. **Life Cycle API**: Hauptmethoden zum Erstellen, Lesen, Aktualisieren und Löschen von DPPs
+    2. **Registry API**: Registrierung eines neuen DPP im zentralen Register der EU-Kommission
+    3. **Fine-Granular API**: Detaillierter Lese- und Schreibzugriff auf einzelne Datenelemente
   contact:
-    name: "DIN/DKE Gemeinschaftsgremium Digitaler Produktpass"
-    email: "samarkhel-khan.yahya@din.de"
+    name: DIN/DKE Gemeinschaftsgremium Digitaler Produktpass
+    email: samarkhel-khan.yahya@din.de
 
 servers:
   - url: https://srv01.noah-becker.de/uni/swe/api
-    description: "Produktiv-Server"
+    description: Produktiv-Server
   - url: http://localhost:8081
-    description: "Lokale Entwicklungsumgebung"
+    description: Lokale Entwicklungsumgebung
 
 tags:
-  - name: "DPP Life Cycle API"
-    description: "Hauptmethoden zur Verwaltung des DPP-Lebenszyklus."
-  - name: "DPP Registry API"
-    description: "Schnittstelle zur Registrierung von DPPs im zentralen Register."
-  - name: "DPP Fine-Granular Life Cycle API"
-    description: "Optionale Operationen für den feingranularen Zugriff auf DPP-Daten."
+  - name: DPP Life Cycle API
+    description: Hauptmethoden zur Verwaltung des DPP-Lebenszyklus
+  - name: DPP Registry API
+    description: Schnittstelle zur Registrierung von DPPs im zentralen Register
+  - name: DPP Fine-Granular Life Cycle API
+    description: Optionale Operationen für den feingranularen Zugriff auf DPP-Daten
 
+# =============================================================================
+# PATHS - API Endpunkte
+# =============================================================================
 paths:
+  # ---------------------------------------------------------------------------
+  # DPP Life Cycle API - CRUD Operationen
+  # ---------------------------------------------------------------------------
+  
   /dpps:
     post:
       tags:
-        - "DPP Life Cycle API"
-      summary: "Neuen DPP erstellen (CreateDPP)"
-      description: "Erstellt einen neuen Digitalen Produktpass nach dem vorgegbenen Schema im Anforderungskörper."
-      operationId: "createDPP"
+        - DPP Life Cycle API
+      summary: Neuen DPP erstellen (CreateDPP)
+      description: |
+        Erstellt einen neuen Digitalen Produktpass nach dem vorgegebenen Schema.
+        
+        **Hinweis:** Partielle DPPs werden akzeptiert, jedoch wird mindestens 
+        ein Submodel nach dem angegebenen Schema vorausgesetzt.
+      operationId: createDPP
       requestBody:
         required: true
-        description: "Das DPP-Objekt, das erstellt werden soll. <i>&mdash; Partielle DPPs werden ebenso akzeptiert. <br> (Jedoch wird mindestens ein Submodel nach dem angegebenen Schema vorausgesetzt)</i>"
+        description: Das DPP-Objekt, das erstellt werden soll
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DPPRequestScheme"
+              $ref: '#/components/schemas/DPPRequestScheme'
       responses:
-        "201":
-          $ref: "#/components/responses/SuccessCreated"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
+        '201':
+          $ref: '#/components/responses/SuccessCreated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /dpps/{dppId}:
     get:
       tags:
-        - "DPP Life Cycle API"
-      summary: "DPP anhand seiner ID abrufen (ReadDPPById)"
-      description: "Gibt den Digitalen Produktpass für eine bekannte DPP-Kennung zurück."
-      operationId: "readDPPById"
+        - DPP Life Cycle API
+      summary: DPP anhand seiner ID abrufen (ReadDPPById)
+      description: Gibt den Digitalen Produktpass für eine bekannte DPP-Kennung zurück
+      operationId: readDPPById
       parameters:
-        - $ref: "#/components/parameters/dppId"
+        - $ref: '#/components/parameters/dppId'
       responses:
-        "200":
-          $ref: "#/components/responses/DPP"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        '200':
+          $ref: '#/components/responses/DPPResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
     patch:
       tags:
-        - "DPP Life Cycle API"
-      summary: "DPP teilweise aktualisieren (UpdateDPPById)"
-      description: "Aktualisiert den Inhalt eines DPPs partiell (Patch). Der eingereichte DPP enthält nur die Daten, die aktualisiert oder hinzugefügt werden sollen. Die Aktualisierung ist atomar: Wenn ein Teil fehlschlägt, wird die gesamte Operation zurückgerollt."
-      operationId: "updateDPPById"
+        - DPP Life Cycle API
+      summary: DPP teilweise aktualisieren (UpdateDPPById)
+      description: |
+        Aktualisiert den Inhalt eines DPPs partiell (Patch). Der eingereichte DPP 
+        enthält nur die Daten, die aktualisiert oder hinzugefügt werden sollen.
+        
+        **Atomarität:** Wenn ein Teil fehlschlägt, wird die gesamte Operation zurückgerollt.
+        
+        Implementierungen können RFC 7396 (JSON Merge Patch) berücksichtigen.
+      operationId: updateDPPById
       parameters:
-        - $ref: "#/components/parameters/dppId"
+        - $ref: '#/components/parameters/dppId'
       requestBody:
         required: true
-        description: "Ein partielles DPP-Objekt, das die zu aktualisierenden Submodels enthält. Implementierungen können RFC 7396 (JSON Merge Patch) berücksichtigen."
+        description: Ein partielles DPP-Objekt mit den zu aktualisierenden Submodels
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DPPPatchScheme"
+              $ref: '#/components/schemas/DPPPatchScheme'
       responses:
-        "200":
-          description: "DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück."
+        '200':
+          description: DPP erfolgreich aktualisiert
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPScheme"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/DPPScheme'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
     delete:
       tags:
-        - "DPP Life Cycle API"
-      summary: "DPP löschen (DeleteDPPById)"
-      description: "Entfernt einen DPP anhand seiner ID, z.B. am Ende seines Lebenszyklus. Zugriffsregeln steuern, ob die Löschung erlaubt ist."
-      operationId: "deleteDPPById"
+        - DPP Life Cycle API
+      summary: DPP löschen (DeleteDPPById)
+      description: |
+        Entfernt einen DPP anhand seiner ID, z.B. am Ende seines Lebenszyklus.
+        
+        Zugriffsregeln steuern, ob die Löschung erlaubt ist.
+      operationId: deleteDPPById
       parameters:
-        - $ref: "#/components/parameters/dppId"
+        - $ref: '#/components/parameters/dppId'
       responses:
-        "204":
-          description: "DPP erfolgreich gelöscht."
+        '204':
+          description: DPP erfolgreich gelöscht
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
+  # ---------------------------------------------------------------------------
+  # DPP Abfrage nach Produkt-ID
+  # ---------------------------------------------------------------------------
+  
   /dppsByProductId/{productId}:
     get:
       tags:
-        - "DPP Life Cycle API"
-      summary: "Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId)"
-      description: "Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte Produkt-Kennung zurück."
-      operationId: "readDPPByProductId"
+        - DPP Life Cycle API
+      summary: Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId)
+      description: |
+        Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte 
+        Produkt-Kennung zurück.
+      operationId: readDPPByProductId
       parameters:
-        - $ref: "#/components/parameters/productId"
+        - $ref: '#/components/parameters/productId'
       responses:
-        "200":
-          description: "Erfolgreiche Antwort mit dem angeforderten DPP."
+        '200':
+          description: Erfolgreiche Antwort mit dem angeforderten DPP
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPProductReturnScheme"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/DPPProductReturnScheme'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /dppsByProductIdAndDate/{productId}:
     get:
       tags:
-        - "DPP Life Cycle API"
-      summary: "DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate)"
-      description: "Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Datum."
-      operationId: "readDPPVersionByProductIdAndDate"
+        - DPP Life Cycle API
+      summary: DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate)
+      description: |
+        Gibt eine spezifische Version eines DPP zurück, basierend auf seiner 
+        Produkt-ID und einem angegebenen Datum.
+      operationId: readDPPVersionByProductIdAndDate
       parameters:
-        - $ref: "#/components/parameters/productId"
+        - $ref: '#/components/parameters/productId'
         - name: date
           in: query
           required: true
-          description: "Der Zeitstempel (UTC-basiert), für den die DPP-Version angefordert wird."
+          description: Der Zeitstempel (UTC-basiert), für den die DPP-Version angefordert wird
           schema:
             type: string
             format: date-time
+          example: '2025-11-08T14:30:00Z'
       responses:
-        "200":
-          description: "Erfolgreiche Antwort mit der angeforderten DPP-Version."
+        '200':
+          description: Erfolgreiche Antwort mit der angeforderten DPP-Version
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPProductReturnScheme"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/DPPProductReturnScheme'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /dppsByProductIds:
     get:
       tags:
-        - "DPP Life Cycle API"
-      summary: "DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)"
-      description: "Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen. Paginierung wird über 'limit' und 'cursor' unterstützt."
-      operationId: "readDPPIdsByProductIds"
+        - DPP Life Cycle API
+      summary: DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)
+      description: |
+        Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von 
+        Produkt-Kennungen passen.
+        
+        **Paginierung** wird über 'limit' und 'cursor' unterstützt.
+      operationId: readDPPIdsByProductIds
       parameters:
         - name: productId
           in: query
           required: true
-          description: "Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen (UTF8-BASE64-URL-encoded). Mehrere IDs können durch wiederholte Verwendung dieses Parameters angegeben werden."
+          description: |
+            Eine Liste von Produkt-IDs (UTF8-BASE64-URL-encoded). 
+            Mehrere IDs können durch wiederholte Verwendung dieses Parameters angegeben werden.
           schema:
             type: array
             items:
               type: string
-              example: "productId"
         - name: limit
           in: query
-          description: "Maximale Anzahl der zurückgegebenen Ergebnisse."
+          required: false
+          description: Maximale Anzahl der zurückgegebenen Ergebnisse
           schema:
             type: integer
             format: int32
             minimum: 0
         - name: cursor
           in: query
-          description: "Position, von der aus die Ergebnisliste fortgesetzt werden soll (für Paginierung)."
+          required: false
+          description: Position für Paginierung (Fortsetzungspunkt)
           schema:
             type: string
       responses:
-        "200":
-          description: "Eine Liste der passenden DPP-Kennungen."
+        '200':
+          description: Eine Liste der passenden DPP-Kennungen
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProductListScheme"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/ProductListScheme'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
-
-  ## DPP Registry API
-  # tbd!
+  # ---------------------------------------------------------------------------
+  # DPP Registry API - Registrierung im zentralen EU-Register
+  # ---------------------------------------------------------------------------
+  
   /registerDPP:
     post:
       tags:
-        - "DPP Registry API"
-      summary: "Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry)"
-      description: "Registriert einen neuen DPP im zentralen Register der EU-Kommission. Gibt eine eindeutige Registrierungs-ID zurück."
-      operationId: "postNewDPPToRegistry"
+        - DPP Registry API
+      summary: Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry)
+      description: |
+        Registriert einen neuen DPP im zentralen Register der EU-Kommission.
+        
+        Gibt eine eindeutige Registrierungs-ID zurück.
+      operationId: postNewDPPToRegistry
       requestBody:
         required: true
-        description: "Ein Objekt, das die Kennungen für Produkt, Betreiber und Sicherungsbetreiber enthält (Teilmenge des DPP-Headers)."
+        description: |
+          Objekt mit Kennungen für Produkt, Betreiber und Sicherungsbetreiber 
+          (Teilmenge des DPP-Headers)
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                productId:
-                  $ref: "#/components/schemas/IdentifierAAS"
-                operatorId:
-                  $ref: "#/components/schemas/IdentifierDPP"
-                backupOperatorId:
-                  $ref: "#/components/schemas/IdentifierDPP"
+              $ref: '#/components/schemas/DPPRegistrationRequest'
       responses:
-        "201":
-          description: "DPP erfolgreich registriert. Gibt die neue Registrierungs-ID zurück."
+        '201':
+          description: DPP erfolgreich registriert
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  registryIdentifier:
-                    $ref: "#/components/schemas/IdentifierDPP"
+                $ref: '#/components/schemas/DPPRegistrationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
-  ## DPP Fine-Granular Life Cycle API
+  # ---------------------------------------------------------------------------
+  # DPP Fine-Granular Life Cycle API - Feingranularer Zugriff
+  # ---------------------------------------------------------------------------
+  
   /dpps/{dppId}/collections/{elementId}:
     get:
       tags:
-        - "DPP Fine-Granular Life Cycle API"
-      summary: "Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection)"
-      description: "Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus einem bestimmten DPP zurück."
-      operationId: "readDataElementCollection"
+        - DPP Fine-Granular Life Cycle API
+      summary: Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection)
+      description: |
+        Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus 
+        einem bestimmten DPP zurück.
+      operationId: readDataElementCollection
       parameters:
-        - $ref: "#/components/parameters/dppId"
-        - $ref: "#/components/parameters/elementId"
+        - $ref: '#/components/parameters/dppId'
+        - $ref: '#/components/parameters/elementId'
       responses:
-        "200":
-          description: "Die angeforderte DataElementCollection."
+        '200':
+          description: Die angeforderte DataElementCollection
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPScheme"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/DPPScheme'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
+# =============================================================================
+# COMPONENTS - Wiederverwendbare Definitionen
+# =============================================================================
 components:
+  # ---------------------------------------------------------------------------
+  # SCHEMAS - Datenmodelle
+  # ---------------------------------------------------------------------------
   schemas:
-    # Identifier
+    # -------------------------------------------------------------------------
+    # Identifier-Typen
+    # -------------------------------------------------------------------------
+    
     IdentifierAAS:
       type: string
-      description: "Ein base64-encodierter String"
-      example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ=="
+      description: |
+        Base64-encodierter String für Asset Administration Shell (AAS) Identifier.
+        
+        Repräsentiert die eindeutige Kennung eines Produkts.
+      example: aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==
+    
     IdentifierDPP:
       type: string
-      description: "productId + /DPP/ + timestamp --> base64-encodiert"
-      example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA=="
-  
-    # DPP Schemas
-    DPPProductReturnScheme:
-      type: object
-      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
-      properties:
-        status:
-          type: string
-          example: "Success"
-        payload:
-          type: object
-          properties:
-            productId:
-              $ref: "#/components/schemas/IdentifierAAS"
-            dpps:
-              $ref: "#/components/schemas/DPPValue"
-
-    DPPProductReturnMultipleScheme:
-      type: object
-      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
-      properties:
-        status:
-          type: string
-          example: "Success"
-        payload:
-          type: object
-          properties:
-            productId:
-              $ref: "#/components/schemas/IdentifierAAS"
-            dpps:
-              $ref: "#/components/schemas/DPPValueArray"
-    DPPValueArray:
-      type: array
-      description: "Repräsentiert alle Versionen eines Digitalen Produktpasses im Value-Only Stil"
-      items:
-        $ref: "#/components/schemas/DPPValue"
+      description: |
+        Base64-encodierter String für DPP Identifier.
         
+        Format: productId + /DPP/ + timestamp (base64-encodiert)
+      example: aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA==
 
+    # -------------------------------------------------------------------------
+    # DPP Request/Response Schemas
+    # -------------------------------------------------------------------------
+    
     DPPRequestScheme:
       type: object
-      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
+      description: |
+        Schema für die Erstellung eines neuen DPP.
+        
+        Enthält die AAS-Kennung und mindestens ein Submodel.
+      required:
+        - aasIdentifier
+        - submodels
       properties:
         aasIdentifier:
-          $ref: "#/components/schemas/IdentifierAAS"
+          $ref: '#/components/schemas/IdentifierAAS'
         submodels:
           type: array
+          description: Liste der Submodels für den DPP
+          minItems: 1
           items:
-            $ref: "#/components/schemas/DPPSubmodelElement"
+            $ref: '#/components/schemas/DPPSubmodelElement'
+    
+    DPPPatchScheme:
+      type: object
+      description: |
+        Schema für partielle Updates eines DPP.
+        
+        Enthält nur die zu aktualisierenden oder hinzuzufügenden Submodels.
+      properties:
+        submodels:
+          type: array
+          description: Liste der zu aktualisierenden Submodels
+          items:
+            $ref: '#/components/schemas/DPPSubmodelElement'
+    
     DPPScheme:
       type: object
-      description: "Repräsentiert den Digitalen Produktpass. Die genaue logische Struktur ist in 'Modul 4: Systeminteroperabilität' der Normungsreihe definiert und wird hier als generisches Objekt dargestellt."
+      description: |
+        Vollständige Repräsentation eines Digitalen Produktpasses.
+        
+        Die genaue logische Struktur ist in 'Modul 4: Systeminteroperabilität' 
+        der Normungsreihe definiert.
+      required:
+        - status
+        - payload
       properties:
         status:
           type: string
-          example: "Success"
+          description: Status der Anfrage
+          example: Success
         payload:
           type: object
+          required:
+            - dppId
+            - timestamp
+            - dpps
           properties:
             dppId:
-              $ref: "#/components/schemas/IdentifierDPP"
+              $ref: '#/components/schemas/IdentifierDPP'
             timestamp:
               type: string
               format: date-time
-              example: "2025-11-08T14:30:00Z"
+              description: Zeitstempel der DPP-Version
+              example: '2025-11-08T14:30:00Z'
             dpps:
               type: array
+              description: Array von DPP-Versionen
               items:
-                $ref: "#/components/schemas/DPPValue"        
+                $ref: '#/components/schemas/DPPValue'
+    
     DPPValue:
       type: object
-      description: "Repräsentiert ein DPP-Objekt im Value-Only Stil"
+      description: |
+        Repräsentiert ein DPP-Objekt im Value-Only Stil.
+        
+        Enthält Version und zugehörige Submodels.
+      required:
+        - DPPVersion
+        - DPPSubmodels
       properties:
         DPPVersion:
           type: string
-          example: "2025-11-08T14:30:00Z"
+          format: date-time
+          description: Versionszeitstempel des DPP
+          example: '2025-11-08T14:30:00Z'
         DPPSubmodels:
-          $ref: "#/components/schemas/DPPSubmodelElementValue"
-
+          $ref: '#/components/schemas/DPPSubmodelElementValue'
+    
     DPPSubmodelElementValue:
       type: object
-      description: "Repräsentiert ein Submodel-Element im Value-Only Stil"
-      properties:
-        DPPSubmodel_Submodel1:
-          type: string
-          example: "https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0"
-        DPPSubmodel_Submodel2:
-          type: string
-          example: "https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0"
-
-    DPPPatchScheme:
-      type: object
-      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
-      properties:
-        submodels:
-          type: array
-          items:
-            $ref: "#/components/schemas/DPPSubmodelElement"
-    DPPSubmodelElement:
-      type: object
-      properties:
-        displayName:
-          type: array
-          items:
-            $ref: "#/components/schemas/LangString"
-        description:
-          type: array
-          items:
-            $ref: "#/components/schemas/LangString"
-        category:
-          type: string
-        idShort:
-          type: string
-        extensions:
-          type: array
-          items:
-            $ref: "#/components/schemas/Extension"
-        embeddedDataSpecifications:
-          type: array
-          items:
-            $ref: "#/components/schemas/EmbeddedDataSpecification"
-        semanticId:
-          $ref: "#/components/schemas/Reference"
-        supplementalSemanticIds:
-          type: array
-          items:
-            $ref: "#/components/schemas/Reference"
-        qualifiers:
-          type: array
-          items:
-            $ref: "#/components/schemas/Qualifier"
+      description: |
+        Repräsentiert Submodel-Elemente im Value-Only Stil.
+        
+        Die Eigenschaften sind dynamisch und repräsentieren verschiedene Submodels 
+        (z.B. CarbonFootprint, MaterialComposition).
+      additionalProperties:
+        type: string
+        description: URL zu einem spezifischen Submodel
       example:
-        displayName:
-          - language: "string"
-            text: "string"
-        description:
-          - language: "string"
-            text: "string"
-        category: "string"
-        idShort: "string"
-        extensions:
-          - name: "string"
-            value: "string"
-            valueType: "ANY_URI"
-            refersTo:
-              - type: "EXTERNAL_REFERENCE"
-                keys:
-                  - value: "string"
-                    type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-                referredSemanticId: "string"
-            semanticId:
-              type: "EXTERNAL_REFERENCE"
-              keys:
-                - value: "string"
-                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-              referredSemanticId: "string"
-            supplementalSemanticIds:
-              - type: "EXTERNAL_REFERENCE"
-                keys:
-                  - value: "string"
-                    type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-                referredSemanticId: "string"
-        embeddedDataSpecifications:
-          - dataSpecification:
-              type: "EXTERNAL_REFERENCE"
-              keys:
-                - value: "string"
-                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-              referredSemanticId: "string"
-            dataSpecificationContent: {}
-        semanticId:
-          type: "EXTERNAL_REFERENCE"
-          keys:
-            - value: "string"
-              type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-          referredSemanticId: "string"
-        supplementalSemanticIds:
-          - type: "EXTERNAL_REFERENCE"
-            keys:
-              - value: "string"
-                type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-            referredSemanticId: "string"
-        qualifiers:
-          - type: "string"
-            value: "string"
-            kind: "CONCEPT_QUALIFIER"
-            valueType: "ANY_URI"
-            valueId:
-              type: "EXTERNAL_REFERENCE"
-              keys:
-                - value: "string"
-                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-              referredSemanticId: "string"
-            semanticId:
-              type: "EXTERNAL_REFERENCE"
-              keys:
-                - value: "string"
-                  type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-              referredSemanticId: "string"
-            supplementalSemanticIds:
-              - type: "EXTERNAL_REFERENCE"
-                keys:
-                  - value: "string"
-                    type: "ANNOTATED_RELATIONSHIP_ELEMENT"
-                referredSemanticId: "string"
-            
-    ProductListScheme:
+        DPPSubmodel_Submodel1: https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0
+        DPPSubmodel_Submodel2: https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0
+
+    DPPValueArray:
+      type: array
+      description: Repräsentiert alle Versionen eines Digitalen Produktpasses im Value-Only Stil
+      items:
+        $ref: '#/components/schemas/DPPValue'
+
+    # -------------------------------------------------------------------------
+    # Produkt-bezogene Response Schemas
+    # -------------------------------------------------------------------------
+    
+    DPPProductReturnScheme:
       type: object
-      description: "Repräsentiert eine Liste von Produkt-Kennungen."
+      description: |
+        Response-Schema für produktbezogene DPP-Abfragen.
+        
+        Gibt den aktuellen oder versionierten DPP für ein Produkt zurück.
+      required:
+        - status
+        - payload
       properties:
         status:
           type: string
-          example: "Success"
+          example: Success
         payload:
           type: object
+          required:
+            - productId
+            - dpps
+          properties:
+            productId:
+              $ref: '#/components/schemas/IdentifierAAS'
+            dpps:
+              $ref: '#/components/schemas/DPPValue'
+    
+    DPPProductReturnMultipleScheme:
+      type: object
+      description: |
+        Response-Schema für mehrere DPP-Versionen eines Produkts.
+      required:
+        - status
+        - payload
+      properties:
+        status:
+          type: string
+          example: Success
+        payload:
+          type: object
+          required:
+            - productId
+            - dpps
+          properties:
+            productId:
+              $ref: '#/components/schemas/IdentifierAAS'
+            dpps:
+              $ref: '#/components/schemas/DPPValueArray'
+    
+    ProductListScheme:
+      type: object
+      description: |
+        Response-Schema für Produkt-Listen mit zugehörigen DPPs.
+        
+        Unterstützt Paginierung durch cursor-basiertes Navigieren.
+      required:
+        - status
+        - payload
+      properties:
+        status:
+          type: string
+          example: Success
+        payload:
+          type: object
+          required:
+            - products
           properties:
             products:
               type: array
+              description: Liste von Produkten mit ihren DPPs
               items:
-                $ref: "#/components/schemas/DPPListScheme"
-
+                $ref: '#/components/schemas/DPPListScheme'
+    
     DPPListScheme:
       type: object
-      description: "Repräsentiert eine Liste von DPP-Kennungen."
+      description: |
+        Schema für ein Produkt mit seiner Liste von DPP-Versionen.
+      required:
+        - productId
+        - dpps
       properties:
         productId:
-          $ref: "#/components/schemas/IdentifierAAS"
+          $ref: '#/components/schemas/IdentifierAAS'
         dpps:
           type: array
+          description: Liste aller DPP-Versionen für dieses Produkt
           items:
-            $ref: "#/components/schemas/DPPListIdentiferScheme"
-
+            $ref: '#/components/schemas/DPPListIdentiferScheme'
+    
     DPPListIdentiferScheme:
       type: object
-      description: "Repräsentiert eine Liste von DPP-Kennungen."
+      description: |
+        Kompakte Repräsentation einer DPP-Version (nur ID und Zeitstempel).
+      required:
+        - dppId
+        - timestamp
       properties:
         dppId:
-          $ref: "#/components/schemas/IdentifierDPP"
+          $ref: '#/components/schemas/IdentifierDPP'
         timestamp:
           type: string
           format: date-time
-          example: "2025-11-08T14:30:00Z"
+          description: Erstellungs- oder Aktualisierungszeitpunkt
+          example: '2025-11-08T14:30:00Z'
 
+    # -------------------------------------------------------------------------
+    # Registry-bezogene Schemas
+    # -------------------------------------------------------------------------
+    
+    DPPRegistrationRequest:
+      type: object
+      description: |
+        Request-Schema für die Registrierung eines DPP im EU-Register.
+      required:
+        - productId
+        - operatorId
+      properties:
+        productId:
+          $ref: '#/components/schemas/IdentifierAAS'
+        operatorId:
+          $ref: '#/components/schemas/IdentifierDPP'
+        backupOperatorId:
+          $ref: '#/components/schemas/IdentifierDPP'
+    
+    DPPRegistrationResponse:
+      type: object
+      description: |
+        Response-Schema nach erfolgreicher Registrierung im EU-Register.
+      required:
+        - registryIdentifier
+      properties:
+        registryIdentifier:
+          $ref: '#/components/schemas/IdentifierDPP'
+
+    # -------------------------------------------------------------------------
+    # Submodel-Element Schemas (AAS-konform)
+    # -------------------------------------------------------------------------
+    
+    DPPSubmodelElement:
+      type: object
+      description: |
+        Repräsentiert ein Submodel-Element nach AAS-Standard.
         
+        Enthält Metadaten und semantische Verweise für strukturierte Produktinformationen.
+      properties:
+        displayName:
+          type: array
+          description: Mehrsprachige Anzeigenamen
+          items:
+            $ref: '#/components/schemas/LangString'
+        description:
+          type: array
+          description: Mehrsprachige Beschreibungen
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+          description: Kategorie des Elements
+        idShort:
+          type: string
+          description: Kurze Kennung innerhalb des Namensraums
+        extensions:
+          type: array
+          description: Erweiterungen für zusätzliche Metadaten
+          items:
+            $ref: '#/components/schemas/Extension'
+        embeddedDataSpecifications:
+          type: array
+          description: Eingebettete Datenspezifikationen
+          items:
+            $ref: '#/components/schemas/EmbeddedDataSpecification'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+        supplementalSemanticIds:
+          type: array
+          description: Ergänzende semantische Referenzen
+          items:
+            $ref: '#/components/schemas/Reference'
+        qualifiers:
+          type: array
+          description: Qualifizierer für zusätzliche Einschränkungen
+          items:
+            $ref: '#/components/schemas/Qualifier'
+
+    # -------------------------------------------------------------------------
+    # AAS-Basisdatentypen
+    # -------------------------------------------------------------------------
+    
     LangString:
       type: object
+      description: |
+        Mehrsprachiger String gemäß AAS-Standard.
+      required:
+        - language
+        - text
       properties:
         language:
           type: string
+          description: ISO 639-1 Sprachcode
+          example: de
         text:
           type: string
+          description: Der Text in der angegebenen Sprache
+          example: Beispieltext
     
     Extension:
       type: object
+      description: |
+        Erweiterung für zusätzliche Metadaten gemäß AAS-Standard.
+      required:
+        - name
       properties:
         name:
           type: string
+          description: Name der Erweiterung
         value:
           type: string
+          description: Wert der Erweiterung
         valueType:
           type: string
-          enum: [ANY_URI]
+          enum:
+            - ANY_URI
+          description: Datentyp des Wertes
         refersTo:
           type: array
+          description: Referenzen, auf die sich die Erweiterung bezieht
           items:
-            $ref: "#/components/schemas/Reference"
+            $ref: '#/components/schemas/Reference'
         semanticId:
-          $ref: "#/components/schemas/Reference"
+          $ref: '#/components/schemas/Reference'
         supplementalSemanticIds:
           type: array
+          description: Ergänzende semantische IDs
           items:
-            $ref: "#/components/schemas/Reference"
+            $ref: '#/components/schemas/Reference'
     
     Reference:
       type: object
+      description: |
+        Referenz auf ein externes oder internes Element gemäß AAS-Standard.
+      required:
+        - type
+        - keys
       properties:
         type:
           type: string
-          enum: [EXTERNAL_REFERENCE]
+          enum:
+            - EXTERNAL_REFERENCE
+          description: Art der Referenz
         keys:
           type: array
+          description: Pfad-Schlüssel zur referenzierten Ressource
+          minItems: 1
           items:
-            $ref: "#/components/schemas/Key"
+            $ref: '#/components/schemas/Key'
         referredSemanticId:
           type: string
+          description: Semantische ID des referenzierten Elements
     
     Key:
       type: object
+      description: |
+        Ein Schlüssel-Element innerhalb einer Referenz.
+      required:
+        - type
+        - value
       properties:
-        value:
-          type: string
         type:
           type: string
-          enum: [ANNOTATED_RELATIONSHIP_ELEMENT]
+          enum:
+            - ANNOTATED_RELATIONSHIP_ELEMENT
+          description: Typ des Schlüssels
+        value:
+          type: string
+          description: Wert des Schlüssels (typischerweise eine URI oder ID)
     
     EmbeddedDataSpecification:
       type: object
+      description: |
+        Eingebettete Datenspezifikation gemäß AAS-Standard.
+      required:
+        - dataSpecification
       properties:
         dataSpecification:
-          $ref: "#/components/schemas/Reference"
+          $ref: '#/components/schemas/Reference'
         dataSpecificationContent:
           type: object
+          description: Inhalt der Datenspezifikation (schema-abhängig)
           additionalProperties: false
     
     Qualifier:
       type: object
+      description: |
+        Qualifizierer für zusätzliche semantische Einschränkungen.
+      required:
+        - type
       properties:
         type:
           type: string
+          description: Typ des Qualifizierers
         value:
           type: string
+          description: Wert des Qualifizierers
         kind:
           type: string
-          enum: [CONCEPT_QUALIFIER]
+          enum:
+            - CONCEPT_QUALIFIER
+          description: Art des Qualifizierers
         valueType:
           type: string
-          enum: [ANY_URI]
+          enum:
+            - ANY_URI
+          description: Datentyp des Wertes
         valueId:
-          $ref: "#/components/schemas/Reference"
+          $ref: '#/components/schemas/Reference'
         semanticId:
-          $ref: "#/components/schemas/Reference"
+          $ref: '#/components/schemas/Reference'
         supplementalSemanticIds:
           type: array
+          description: Ergänzende semantische IDs
           items:
-            $ref: "#/components/schemas/Reference"
-            
-            
+            $ref: '#/components/schemas/Reference'
 
-    # Nachrichtenstruktur
+    # -------------------------------------------------------------------------
+    # Nachrichten- und Response-Schemas
+    # -------------------------------------------------------------------------
+    
     Message:
       type: object
-      description: "Eine Nachricht, die mehr Informationen für den Anforderer zu einem bestimmten Ereignis im Backend enthält"
-      properties:
-        messageType:
-          $ref: "#/components/schemas/MessageTypeEnum"
-        text:
-          type: string
-          description: "Nachrichtentext"
-        code:
-          type: string
-          description: "Technologieabhängiger Status- oder Fehlercode"
-          example: "DPP_001"
-        correlationId:
-          type: string
-          description: "Kennung zum Verbinden von mehreren Ergebnisnachrichten über mehrere Systeme hinweg"
-          example: "550e8400-e29b-41d4-a716-446655440000"
-        timestamp:
-          type: string
-          format: date-time
-          description: "Zeitstempel der Nachricht"
-          example: "2025-11-10T14:30:00Z"
+      description: |
+        Nachrichtenstruktur für zusätzliche Informationen zu API-Operationen.
+        
+        Ermöglicht detailliertes Logging und Tracing über Systemgrenzen hinweg.
       required:
         - messageType
         - text
+      properties:
+        messageType:
+          $ref: '#/components/schemas/MessageTypeEnum'
+        text:
+          type: string
+          description: Nachrichtentext (idealerweise lokalisiert)
+          example: Die Anfrage wurde erfolgreich verarbeitet.
+        code:
+          type: string
+          description: Technologie-spezifischer Fehler- oder Statuscode
+          example: DPP_001
+        correlationId:
+          type: string
+          description: |
+            UUID zur Korrelation von Nachrichten über mehrere Systeme hinweg.
+            
+            Ermöglicht End-to-End-Tracing in verteilten Systemen.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 Zeitstempel der Nachricht
+          example: '2025-11-10T14:30:00Z'
     
-    # MessageTypeEnum
     MessageTypeEnum:
       type: string
-      description: "Nachrichtentyp"
+      description: Klassifizierung der Nachricht nach Schweregrad
       enum:
         - Info
         - Warning
         - Error
         - Exception
     
-    # Erfolgs-Response (Standard)
     SuccessResponse:
       type: object
-      description: "Erfolgreiche API-Antwort ohne Ergebnisobjekt"
+      description: |
+        Standard-Success-Response ohne spezifisches Ergebnisobjekt.
+        
+        Wird für einfache Bestätigungen verwendet (z.B. Löschoperationen).
+      required:
+        - status
       properties:
         status:
           type: string
@@ -656,36 +844,41 @@ components:
             - Success
             - SuccessAccepted
             - SuccessNoContent
-          description: "HTTP Success Status"
+          description: HTTP Success Status als String
         message:
-          $ref: "#/components/schemas/Message"
-      required:
-        - status
+          $ref: '#/components/schemas/Message'
     
-    # Spezielle Response für SuccessCreated mit dppId
     SuccessCreatedResponse:
       type: object
-      description: "Erfolgreiche Erstellung mit Ressourcen-ID"
+      description: |
+        Response nach erfolgreicher Erstellung einer Ressource.
+        
+        Enthält die ID der neu erstellten Ressource.
+      required:
+        - status
+        - dppId
       properties:
         status:
           type: string
           enum:
             - SuccessCreated
-          description: "HTTP Success Status"
+          description: HTTP 201 Created Status
         dppId:
           type: string
-          description: "ID des erstellten Digitalen Produktpasses"
-          example: "dpp-12345-abcde"
+          description: Eindeutige ID des erstellten Digitalen Produktpasses
+          example: dpp-12345-abcde
         message:
-          $ref: "#/components/schemas/Message"
-      required:
-        - status
-        - dppId
+          $ref: '#/components/schemas/Message'
     
-    # Fehler-Response mit Ergebnisobjekt
     ErrorResponse:
       type: object
-      description: "Fehlerhafte API-Antwort mit Ergebnisobjekt"
+      description: |
+        Fehler-Response mit detaillierter Nachricht.
+        
+        Wird für alle 4xx und 5xx Fehler verwendet.
+      required:
+        - status
+        - message
       properties:
         status:
           type: string
@@ -698,245 +891,287 @@ components:
             - ClientResourceConflict
             - ServerInternalError
             - ServerErrorBadGateway
-          description: "HTTP Error Status"
+          description: HTTP Error Status als String
         message:
-          $ref: "#/components/schemas/Message"
-      required:
-        - status
-        - message
+          $ref: '#/components/schemas/Message'
 
+  # ---------------------------------------------------------------------------
+  # RESPONSES - Wiederverwendbare Response-Definitionen
+  # ---------------------------------------------------------------------------
   responses:
-    #DPP
-    DPP:
-      description: "Erfolg"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/DPPScheme"
-              
-  
-  
-  
-    # 2xx Success Responses
+    # -------------------------------------------------------------------------
+    # Success Responses (2xx)
+    # -------------------------------------------------------------------------
+    
     Success:
-      description: "Erfolg"
+      description: Erfolgreiche Verarbeitung der Anfrage
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/SuccessResponse"
+            $ref: '#/components/schemas/SuccessResponse'
           example:
-            status: "Success"
-            result:
-              message:
-                messageType: "Info"
-                text: "Die Anfrage wurde erfolgreich verarbeitet."
-                code: "DPP_SUCCESS"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: Success
+            message:
+              messageType: Info
+              text: Die Anfrage wurde erfolgreich verarbeitet.
+              code: DPP_SUCCESS
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     SuccessCreated:
-      description: "Erfolgreiche Erstellung einer neuen Ressource"
+      description: Ressource wurde erfolgreich erstellt (HTTP 201)
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/SuccessCreatedResponse"
+            $ref: '#/components/schemas/SuccessCreatedResponse'
           example:
-            status: "SuccessCreated"
-            dppId: "dpp-12345-abcde"
-            result:
-              message:
-                messageType: "Info"
-                text: "Der Digitale Produktpass wurde erfolgreich erstellt."
-                code: "DPP_CREATED"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: SuccessCreated
+            dppId: dpp-12345-abcde
+            message:
+              messageType: Info
+              text: Der Digitale Produktpass wurde erfolgreich erstellt.
+              code: DPP_CREATED
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     SuccessAccepted:
-      description: "Der Empfang der Anforderung war erfolgreich"
+      description: |
+        Anfrage wurde akzeptiert und wird asynchron verarbeitet (HTTP 202)
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/SuccessResponse"
+            $ref: '#/components/schemas/SuccessResponse'
           example:
-            status: "SuccessAccepted"
-            result:
-              message:
-                messageType: "Info"
-                text: "Die Anfrage wurde akzeptiert und wird verarbeitet."
-                code: "DPP_ACCEPTED"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
-      
+            status: SuccessAccepted
+            message:
+              messageType: Info
+              text: Die Anfrage wurde akzeptiert und wird verarbeitet.
+              code: DPP_ACCEPTED
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
+    
     SuccessNoContent:
-      description: "Erfolg mit explizit keinem Inhalt in der Nutzlast"
+      description: |
+        Erfolgreiche Verarbeitung ohne Rückgabewert (HTTP 204)
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/SuccessResponse"
+            $ref: '#/components/schemas/SuccessResponse'
           example:
-            status: "SuccessNoContent"
-            result:
-              message:
-                messageType: "Info"
-                text: "Die Anfrage wurde erfolgreich verarbeitet, kein Inhalt zurückgegeben."
-                code: "DPP_NO_CONTENT"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
-      
-    # 4xx Client Error Responses (weist Ergebnisobjekt auf)
+            status: SuccessNoContent
+            message:
+              messageType: Info
+              text: Die Anfrage wurde erfolgreich verarbeitet.
+              code: DPP_NO_CONTENT
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
+    
+    DPPResponse:
+      description: |
+        Erfolgreiche Rückgabe eines vollständigen DPP
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DPPScheme'
+          example:
+            status: Success
+            payload:
+              dppId: aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA==
+              timestamp: '2025-11-08T14:30:00Z'
+              dpps:
+                - DPPVersion: '2025-11-08T14:30:00Z'
+                  DPPSubmodels:
+                    DPPSubmodel_Submodel1: https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0
+                    DPPSubmodel_Submodel2: https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0
+
+    # -------------------------------------------------------------------------
+    # Client Error Responses (4xx)
+    # -------------------------------------------------------------------------
+    
     BadRequest:
-      description: "Schlechte oder fehlerhafte Anforderung"
+      description: |
+        Ungültige oder fehlerhafte Anfrage (HTTP 400)
+        
+        Die Anfrage enthält syntaktische Fehler oder ungültige Parameter.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ClientErrorBadRequest"
-            result:
-              message:
-                messageType: "Error"
-                text: "Die Anfrage enthält ungültige Parameter."
-                code: "DPP_BAD_REQUEST"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: ClientErrorBadRequest
+            message:
+              messageType: Error
+              text: Die Anfrage enthält ungültige Parameter.
+              code: DPP_BAD_REQUEST
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     Unauthorized:
-      description: "Falsche oder fehlende Berechtigungsnachweise"
+      description: |
+        Authentifizierung fehlgeschlagen (HTTP 401)
+        
+        Die Anfrage enthält keine oder ungültige Authentifizierungsnachweise.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ClientNotAuthorized"
-            result:
-              message:
-                messageType: "Error"
-                text: "Authentifizierung fehlgeschlagen."
-                code: "DPP_UNAUTHORIZED"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: ClientNotAuthorized
+            message:
+              messageType: Error
+              text: Authentifizierung fehlgeschlagen.
+              code: DPP_UNAUTHORIZED
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     Forbidden:
-      description: "Autorisierung wurde verweigert"
+      description: |
+        Zugriff verweigert (HTTP 403)
+        
+        Der Client ist authentifiziert, hat aber keine Berechtigung für diese Ressource.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ClientForbidden"
-            result:
-              message:
-                messageType: "Error"
-                text: "Sie haben keine Berechtigung für diese Ressource."
-                code: "DPP_FORBIDDEN"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: ClientForbidden
+            message:
+              messageType: Error
+              text: Sie haben keine Berechtigung für diese Ressource.
+              code: DPP_FORBIDDEN
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     MethodNotAllowed:
-      description: "Methodenanforderung ist nicht zulässig"
+      description: |
+        HTTP-Methode nicht erlaubt (HTTP 405)
+        
+        Die verwendete HTTP-Methode wird für diese Ressource nicht unterstützt.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ClientMethodNotAllowed"
-            result:
-              message:
-                messageType: "Error"
-                text: "Diese HTTP-Methode ist nicht erlaubt."
-                code: "DPP_METHOD_NOT_ALLOWED"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: ClientMethodNotAllowed
+            message:
+              messageType: Error
+              text: Diese HTTP-Methode ist nicht erlaubt.
+              code: DPP_METHOD_NOT_ALLOWED
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     NotFound:
-      description: "Ressource nicht gefunden"
+      description: |
+        Ressource nicht gefunden (HTTP 404)
+        
+        Die angeforderte Ressource existiert nicht oder ist nicht verfügbar.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ClientErrorResourceNotFound"
-            result:
-              message:
-                messageType: "Error"
-                text: "Die angeforderte Ressource existiert nicht."
-                code: "DPP_NOT_FOUND"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: ClientErrorResourceNotFound
+            message:
+              messageType: Error
+              text: Die angeforderte Ressource existiert nicht.
+              code: DPP_NOT_FOUND
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
     
     Conflict:
-      description: "Einen Konflikt verursachende Ressource (Ressource existiert bereits)"
+      description: |
+        Ressourcen-Konflikt (HTTP 409)
+        
+        Die Ressource existiert bereits oder es liegt ein Versionierungskonflikt vor.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ClientResourceConflict"
-            result:
-              message:
-                messageType: "Error"
-                text: "Die Ressource existiert bereits."
-                code: "DPP_CONFLICT"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
+            status: ClientResourceConflict
+            message:
+              messageType: Error
+              text: Die Ressource existiert bereits.
+              code: DPP_CONFLICT
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
+
+    # -------------------------------------------------------------------------
+    # Server Error Responses (5xx)
+    # -------------------------------------------------------------------------
     
-    # 5xx Server Error Responses (weist Ergebnisobjekt auf)
     InternalServerError:
-      description: "Unerwarteter Fehler"
+      description: |
+        Interner Serverfehler (HTTP 500)
+        
+        Ein unerwarteter Fehler ist auf dem Server aufgetreten.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ServerInternalError"
-            result:
-              message:
-                messageType: "Exception"
-                text: "Ein interner Serverfehler ist aufgetreten."
-                code: "DPP_INTERNAL_ERROR"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
-      
+            status: ServerInternalError
+            message:
+              messageType: Exception
+              text: Ein interner Serverfehler ist aufgetreten.
+              code: DPP_INTERNAL_ERROR
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
+    
     BadGateway:
-      description: "Schlechter Gateway"
+      description: |
+        Gateway-Fehler (HTTP 502)
+        
+        Der Upstream-Server hat eine ungültige Antwort zurückgegeben.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
           example:
-            status: "ServerErrorBadGateway"
-            result:
-              message:
-                messageType: "Exception"
-                text: "Der Upstream-Server hat eine ungültige Antwort gesendet."
-                code: "DPP_BAD_GATEWAY"
-                correlationId: "550e8400-e29b-41d4-a716-446655440000"
-                timestamp: "2025-11-10T14:30:00Z"
-              
-            
-            
-            
-            
+            status: ServerErrorBadGateway
+            message:
+              messageType: Exception
+              text: Der Upstream-Server hat eine ungültige Antwort gesendet.
+              code: DPP_BAD_GATEWAY
+              correlationId: 550e8400-e29b-41d4-a716-446655440000
+              timestamp: '2025-11-10T14:30:00Z'
+
+  # ---------------------------------------------------------------------------
+  # PARAMETERS - Wiederverwendbare Parameter-Definitionen
+  # ---------------------------------------------------------------------------
   parameters:
     dppId:
       name: dppId
       in: path
       required: true
-      description: "Eindeutige Kennung des DPP (UTF8-BASE64-URL-encoded)"
+      description: |
+        Eindeutige Kennung des DPP (UTF8-BASE64-URL-encoded).
+        
+        Format: productId + /DPP/ + timestamp (base64-encodiert)
       schema:
-        $ref: "#/components/schemas/IdentifierDPP"
+        $ref: '#/components/schemas/IdentifierDPP'
+      example: aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA==
+    
     productId:
       name: productId
       in: path
       required: true
-      description: "Eindeutige Kennung des Produkts / der AAS (UTF8-BASE64-URL-encoded)"
+      description: |
+        Eindeutige Kennung des Produkts / der AAS (UTF8-BASE64-URL-encoded).
+        
+        Entspricht der Asset Administration Shell Identifier.
       schema:
-        $ref: "#/components/schemas/IdentifierAAS"
+        $ref: '#/components/schemas/IdentifierAAS'
+      example: aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==
+    
     elementId:
       name: elementId
       in: path
       required: true
-      description: "Eindeutige Kennung des DataElementCollection (UTF8-BASE64-URL-encoded)"
+      description: |
+        Eindeutige Kennung einer DataElementCollection (UTF8-BASE64-URL-encoded).
+        
+        Wird für feingranularen Zugriff auf Submodel-Elemente verwendet.
       schema:
         type: string
-        example: "ZGF0YUVsZW1lbnRJRA=="
+      example: ZGF0YUVsZW1lbnRJRA==
