@@ -61,7 +61,8 @@
 4. [Nicht-funktionale Anforderungen (NFR)](#4-nicht-funktionale-anforderungen-nfr)
 5. [Usability Konzept & Workflows](#5-usability-konzept--workflows)
 6. [Qualitätssicherung & Tests](#6-qualitätssicherung--tests)
-7. [Quellen & Referenzen](#7-quellen--referenzen)
+7. [MockUps & Wireframes](#7-mockupswireframes)
+8. [Quellen & Referenzen](#6-qualitätssicherung--tests)
 
 ---
 
@@ -126,7 +127,7 @@ Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur de
 7. **Circularity (IDTA-02035-7):** Beinhaltet Informationen zur Wiederverwendbarkeit und Nachhaltigkeit.
 
 ## 2. Anwendungsfälle
-Die Anwendungsfälle für diese Software können innerhalb des CRS (Kapitel XX) gefunden werden.
+Die Anwendungsfälle für diese Software können innerhalb des <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/CRS/TINF24F_CRS_Team_6_0v1.md#use-cases">CRS</a> (Kapitel 04) gefunden werden.
 
 ## 3. Funktionale Anforderungen (FR)
 Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt definiert. Diese unterteilen sich in Anforderungen an das Backend (Daten und API) und Anforderungen an das Frontend.
@@ -227,6 +228,14 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Beschreibung|Das Backend muss in der Lage sein, ein einzelnes Datenelement in einem DPP zu aktualisieren.|
 |Priorität|5 - Sehr hoch|
 |Akzeptanzkriterium|Das einzelne Element wurde alleine innerhalb des DPP geupdated|
+
+### FR-BE-13
+|ID|FR-BE-13|
+|---|---|
+|Name|Fehler bei ungültigen Eingabeparametern|
+|Beschreibung|Das Backend muss einen HTTP Error zurück geben, wenn der Nutzer falsche/ungültige Eingabeparameter verwendet.|
+|Priorität|5 - Sehr hoch|
+|Akzeptanzkriterium|Bei falscher Eingabe erfolgt ein HTTP Error|
 
 
 ### 3.2 Frontend-Anforderungen
@@ -380,7 +389,10 @@ Contract[Contract‑Tests DIN EN 18222]
 ```
 <p align="center"> <i>Abbildung 5: Teststrategie</i> </p>
 
-## 7. Quellen & Referenzen
+## 7. Mockups/Wireframes
+Innerhalb dieses Kapitels werden verschiedene MockUps/Wireframes vorgestellt, die eine mögliche Umsetzung unseres Projekts zeigen:
+
+## 8. Quellen & Referenzen
 |NR.|Referenz|Titel|Version|Beschreibung|
 |---|---|---|---|---|
 |1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|Dokument, dass die Anforderungen an eine API für den Digitalen Produktpass enthält.|
