@@ -300,66 +300,49 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-  actor User
-  participant Web as AAS Web UI (DPP Viewer)
+  participant Web as Service
   participant API as DPP-API
   participant Env as AAS Environment API
 
-  User->>Web: Wants a specific Submodel in a DPP with dppId and elementId
   Web->>API: GET /dpps/{dppId}/collections/{elementId}
 
-  rect purple
-    API->>API: /dpp/{dppId}
-    Note right of API: elementId = submodelIdentifier
+  API->>API: GET /dpps/{dppId}
+
+  opt FEHLER: Nicht gefunden
+    API-->>Web: Return HTTP 404
   end
 
-  loop for every dpp version
-    API-->>API: Check if elementId/submodel exists in DPP submodel list
-    API->>Env: GET /submodels/{submodelIdentifiers}/submodel-elements
-    alt success
-      Env-->>API: return HTTP 204: All DPP-relevant submodel data (JSON)
-    else failed
-      Env-->>API: return HTTP Errorcode
-    end
+  loop für jedes Submodel im DPP
+    API->>Env: GET /submodels/{submodelIdentifier}/$value
+    Env-->>API: Return Submodel structure & values
   end
 
-  Note right of Web: Structure: "Version > Data | Version > Data"
-  API-->>Web: return Submodel JSON (Version + Data)
-  Web-->>User: Display all relevant data
+  API-->>Web: Return JSON DPP Scheme
 ```
 
 <br>
 
 ### `PATCH` /dpps/{dppId}/collections/{elementId}
 
+> **To be included:** "Wenn die Aktualisierung einiger Teile scheitert, scheitert der vollständige Aktualisierungsprozess
+und es sollten keine Änderungen im DPP übernommen werden."
+
 ```mermaid
 sequenceDiagram
-  actor User
-  participant Web as AAS Web UI (DPP Viewer)
+  participant Web as Service
   participant API as DPP-API
   participant Env as AAS Environment API
 
-  User->>Web: Wants to update a specific Submodel in a DPP with dppId and elementId
   Web->>API: PATCH /dpps/{dppId}/collections/{elementId}
 
-  rect purple
-    API->>API: /dpp/{dppId}
-    Note right of API: elementId = submodelIdentifier
+  loop für jede Änderung
+    Note right of API: submodelIdentifier = elementId
+    API-->>API: Baue idShortPath aus Attribut-Hierarchie zusammen
+    API->>Env: PATCH /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value 
+    Env-->>API: Return HTTP 200 Success
   end
 
-  loop for whole dpp list
-    API-->>API: Check if elementId/submodel exists in DPP submodel list
-    opt
-      API-->>Web: return error
-    end
-
-    Note right of API: submodelIdentifier has to be base64-encoded
-    API->>Env: PATCH /submodels/{submodelIdentifier}/$values
-    Env-->>API: Returns updated Submodel 
-  end
-
-  API-->>Web: return updated Submodel
-  Web-->>User: Display all relevant data
+  API-->>Web: Return JSON DPP Scheme
 ```
 
 <br>
@@ -368,31 +351,22 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-  actor User
-  participant Web as AAS Web UI (DPP Viewer)
+  participant Web as Service
   participant API as DPP-API
   participant Env as AAS Environment API
 
-  User->>Web: Wants a specific Value of a Submodel in a DPP with dppId and elementPath
-  Web->>API: GET /dpps/{dppId}/elements/{elementPath}
+  Web->>API: PATCH /dpps/{dppId}/elements/{elementPath}
 
-  rect purple
-    API-->>API: /dpp/{dppId}
+  Note right of API: elementPath = idShortPath with (idShort[Submodel].idShort[SubmodelElementCollection]…)
+  rect lightgreen
+    API-->>API: GET /dpps/{dppId}
+    API-->>API: Check DPP for idShort[Submodel] in structure "DPPSubmodel_(idShort[Submodel])" and retrieve submodelIdentifier
   end
 
-  loop for every dpp version
-    loop for every submodel of a version
-        API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements/{elementPath}
-        alt
-            Env-->>API: Error
-        else
-            Env-->>API: HTTP 204: Value of Element
-        end
-    end
-  end
+  API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value
+  Env-->>API: return JSON
 
-  API-->>Web: return Submodel JSON (Version + Data)
-  Web-->>User: Display all relevant data
+  API-->>Web: Return JSON requested element
 ```
 
 <br>
