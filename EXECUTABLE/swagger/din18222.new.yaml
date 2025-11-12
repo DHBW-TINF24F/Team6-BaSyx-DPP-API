@@ -214,6 +214,41 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+
+  ## DPP Registry API
+  # tbd!
+  /registerDPP:
+    post:
+      tags:
+        - "DPP Registry API"
+      summary: "Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry)"
+      description: "Registriert einen neuen DPP im zentralen Register der EU-Kommission. Gibt eine eindeutige Registrierungs-ID zurück."
+      operationId: "postNewDPPToRegistry"
+      requestBody:
+        required: true
+        description: "Ein Objekt, das die Kennungen für Produkt, Betreiber und Sicherungsbetreiber enthält (Teilmenge des DPP-Headers)."
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  $ref: "#/components/schemas/IdentifierAAS"
+                operatorId:
+                  $ref: "#/components/schemas/IdentifierDPP"
+                backupOperatorId:
+                  $ref: "#/components/schemas/IdentifierDPP"
+      responses:
+        "201":
+          description: "DPP erfolgreich registriert. Gibt die neue Registrierungs-ID zurück."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  registryIdentifier:
+                    $ref: "#/components/schemas/IdentifierDPP"
+
 components:
   schemas:
     # Identifier
