@@ -390,7 +390,7 @@ Contract[Contract‑Tests DIN EN 18222]
 <p align="center"> <i>Abbildung 5: Teststrategie</i> </p>
 
 ## 7. Mockups/Wireframes
-Innerhalb dieses Kapitels werden verschiedene MockUps/Wireframes vorgestellt, die eine mögliche Umsetzung unseres Projekts zeigen:
+Mockups und Wireframes können <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PM/Mockups%20%26%20Wireframes">hier</a> gefunden werden.
 
 ## 8. Quellen & Referenzen
 |NR.|Referenz|Titel|Version|Beschreibung|
