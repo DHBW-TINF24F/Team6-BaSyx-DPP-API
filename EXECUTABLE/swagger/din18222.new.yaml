@@ -203,6 +203,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProductListScheme"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
 components:
   schemas:
@@ -368,10 +374,16 @@ components:
       type: object
       description: "Repräsentiert eine Liste von Produkt-Kennungen."
       properties:
-        products:
-          type: array
-          items:
-            $ref: "#/components/schemas/DPPListScheme"
+        status:
+          type: string
+          example: "Success"
+        payload:
+          type: object
+          properties:
+            products:
+              type: array
+              items:
+                $ref: "#/components/schemas/DPPListScheme"
 
     DPPListScheme:
       type: object
