@@ -107,6 +107,10 @@ paths:
       responses:
         "204":
           description: "DPP erfolgreich gelöscht."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
