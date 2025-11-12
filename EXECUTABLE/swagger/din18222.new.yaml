@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPScheme"
+                $ref: "#/components/schemas/DPPProductReturnScheme"
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -163,7 +163,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPScheme"
+                $ref: "#/components/schemas/DPPProductReturnScheme"
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -283,6 +283,42 @@ components:
       example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA=="
   
     # DPP Schemas
+    DPPProductReturnScheme:
+      type: object
+      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
+      properties:
+        status:
+          type: string
+          example: "Success"
+        payload:
+          type: object
+          properties:
+            productId:
+              $ref: "#/components/schemas/IdentifierAAS"
+            dpps:
+              $ref: "#/components/schemas/DPPValue"
+
+    DPPProductReturnMultipleScheme:
+      type: object
+      description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
+      properties:
+        status:
+          type: string
+          example: "Success"
+        payload:
+          type: object
+          properties:
+            productId:
+              $ref: "#/components/schemas/IdentifierAAS"
+            dpps:
+              $ref: "#/components/schemas/DPPValueArray"
+    DPPValueArray:
+      type: array
+      description: "Repräsentiert alle Versionen eines Digitalen Produktpasses im Value-Only Stil"
+      items:
+        $ref: "#/components/schemas/DPPValue"
+        
+
     DPPRequestScheme:
       type: object
       description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
@@ -309,10 +345,31 @@ components:
               type: string
               format: date-time
               example: "2025-11-08T14:30:00Z"
-            submodels:
+            dpps:
               type: array
               items:
-                $ref: "#/components/schemas/DPPSubmodelElement"
+                $ref: "#/components/schemas/DPPValue"        
+    DPPValue:
+      type: object
+      description: "Repräsentiert ein DPP-Objekt im Value-Only Stil"
+      properties:
+        DPPVersion:
+          type: string
+          example: "2025-11-08T14:30:00Z"
+        DPPSubmodels:
+          $ref: "#/components/schemas/DPPSubmodelElementValue"
+
+    DPPSubmodelElementValue:
+      type: object
+      description: "Repräsentiert ein Submodel-Element im Value-Only Stil"
+      properties:
+        DPPSubmodel_Submodel1:
+          type: string
+          example: "https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0"
+        DPPSubmodel_Submodel2:
+          type: string
+          example: "https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0"
+
     DPPPatchScheme:
       type: object
       description: "Repräsentiert das Anlegeschema eines Digitalen Produktpasses."
@@ -321,7 +378,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/DPPSubmodelElement"
-        
     DPPSubmodelElement:
       type: object
       properties:
