@@ -9,6 +9,7 @@ Dieses Dokument dient der Nachvollziehbarkeit der internen DPP API Abläufe, ins
 | 1.0     | 2025-11-08 | Luca Schmoll & Noah Becker | Inital thoughts & diagrams |
 | 1.1     | 2025-11-09 | Luca Schmoll & Noah Becker | Refactor sequences & write down open questions |
 | 1.2     | 2025-11-12 | Noah Becker                | Refactor Fine-Granular API Calls |
+| 1.3     | 2025-11-13 | Noah Becker                | Refactor all API-Calls due to new dppId structure |
 
 ---
 
