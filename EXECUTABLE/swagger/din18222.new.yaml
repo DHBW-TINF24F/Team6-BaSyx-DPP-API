@@ -314,7 +314,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DPPScheme'
+                $ref: '#/components/schemas/DPPElementResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
@@ -354,6 +354,26 @@ components:
     # DPP Request/Response Schemas
     # -------------------------------------------------------------------------
     
+    DPPElementResponse:
+      type: object
+      description: |
+        Response-Schema für feingranulare DPP-Element-Abfragen.
+      properties:
+        status:
+          type: string
+          description: Status der Anfrage
+          example: Success
+        payload:
+          type: object
+          required:
+            - elementId
+            - dataElementCollection
+          properties:
+            elementId:
+              $ref: '#/components/schemas/IdentifierAAS'
+            dataElementCollection:
+              $ref: '#/components/schemas/DPPSubmodelValue'
+
     DPPRequestScheme:
       type: object
       description: |
@@ -419,12 +439,12 @@ components:
               type: array
               description: Array von DPP-Versionen
               items:
-                $ref: '#/components/schemas/DPPValue'
+                $ref: '#/components/schemas/DPPSubmodelsValue'
     
     DPPValue:
       type: object
       description: |
-        Repräsentiert ein DPP-Objekt im Value-Only Stil.
+        Repräsentiert ein DPP-Objekt.
         
         Enthält Version und zugehörige Submodels.
       required:
@@ -437,8 +457,37 @@ components:
           description: Versionszeitstempel des DPP
           example: '2025-11-08T14:30:00Z'
         DPPSubmodels:
-          $ref: '#/components/schemas/DPPSubmodelElementValue'
+          type: array
+          $ref: '#/components/schemas/DPPSubmodelElement'
     
+    DPPSubmodelsValue:
+      type: object
+      description: |
+        Repräsentiert eine Liste von Submodels eines DPP im Value-Only Stil.
+      properties:
+        DPPSubmodels:
+          $ref: '#/components/schemas/DPPSubmodelValue'
+
+    DPPSubmodelValue:
+      type: object
+      description: |
+        Repräsentiert Submodel-Elemente im Value-Only Stil.
+        
+        Die Eigenschaften sind dynamisch und repräsentieren verschiedene Submodels 
+        (z.B. CarbonFootprint, MaterialComposition).
+      additionalProperties:
+        type: string
+        description: URL zu einem spezifischen Submodel
+      example:
+        SubmodelElementCollection:
+          Property1: "string"
+          SubmodelElementCollection:
+            Property2: "string"
+            Property3: "string"
+        SubmodelElementCollection2:
+          PropertyA: "string"
+          PropertyB: "string"
+
     DPPSubmodelElementValue:
       type: object
       description: |
@@ -450,14 +499,16 @@ components:
         type: string
         description: URL zu einem spezifischen Submodel
       example:
-        DPPSubmodel_Submodel1: https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0
-        DPPSubmodel_Submodel2: https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0
+        DPPVersion: '2025-11-08T14:30:00Z'
+        DPPSubmodels:
+          DPPSubmodel_Submodel1: https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0
+          DPPSubmodel_Submodel2: https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0
 
     DPPValueArray:
       type: array
       description: Repräsentiert alle Versionen eines Digitalen Produktpasses im Value-Only Stil
       items:
-        $ref: '#/components/schemas/DPPValue'
+        $ref: '#/components/schemas/DPPSubmodelValue'
 
     # -------------------------------------------------------------------------
     # Produkt-bezogene Response Schemas
@@ -485,7 +536,7 @@ components:
             productId:
               $ref: '#/components/schemas/IdentifierAAS'
             dpps:
-              $ref: '#/components/schemas/DPPValue'
+              $ref: '#/components/schemas/DPPSubmodelsValue'
     
     DPPProductReturnMultipleScheme:
       type: object
@@ -973,16 +1024,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DPPScheme'
-          example:
-            status: Success
-            payload:
-              dppId: aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9EUFAvMjAyNS0xMS0xMlQxNDozMDowMCswMDowMA==
-              timestamp: '2025-11-08T14:30:00Z'
-              dpps:
-                - DPPVersion: '2025-11-08T14:30:00Z'
-                  DPPSubmodels:
-                    DPPSubmodel_Submodel1: https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/1/0
-                    DPPSubmodel_Submodel2: https://dpp40.harting.com/shells/ZSN1/submodels/MaterialComposition/1/0
 
     # -------------------------------------------------------------------------
     # Client Error Responses (4xx)
