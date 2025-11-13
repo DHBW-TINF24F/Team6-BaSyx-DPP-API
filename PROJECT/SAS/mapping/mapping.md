@@ -234,22 +234,22 @@ sequenceDiagram
 
 <br>
 
-### `GET` /dppsByProductIdAndDate/{productId}
+### `GET` /dppsByProductIdAndDate/{productId}?date={timestamp}
 
 ```mermaid
-%%Mit Rentschler besprechen
 sequenceDiagram
   actor User
   participant Web as AAS Web UI (DPP Viewer)
   participant API as DPP-API
 
   User->>Web: Wants to get a DPP with a specific productId and timeStamp.
-  Web->>API: GET /dppsByProductId/{productId}
+  Web->>API: GET /dppsByProductId/{productId}?date={timestamp}
   Note right of API: dppId = productId + /DPP/
   API->>API: GET /dpps/{dppId}
   rect red
     Note right of API: Search for correct TimeStamp (No future Version & only 1 !!)
   end
+  API-->>API: map to return scheme
 
   API-->>Web: return DPP Json
   Web-->>User: Display all relevant dpp data
@@ -257,10 +257,20 @@ sequenceDiagram
 
 <br>
 
-### `GET` /dppsByProductIds/{productId}?limit&cursor
+| **Input-Parameter** | **Description** | **Format** | **Note** |
+|---------------------|-----------------|------------|----------|
+| **productId**       | Product-ID      | *base64-encoded* | submodelIdentifier of (Product) AAS <br> |
+| **timestamp**       | Timestamp       | YYYY-MM-DD*T*HH-MM-SS*Z* | - |
 
-> DIN 18222 hier unschlüssig: Siehe Seite 19 in PDF Tabelle HTTP-Methode für Methode "ReadDPPIdsByProductIds" ist "POST", während Seite 11 sagt "gibt eine Liste [...] zurück"
->> ***Hier angenommen: GET, da kein request body (payload) in der DIN angegeben ist***
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /dpp/{dppId}** | dppId | [See here](#api-calls) | dppId = *productId* + *"DPP"* <br> productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+| **GET /dppsByProductIdAndDate/{productId}?date={timestamp}** | productId <br> timestamp | ![](./src/RETURN_GET-ddpsByProductIds_2.png) | Only return the to the given timestamp newest DPP, no older or newer DPPs(!) |
+
+<br>
+
+
+### `POST` /dppsByProductIds
 
 > Nochmal Blick in die Norm werfen – insbesondere für die Umsetzung der Parameter *limit* und *cursor*
 
@@ -272,7 +282,9 @@ sequenceDiagram
   participant Env as AAS Enviroment API
 
   User->>Web: Wants to get a list of dppIds by productIds
-  Web->>API: GET /dppsByProductIds/{productId}
+  Web->>API: POST /dppsByProductIds
+
+  API-->>API: fetch the request body for productIds, limit and cursor
   
   loop for all productIds
     Note right of API: submodelIdentifier = productId + /DPP
@@ -290,14 +302,14 @@ sequenceDiagram
 
 | **Input-Parameter** | **Description** | **Format** | **Note** |
 |---------------------|-----------------|------------|----------|
-| **productId**       | Product-ID      | *base64-encoded* | submodelIdentifier of (Product) AAS <br> |
-| **limit**           | ? | ? | - |
-| **cursor**          | ? | ? | - |
+| **Request body**<br>*productIds<br>limit<br>cursor* | <br> Product-ID <br> . <br> . | <br> *base64-encoded* <br> ? <br> ? | <br> submodelIdentifier of (Product) AAS <br> ? <br> ? |
 
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | [See here](#api-calls) | submodelIdentifier is put together by the given *productId* and *"/DPP"* |
-| **GET /dppsByProductIds/{productId}** | productId <br> limit <br> cursor | ![](./src/RETURN_GET-ddpsByProductIds_2.png) | productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+| **GET /dppsByProductIds** | Request body:<br>*productIds<br>limit<br>cursor* | ![](./src/RETURN_GET-ddpsByProductIds_2.png) | productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+
+<br>
 
 ---
 
