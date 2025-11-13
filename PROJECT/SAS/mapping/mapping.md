@@ -19,7 +19,7 @@ Dieses Dokument dient der Nachvollziehbarkeit der internen DPP API Abläufe, ins
 
 ### `POST` /dpps
 
-> DIN Dokument hier ungenau: Tabelle 5 &mdash; Create DPP gibt als Ausgabeparameter `dppId` an, während Tabelle 17 &mdash; Lebensweg-API als Ausgabe `DPP`(-Objekt) fordert.
+> ***[noahbecker] 2025-11-10 21:06:*** DIN Dokument hier ungenau: Tabelle 5 &mdash; Create DPP gibt als Ausgabeparameter `dppId` an, während Tabelle 17 &mdash; Lebensweg-API als Ausgabe `DPP`(-Objekt) fordert.
 
 ```mermaid
 sequenceDiagram
@@ -66,19 +66,11 @@ sequenceDiagram
 
 <br>
 
-**Erläuterung**  
 
-| **Actor**      | **API-Call** | **Recipient** | **Parameters** | **Body expected?** | **Return element** | **Note** |
-|----------------|--------------|---------------|----------------|--------------------|--------------------|----------|
-| **AAS Web UI** | `POST` /dpps | DPP-API | - | *Yes* <br> dppId <br> productId^*^ | JSON | Initial Frontend call <br> dppId can be empty <br> productId has to be idShort of AAS Shell <br> *Both base64-encoded!* <br> **Return: JSON** |
-| **DPP-API**    | `GET` /submodels | Environment API | idShort | No | JSON | idShort is productId <br> **Return: Array of submodels** |
-|                | `POST` /submodels | Environment API | 
 
 <br>
 
 ### `GET` /dpps/{dppId}
-
-[KI example](https://mermaid.live/edit#pako:eNqVVclu2zAQ_ZUBTwmgeJO8RGhTZLELX1KjLnJoHAS0SMesJVElKceu4X_vaLPltakOAjV8b97McIZaEU8yTlyi-e-Yhx5_EPRN0WAUAj4RVUZ4IqKhgXtf8NAc2m8HfaAaelSbZNkNWSTFMWA3TKRUAr6jmrecwnIIfZDeLEPmqyFXc-HxDJm9s3iubm5Q1YWv3R9QZVGkv-Crzz4vFosMhruIyZXcXBJSUAbIt64KTzz9Zq8lSNlTFlAuqONxgGBfV1c7tHXGyLAbz9-5jmSoObwLM4WC2_V5gIno55ey2KM0HOQcU0-pA6qQpwoH2qjYM7Hin8aqenNh1BIYNbSy79OCQ4vEuipFl5dlOV_KCHq4xak3heEu6V76PveMkGEGPhJfd2EU9fDgBoMnrjRCwYiAa0ODaEuivoEn6gu23YSJjEO2hZzMvT_8Bp1WrQ5VmFDfH1NvhlwVUHOW3BMhS6IqUtLgHclmW4ji2S1IUUXoP4AId_zt0k53XMnFIeVUDxakV8EOSaeU_9WhJafrzf4VzxvkIzrJOfa4SQvjeVzrSewfoo5MQFG1tFuPM_bO75YxWAlmpYw1GLkp5GZgyg-aeR7ahAqfsw-F1VVKqv8LhyeUD8Sz39sHhrPdexcLP21fmOdTJce_sHnddO5XudHajpNVDme99Z3W5VHCfHf6zooPZyICMxU6CaDkqshgszh6Yw2lMtgofkLWMF6WRv4i5O-4hIlQ2lzuX7F4KNnV7sIqOXQXniuVyouFgxsnxnBNLPKmBCMu3oLcIgHHWyD5JKvEy4iYKbbyiLi4ZFTNRmSUcvDP8lPKoKApGb9NiYuXicavOEKt4ue3gWCKXN0nusTttBqpD-KuyIK4jbZdaTfqdqdds22n7tRsiyyJ67Qrtt1qNq_bDcdp1R1nbZE_qWq9YjdqzXan6didVvu6XnfWfwEHPUAO)
 
 ```mermaid
 sequenceDiagram
@@ -87,40 +79,48 @@ sequenceDiagram
   participant API as DPP-API
   participant Env as AAS Environment API
 
-  User->>Web: Search DPP by ID: {dppId}
+  User->>Web: Want to retrieve a specific DPP by ID
   Web->>API: GET /dpps/{dppId}
 
-  rect purple
-    Note right of API: submodelIdentifier = [base64 encoded] dppId
-    API->>Env: /submodels/{submodelIdentifier}
-    alt success
-        Env-->>API: return whole submodel tree
-    else failed
-        Env-->>API: return HTTP Errorcode
-    end
+  API-->>API: strip out submodelIdentifier and idShort of DPP version out of dppId
+
+  Note right of API: Use submodelIdentifier from stripped dppId & build idShortPath with requested [dppVersion].DPPSubmodels 
+  API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value
+  Env-->>API: Return submodelIdentifiers - references to DPP-related submodels
+
+  loop for every submodel
+    API->>Env: GET /submodels/{submodelIdentifier}/$value
+    Env-->>API: Return submodel
+    API-->>API: Add to return array
   end
 
-  API->>API: Re-model Submodel tree sorted by version and their corresponding DPPSubmodels (only "value" important)
+  API-->>API: map to return scheme
 
-  loop
-  Note right of API: submodelIdentifier = [base64 encoded] Parameter "value"
-    API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements
-    alt success
-      Env-->>API: return HTTP 204: All DPP-relevant submodel data (JSON)
-    else failed
-      Env-->>API: return HTTP Errorcode
-    end
-  end
-
-  API-->>Web: return Submodel JSON
-  Web-->>User: Display all relevant data
+  API-->>Web: Return Submodel JSON
+  Web-->>User: Return data
 ```
+
+<br>
+
+| **Input-Parameter** | **Description** | **Format** | **Note** |
+|---------------------|-----------------|------------|----------|
+| **dppId**           | DPP-Identifier  | *base64-encoded* | [See here](#parameter) |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value** | submodelIdentifier<br>idShortPath | - | submodelIdentifier and idShortPath need to be stripped out of given dppId; <br> idShortPath has to end with ".DPPSubmodels" |
+| **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | - | Returns submodel data |
+| **GET /dpps/{dppId}** | dppId | ***image soon*** | - |
 
 <br>
 
 ### `PATCH` /dpps/{dppId}
 
-> Zu klären: Soll hier der timestamp geändert werden?
+> ***[noahbecker] 2025-11-11:*** Zu klären: Soll hier der timestamp geändert werden?
+> ***[noahbecker] 2025-11-13:*** Soll hier das DPP Submodel verändert werden (sprich: Änderungen an den Referenzierungen zu den Submodels) oder konkret die in den DPP verwendeten Submodels verändert werden?
+
+> **To be included:** "Wenn die Aktualisierung einiger Teile scheitert, scheitert der vollständige Aktualisierungsprozess
+und es sollten keine Änderungen im DPP übernommen werden."
 
 ```mermaid
 sequenceDiagram
