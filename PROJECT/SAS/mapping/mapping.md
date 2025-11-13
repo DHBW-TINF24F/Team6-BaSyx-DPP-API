@@ -354,13 +354,27 @@ sequenceDiagram
     API-->>Web: Return HTTP 404
   end
 
-  loop für jedes Submodel im DPP
-    API->>Env: GET /submodels/{submodelIdentifier}/$value
-    Env-->>API: Return Submodel structure & values
-  end
+  API-->>API: Check DPPSubmodels for given elementId (submodelIdentifier)
+
+  API->>Env: GET /submodels/{submodelIdentifier}/$value
+  Env-->>API: Return Submodel structure & values
 
   API-->>Web: Return JSON DPP Scheme
 ```
+
+<br>
+
+| **Input-Parameter** | **Description** |**Format** | **Note** |
+|---------------------|-----------------|-----------|----------|
+| dppId               | [See here](#parameter) | - | - |
+| elementId           | ElementId | *base64-encoded* | elementId = submodelIdentifier (of DPP-related submodel) |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /dpps/{dppId}** | dppId | [See here](#api-calls) | Used to verify for elementId existence in DPP |
+| **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | SubmodelValues | submodelIdentifier = elementId |
+| | | | |
+| **GET /dpps/{dppId}/collections/{elementId}** | dppId <br> elementId | ***Image soon*** | *tbd* |
 
 <br>
 
@@ -379,6 +393,12 @@ sequenceDiagram
 
   loop für jede Änderung
     Note right of API: submodelIdentifier = elementId
+    rect lightblue
+      Note right of API: check if given elementId is exisiting in DPP
+      API->>API: GET /dpps/{dppId}
+      API-->>API: Check DPPSubmodels for given elementId (submodelIdentifier)
+    end
+
     API-->>API: Baue idShortPath aus Attribut-Hierarchie zusammen
     API->>Env: PATCH /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value 
     Env-->>API: Return HTTP 200 Success
@@ -386,6 +406,20 @@ sequenceDiagram
 
   API-->>Web: Return JSON DPP Scheme
 ```
+
+<br>
+
+| **Input-Parameter** | **Description** |**Format** | **Note** |
+|---------------------|-----------------|-----------|----------|
+| dppId               | [See here](#parameter) | - | - |
+| elementId           | ElementId | *base64-encoded* | elementId = submodelIdentifier (of DPP-related submodel) |
+| *Request body*        | Partial-DataElementCollection | [See here](#parameter) | *tbd* |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **PATCH /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value** | submodelIdentifier<br>idShortPath | - | *tbd* |
+| | | | |
+| **PATCH /dpps/{dppId}/collections/{elementId}** | dppId <br> elementId | [See here](#api-calls) | *tbd* |
 
 <br>
 
