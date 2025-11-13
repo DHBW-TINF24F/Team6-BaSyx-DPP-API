@@ -257,9 +257,10 @@ sequenceDiagram
 
 <br>
 
-### `GET` /dppsByProductIds/{prodcutId}?limit&cursor
+### `GET` /dppsByProductIds/{productId}?limit&cursor
 
 > DIN 18222 hier unschlüssig: Siehe Seite 19 in PDF Tabelle HTTP-Methode für Methode "ReadDPPIdsByProductIds" ist "POST", während Seite 11 sagt "gibt eine Liste [...] zurück"
+>> ***Hier angenommen: GET, da kein request body (payload) in der DIN angegeben ist***
 
 > Nochmal Blick in die Norm werfen – insbesondere für die Umsetzung der Parameter *limit* und *cursor*
 
@@ -271,19 +272,32 @@ sequenceDiagram
   participant Env as AAS Enviroment API
 
   User->>Web: Wants to get a list of dppIds by productIds
-  Web->>API: POST /dppsByProductIds
-  Note right of API: dppId = productId + /DPP/ + (neueste) Version base64-encoded
+  Web->>API: GET /dppsByProductIds/{productId}
   
   loop for all productIds
-    API->>Env: GET /dpps/{dppId}
-    Env->>API: return DPPs (JSON)
+    Note right of API: submodelIdentifier = productId + /DPP
+    
+    API->>Env: GET /submodels/{submodelIdentifier}/$value
+    Env-->>API: Return all DPP versions
+    API-->>API: map to return scheme
   end
 
-  API->>Web: Collection of DPPs (JSON)
-  Web->>User: return visuals
+  API-->>Web: Collection of DPPs (JSON)
+  Web-->>User: Return data
 ```
 
 <br>
+
+| **Input-Parameter** | **Description** | **Format** | **Note** |
+|---------------------|-----------------|------------|----------|
+| **productId**       | Product-ID      | *base64-encoded* | submodelIdentifier of (Product) AAS <br> |
+| **limit**           | ? | ? | - |
+| **cursor**          | ? | ? | - |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | [See here](#api-calls) | submodelIdentifier is put together by the given *productId* and *"/DPP"* |
+| **GET /dppsByProductIds/{productId}** | productId <br> limit <br> cursor | ![](./src/RETURN_GET-ddpsByProductIds_2.png) | productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
 
 ---
 
@@ -386,6 +400,7 @@ sequenceDiagram
 
 ### `PATCH` /dpps/{dppId}/elements/{elementPath}
 
+> **tbd**
 
 <br>
 
