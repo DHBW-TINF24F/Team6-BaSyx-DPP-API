@@ -28,45 +28,50 @@ sequenceDiagram
   participant Env as AAS Environment API
 
   Web->>API: POST /dpps
-  Note right of API: idShort: idShort of AAS Shell
-  API->>Env: GET /submodels?idShort
-  Env-->>API: All Submodel in the AAS Shell
-
-  rect purple
-    Note right of API: DPP Metadata Submodel
-    Note left of Env: ID: AAS ID + /dpp/
-    API->>Env: POST /submodels
-    Env-->>API: return submodelIdentifier
-    Note left of Env: Creating version based on current time + date (as SubmodelElementCollection)
-  end
-
-  loop je DPP-relevantes Submodel*
-    API->>API: Duplicate check (with idShorts)
-
-    rect yellow
-        opt Duplicate
-            API->>Env: ?
-        end
+  
+  rect yellow
+    Note right of API: submodelIdentifier: aasIdentifier + "/DPP"
+    API->>Env: GET /submodels/{submodelIdentifier}/$value
+    opt Not Found: No DPP
+      Note right of API: No DPP Found: Create the DPP Submodel first
+      Env-->>API: Return 404 Not Found
+      API->>Env: POST /submodels
+      Env-->>API: Return Success HTTP 200
     end
-
-    API->>Env: POST /submodels
-    Env-->>API: return submodelIdentifier
-    API->>Env: POST /submodels/{submodelIdentifier}/submodel-elements
-    Env-->>API: return submodel JSON
-
-    Note right of API: aasIdentifier: [base64 encoded] AAS idShort
-    API->>Env: POST /shells/{aasIdentifier}/submodel-refs
-    Env->>API: return added Submodel reference (JSON)
+    Env-->>API: Return existing DPP Submodel
   end
 
-  API->>API: Store submodelIdentifier of the relevant submodels in {DPP Submodel + Version}
+  Note right of API: Create new DPP Version
+  API->>Env: POST /submodels/{submodelIdentifier}/submodel-elements
+  Env-->>API: Return Success HTTP 200
 
-  API-->>Web: return JSON
+  loop for every given submodel
+    API->>Env: POST /submodels
+    Env-->>API: Return Success HTTP 200
+    
+    Note right of API: Add submodel reference to the DPP Submodel
+    API->>Env: POST /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}
+    Env-->>API: Return Success HTTP 200
+  end
+
+  API-->>Web: Return Success
 ```
 
 <br>
 
+| **Input-Parameter** | **Description** | **Format** | **Note** |
+|---------------------|-----------------|------------|----------|
+| **dppId**           | DPP-Identifier  | *base64-encoded* | [See here](#parameter) |
+| **Request body**<br>aasIdentifier<br>dpp | <br>AAS-Identifier<br>Submodels | <br>*base64-encoded*<br>[See here](#parameter) | -
 
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | [See here](#api-calls) | submodelIdentifier must be build from the given *aasIdentifier* + *"/DPP"* |
+| **POST /submodels** | [See here]() | - | 1. Create DPP Submodel <br> 2. Create Submodels |
+| **POST /submodels/{submodelIdentifier}/submodel-elements** | submodelIdentifier <br>*Request body* | - | Parameter *submodelIdentifier* is submodelIdentifier of DPP Submodel |
+| **POST /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}** | submodelIdentifier <br> idShortPath | - | Parameter *submodelIdentifier* is submodelIdentifier of DPP Submodel <br> idShortPath is build from scheme: "DPPSubmodels.DPPSubmodel_[shortId of Submodel]" |
+| | | | |
+| **POST /dpps** | - | ***Image soon*** | - |
 
 <br>
 
@@ -110,6 +115,7 @@ sequenceDiagram
 |--------------|---------------|------------|----------|
 | **GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value** | submodelIdentifier<br>idShortPath | - | submodelIdentifier and idShortPath need to be stripped out of given dppId; <br> idShortPath has to end with ".DPPSubmodels" |
 | **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | - | Returns submodel data |
+| | | | |
 | **GET /dpps/{dppId}** | dppId | ***image soon*** | - |
 
 <br>
@@ -198,6 +204,7 @@ sequenceDiagram
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **DELETE /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}** | submodelIdentifier<br>idShortPath | - | submodelIdentifier and idShortPath need to be stripped out of given dppId |
+| | | | |
 | **DELETE /dpps/{dppId}** | dppId | ![](./src/RETURN_DELETE-dpps.png) | Only return the to the given timestamp newest DPP, no older or newer DPPs(!) |
 
 <br>
@@ -235,6 +242,7 @@ sequenceDiagram
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /dpps/{dppId}** | dppId | [See here](#api-calls) | dppId = *productId* + *"DPP"* <br> productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+| | | | |
 | **GET /dppsByProductId/{productId}** | productId | ![](./src/RETURN_GET-dppsByProductId.png) | Only return the newest DPP to the given product(Id) |
 
 <br>
@@ -270,6 +278,7 @@ sequenceDiagram
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /dpp/{dppId}** | dppId | [See here](#api-calls) | dppId = *productId* + *"DPP"* <br> productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+| | | | |
 | **GET /dppsByProductIdAndDate/{productId}?date={timestamp}** | productId <br> timestamp | ![](./src/RETURN_GET-dppsByProductIdAndDate.png) | Only return the to the given timestamp newest DPP, no older or newer DPPs(!) |
 
 <br>
@@ -312,6 +321,7 @@ sequenceDiagram
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | [See here](#api-calls) | submodelIdentifier is put together by the given *productId* and *"/DPP"* |
+| | | | |
 | **GET /dppsByProductIds** | Request body:<br>*productId<br>limit<br>cursor* | ![](./src/RETURN_GET-ddpsByProductIds.png) | productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
 
 <br>
@@ -411,6 +421,7 @@ sequenceDiagram
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /dpps/{dppId}** | dppId | [See here](#api-calls) | - |
+| | | | |
 | **GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value** | submodelIdentifier <br> idShortPath | [See here](#api-calls) | Use submodelIdentifier from *GET /dpps/{dppId}*; <br> Retrieve idShortPath from input parameter *elementPath* - divided by dots, use path given from elementPath[1] |
 
 <br>
