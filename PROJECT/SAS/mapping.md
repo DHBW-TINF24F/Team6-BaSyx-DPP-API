@@ -8,6 +8,7 @@ Dieses Dokument dient der Nachvollziehbarkeit der internen DPP API Abläufe, ins
 |---------|------------|----------------------------|-----------|
 | 1.0     | 2025-11-08 | Luca Schmoll & Noah Becker | Inital thoughts & diagrams |
 | 1.1     | 2025-11-09 | Luca Schmoll & Noah Becker | Refactor sequences & write down open questions |
+| 1.2     | 2025-11-12 | Noah Becker                | Refactor Fine-Granular API Calls |
 
 ---
 
@@ -360,7 +361,7 @@ sequenceDiagram
   Note right of API: elementPath = idShortPath with (idShort[Submodel].idShort[SubmodelElementCollection]…)
   rect lightgreen
     API-->>API: GET /dpps/{dppId}
-    API-->>API: Check DPP for idShort[Submodel] in structure "DPPSubmodel_(idShort[Submodel])" and retrieve submodelIdentifier
+    API-->>API: Get idShort[Submodel] in structure "DPPSubmodel_(idShort[Submodel])" and retrieve submodelIdentifier
   end
 
   API->>Env: GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value
@@ -371,4 +372,37 @@ sequenceDiagram
 
 <br>
 
+| **Input-Parameter** | **Description** |**Format** | **Note** |
+|---------------------|-----------------|-----------|----------|
+| dppId               | [See here](#parameter) | - | - |
+| elementPath         | ElementId path to the specific data element | *idShort[Submodel]*.*idShort[ChildrenElement]*.[...] | Hierachic structure - start from idShort of submodel to end with specific submodel entry - divided by dots |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /dpps/{dppId}** | dppId | [See here](#api-calls) | - |
+| **GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value** | submodelIdentifier <br> idShortPath | [See here](#api-calls) | Use submodelIdentifier from *GET /dpps/{dppId}*; <br> Retrieve idShortPath from input parameter *elementPath* - divided by dots, use path given from elementPath[1] |
+
+<br>
+
 ### `PATCH` /dpps/{dppId}/elements/{elementPath}
+
+
+<br>
+
+---
+
+## Important parameter & API Calls
+
+### Parameter
+
+| **Parameter** | **Description** | **Format** | **Note** |
+|---------------|-----------------|------------|----------|
+| **dppId**     | DPP identifer   | *submodelIdentifier* + "/DPP/" + timestamp | Used to identify a specific (versioned) DPP |
+
+<br>
+
+### API Calls
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /ddps/{dppId}** | dppId | <code>{<br>&nbsp;&nbsp;"status": "Success",<br>&nbsp;&nbsp;"payload": { <br> &nbsp;&nbsp;&nbsp;&nbsp; "dppId": "[base64-encoded dppId]", <br> &nbsp;&nbsp;&nbsp;&nbsp; "timestamp": "YYYY-MM-DDTHH-MM-SSZ" <br> &nbsp;&nbsp;&nbsp;&nbsp; "dpps": [ <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DPPVersion: "YYYY-MM-DDTHH-MM-SSZ", <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "DPPSubmodels": { <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "DPPSubmodel_[submodelshortId]": "[submodelIdentifier]", <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "DPPSubmodel_[submodelshortId]": "[submodelIdentifier]" <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <br> &nbsp;&nbsp;&nbsp;&nbsp;]<br> &nbsp;&nbsp;} <br>   }</code> | - |
