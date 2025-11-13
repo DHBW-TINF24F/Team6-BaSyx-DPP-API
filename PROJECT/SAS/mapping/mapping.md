@@ -360,6 +360,7 @@ sequenceDiagram
   API->>Env: GET /submodels/{submodelIdentifier}/$value
   Env-->>API: Return Submodel structure & values
 
+  API-->>API: map to return scheme
   API-->>Web: Return JSON DPP Scheme
 ```
 
@@ -383,6 +384,7 @@ sequenceDiagram
 
 > **To be included:** "Wenn die Aktualisierung einiger Teile scheitert, scheitert der vollständige Aktualisierungsprozess
 und es sollten keine Änderungen im DPP übernommen werden."
+>> **Ansatz:** GETte zu änderndes Submodel (GET /submodels/{submodelIdentifier}) und speichere es temporär. Falls Fehlschlag, nutze PUT /submodels/{submodelIdentifiers}.
 
 ```mermaid
 sequenceDiagram
