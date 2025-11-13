@@ -160,6 +160,9 @@ sequenceDiagram
 
 ### `DELETE` /dpps/{dppId}
 
+> ***[noahbecker] 2025-11-13 11:12:*** Will man hier komplettes DPP inkl. der referenzierten Submodels (Nameplate, Carbon Footprint,...) löschen **oder** nur den DPP an sich?
+>> Diagramm zeigt Variante, nur den DPP an sich zu löschen, referenzierte Submodels existieren weiterhin
+
 ```mermaid
 sequenceDiagram
   actor User
@@ -168,40 +171,34 @@ sequenceDiagram
   participant Env as AAS Environment API
 
   User->>Web: Wants to delete a DPP by ID
-  Web->>API: PATCH /dpps/{dppId}
+  Web->>API: DELETE /dpps/{dppId}
 
+  API-->>API: Strip submodelIdentifier and DPP-version from given dppId
 
-  rect purple
-    API->>API: GET /dpp/{dppId}
-    alt success
-        API-->>API: return HTTP 204: All DPP versions and their relevant Submodels (JSON)
-    else failed
-        API-->>API: return HTTP Errorcode
-    end
-  end
-
-  loop for every (DPP-)submodel
-    API->>Env: DELETE /submodels/{submodelIdentifier}
-    
-    alt success
-        Env-->>API: return HTTP 204
-    else failed
-        Env-->>API: return HTTP Errorcode
-    end
-  end
-
-  API->>Env: DELETE /submodels/dppId/
+  Note right of API: idShortPath = "DPP_" + DPP-version
+  API->>Env: DELETE /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}
   alt success
     Env-->>API: return HTTP 204
   else failed
     Env-->>API: return HTTP Errorcode
   end
   
-  API-->>Web: return Status
-  Web-->>User: Displays Status
-
+  API-->>Web: Return StatusCode
+  Web-->>User: Return data
 ```
 
+<br>
+
+| **Input-Parameter** | **Description** | **Format** | **Note** |
+|---------------------|-----------------|------------|----------|
+| **dppId**           | DPP-Identifier  | *base64-encoded* | [See here](#parameter) |
+| **submodelIdentifier** | Submodel-Identifier | *base64-encoded* | submodelIdentifier is stripped out of given dppId |
+| **idShortPath**     | Element-ID-Path | "DPP_" + timestamp | Stripped out of given dppId |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **DELETE /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}** | submodelIdentifier<br>idShortPath | - | submodelIdentifier and idShortPath need to be stripped out of given dppId |
+| **DELETE /dpps/{dppId}** | dppId | ![](./src/RETURN_DELETE-dpps.png) | Only return the to the given timestamp newest DPP, no older or newer DPPs(!) |
 
 <br>
 
@@ -213,24 +210,32 @@ sequenceDiagram
   participant Web as AAS Web UI (DPP Viewer)
   participant API as DPP-API
 
-  User->>Web: Wants to get a DPP with a specific productId.
+  User->>Web: Wants to get a DPP by a specific productId.
   Web->>API: GET /dppsByProductId/{productId}
   Note right of API: Per definition: dppId = productId + /DPP/
-  loop for each productId
-    Note right of API: dppId: Add "/DPP/" to productId
-    API->>API: GET /dpps/{dppId}
-    Note left of API: Choose the newest version ([0]) of DPP
 
-    alt success
-        API-->>API: add DPP to return array
-    else failed
-        API-->>API: do not add DPP to return array
-    end
+  API->>API: GET /dpps/{dppId}
+
+  rect red
+    Note right of API: Choose the newest version ([0]) of returned DPPs
   end
+
+  API-->>API: map to return scheme
   
-  API-->>Web: return DPP JSON
-  Web-->>User: Display all relevant DPP data
+  API-->>Web: Return DPP JSON
+  Web-->>User: Return data
 ```
+
+<br>
+
+| **Input-Parameter** | **Description** | **Format** | **Note** |
+|---------------------|-----------------|------------|----------|
+| **productId**       | Product-Identifier  | *base64-encoded* | [See here](#parameter) |
+
+| **API-Call** | **Parameter** | **Return** | **Note** |
+|--------------|---------------|------------|----------|
+| **GET /dpps/{dppId}** | dppId | [See here](#api-calls) | dppId = *productId* + *"DPP"* <br> productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+| **GET /dppsByProductId/{productId}** | productId | ![](./src/RETURN_GET-dppsByProductId.png) | Only return the newest DPP to the given product(Id) |
 
 <br>
 
@@ -251,21 +256,21 @@ sequenceDiagram
   end
   API-->>API: map to return scheme
 
-  API-->>Web: return DPP Json
-  Web-->>User: Display all relevant dpp data
+  API-->>Web: return DPP JSON
+  Web-->>User: Return data
 ```
 
 <br>
 
 | **Input-Parameter** | **Description** | **Format** | **Note** |
 |---------------------|-----------------|------------|----------|
-| **productId**       | Product-ID      | *base64-encoded* | submodelIdentifier of (Product) AAS <br> |
+| **productId**       | Product-ID      | *base64-encoded* | [See here](#parameter) |
 | **timestamp**       | Timestamp       | YYYY-MM-DD*T*HH-MM-SS*Z* | - |
 
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /dpp/{dppId}** | dppId | [See here](#api-calls) | dppId = *productId* + *"DPP"* <br> productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
-| **GET /dppsByProductIdAndDate/{productId}?date={timestamp}** | productId <br> timestamp | ![](./src/RETURN_GET-ddpsByProductIds_2.png) | Only return the to the given timestamp newest DPP, no older or newer DPPs(!) |
+| **GET /dppsByProductIdAndDate/{productId}?date={timestamp}** | productId <br> timestamp | ![](./src/RETURN_GET-dppsByProductIdAndDate.png) | Only return the to the given timestamp newest DPP, no older or newer DPPs(!) |
 
 <br>
 
@@ -302,12 +307,12 @@ sequenceDiagram
 
 | **Input-Parameter** | **Description** | **Format** | **Note** |
 |---------------------|-----------------|------------|----------|
-| **Request body**<br>*productIds<br>limit<br>cursor* | <br> Product-ID <br> . <br> . | <br> *base64-encoded* <br> ? <br> ? | <br> submodelIdentifier of (Product) AAS <br> ? <br> ? |
+| **Request body**<br>*productId<br>limit<br>cursor* | <br> Product-ID <br> . <br> . | <br> *base64-encoded* <br> ? <br> ? | <br> [See here](#parameter) <br> ? <br> ? |
 
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
 | **GET /submodels/{submodelIdentifier}/$value** | submodelIdentifier | [See here](#api-calls) | submodelIdentifier is put together by the given *productId* and *"/DPP"* |
-| **GET /dppsByProductIds** | Request body:<br>*productIds<br>limit<br>cursor* | ![](./src/RETURN_GET-ddpsByProductIds_2.png) | productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
+| **GET /dppsByProductIds** | Request body:<br>*productId<br>limit<br>cursor* | ![](./src/RETURN_GET-ddpsByProductIds.png) | productId is *base64*-encoded and needs to be decoded in order to generate submodelIdentifier for DPP |
 
 <br>
 
@@ -386,7 +391,7 @@ sequenceDiagram
 
   Note right of API: elementPath = idShortPath with (idShort[Submodel].idShort[SubmodelElementCollection]…)
   rect lightgreen
-    API-->>API: GET /dpps/{dppId}
+    API->>API: GET /dpps/{dppId}
     API-->>API: Get idShort[Submodel] in structure "DPPSubmodel_(idShort[Submodel])" and retrieve submodelIdentifier
   end
 
