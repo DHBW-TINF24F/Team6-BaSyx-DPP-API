@@ -314,6 +314,65 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/DPPElementCollectionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - DPP Fine-Granular Life Cycle API
+      summary: Eine Daten-Sammlung aus einem DPP bearbeiten (UpdateDataElementCollection)
+      description: |
+        Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus 
+        einem bestimmten DPP zurück.
+      operationId: updateDataElementCollection
+      parameters:
+        - $ref: '#/components/parameters/dppId'
+        - $ref: '#/components/parameters/elementId'
+      requestBody:
+        required: true
+        description: Ein partielles DPP-Objekt mit den zu aktualisierenden Submodels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DPPSubmodelValue'
+      responses:
+        '200':
+          description: Die angeforderte DataElementCollection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DPPElementCollectionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dpps/{dppId}/elements/{elementPath}:
+    get:
+      tags:
+        - DPP Fine-Granular Life Cycle API
+      summary: Ein Daten-Element aus einem DPP lesen (ReadDataElementElement)
+      description: |
+        Gibt ein spezifisches 'DataElement' anhand seines elementPath aus 
+        einem bestimmten DPP zurück.
+      operationId: readDataElementElement
+      parameters:
+        - $ref: '#/components/parameters/dppId'
+        - $ref: '#/components/parameters/elementPath'
+      responses:
+        '200':
+          description: | 
+            Das angeforderte DataElement
+            (Hier als Beispiel ein ProductCarbonFootprint)
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/DPPElementResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -321,6 +380,38 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - DPP Fine-Granular Life Cycle API
+      summary: Ein Daten-Element aus einem DPP bearbeiten (UpdateDataElementElement)
+      description: |
+        Gibt ein spezifisches 'DataElement' anhand seines elementPath aus 
+        einem bestimmten DPP zurück.
+      operationId: updateDataElementElement
+      parameters:
+        - $ref: '#/components/parameters/dppId'
+        - $ref: '#/components/parameters/elementPath'
+      requestBody:
+        required: true
+        description: Ein partielles DPP-Objekt mit den zu aktualisierenden Submodels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DPPSubmodelValue'
+      responses:
+        '200':
+          description: Die angeforderte DataElementCollection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DPPElementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
 
 # =============================================================================
 # COMPONENTS - Wiederverwendbare Definitionen
@@ -358,6 +449,36 @@ components:
       type: object
       description: |
         Response-Schema für feingranulare DPP-Element-Abfragen.
+      properties:
+        status:
+          type: string
+          description: Status der Anfrage
+          example: Success
+        payload:
+          type: object
+          required:
+            - elementId
+            - dataElement
+          properties:
+            PublicationDate:
+              type: string
+              format: date
+              example: "2023-11-14"
+            ExplanatoryStatement:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                  example: "application/pdf"
+                value:
+                  type: string
+                  example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ-ProductCarbonFootprint.ExplanatoryStatement-375e4720.pdf"
+            PCFLifeCyclePhase:
+
+    DPPElementCollectionResponse:
+      type: object
+      description: |
+        Response-Schema für feingranulare DPP-ElementCollection-Abfragen.
       properties:
         status:
           type: string
@@ -1216,3 +1337,13 @@ components:
       schema:
         type: string
       example: ZGF0YUVsZW1lbnRJRA==
+
+    elementPath:
+      name: elementPath
+      in: path
+      required: true
+      description: |
+        Pfad zu einem spezifischen DataElement innerhalb eines DPP.
+      schema:
+        type: string
+      example: Submodel[idShort].SubmodelElementCollection[idShort].Property1[idShort]
