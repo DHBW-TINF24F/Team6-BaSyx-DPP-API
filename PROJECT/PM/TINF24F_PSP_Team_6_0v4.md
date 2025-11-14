@@ -109,7 +109,7 @@ Time frame and phases:
 
 | Nr  | Milestone name                        | Week     | Responsible person                             | Deliverable |
 |-----|----------------------------------------|----------|------------------------------------------------|-------------|
-| M4  | Repository-Setup & Issue-Management    | 7        | Fabian Steiß, Noah Becker                      | 1. GitHub repository (basic structure)<br>2. Standard templates (README.md, PR templates)<br>3. Issue tracker setup (CRS, BC, SRS, SAS, STP, protocols) |
+| M4  | Repository-Setup & Issue-Management    | 7        | Fabian Steiß, Manuel Lutz                     | 1. GitHub repository (basic structure)<br>2. Standard templates (README.md, PR templates)<br>3. Issue tracker setup (CRS, BC, SRS, SAS, STP, protocols) |
 | M5  | Black-Box-Design (WHAT)                | 8–9      | Noah Becker, Luca Schmoll, Felix Schulz, Manuel Lutz | 1. Software Requirements Specification (SRS)<br>2. Software Architecture Specification (SAS)<br>3. Mockups/API design sketches, Usability/DX concept |
 | M6  | White-Box-Design (HOW)                 | 9–10     | Whole team                                     | 1. Definition of modules and assignment as work packages |
 | M7  | Final preparation                      | 11       | Whole team, Manuel Lutz                        | 1. Final project plan update (parallelised tasks, dependencies)<br>2. PowerPoint presentation (first version) |
