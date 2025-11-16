@@ -340,13 +340,13 @@ The backend acts as the sole integration and transformation point to ensure a co
 **Relevant Submodels:**  
 The DPP of a product includes information about the following seven Submodels:
 
-- Digital Nameplate *&mdash; (IDTA-02035-1)*
-- Handover Documentation *&mdash; (IDTA-02035-2)*
-- Product Carbon Footprint *&mdash; (IDTA-02035-3)*
-- Technical Data *&mdash; (IDTA-02035-4)*
-- Product Condition *&mdash; (IDTA-02035-5)*
-- Material Composition *&mdash; (IDTA-02035-6)*
-- Circularity *&mdash; (IDTA-02035-7)*
+- Digital Nameplate *&mdash; ([IDTA-02035-1](./IDTA-02035-1_Battery_Digital_Nameplate_1_0.pdf))*
+- Handover Documentation *&mdash; ([IDTA-02035-2](./IDTA-02035-2_Battery_Handover_Documentation_1_0.pdf))*
+- Product Carbon Footprint *&mdash; ([IDTA-02035-3](./IDTA-02035-3_Battery_CarbonFootprint_1_0.pdf))*
+- Technical Data *&mdash; ([IDTA-02035-4](./IDTA-02035-4_Battery_TechnicalData_1_0.pdf))*
+- Product Condition *&mdash; ([IDTA-02035-5](./IDTA-02035-5_Product_Condition_1_0.pdf))*
+- Material Composition *&mdash; ([IDTA-02035-6](./IDTA-02035-6_Material_Composition_1_0.pdf))*
+- Circularity *&mdash; ([IDTA-02035-7](./IDTA-02035-7_Circularity_1_0.pdf))*
 
 All relevant Submodels are stored in the AAS and need to be retrieved in order to return the DPP of a product.
 
