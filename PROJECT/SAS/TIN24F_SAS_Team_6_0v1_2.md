@@ -7,8 +7,8 @@
 | **Metadata**    | **Value**                           |
 |-----------------|-------------------------------------|
 | **Projectname** | Team 6 BaSyx DPP API (DIN EN 18222) |
-| **Version**     | 2.0                                 |
-| **Date**        | 2025-11-07                          |
+| **Version**     | 2.1                                 |
+| **Date**        | 2025-11-16                          |
 | **Author**      | [Noah Becker](https://github.com/noahdbecker) |
 
 ---
@@ -25,6 +25,7 @@
 | 1.5         | 2025-10-29 | Noah Becker | &bull; Behavioral Views &mdash; Sequence Diagram |
 | 1.6         | 2025-11-05 | Noah Becker | Altering Frontend & Backend Technologies |
 | 2.0         | 2025-11-07 | Noah Becker | Adapting software infrastructure to changing stakeholder needs |
+| 2.1         | 2025-11-16 | Noah Becker | Added partial information to DPP Data Composition |
 
 ---
 
@@ -47,6 +48,7 @@
 5. [Data View](#5-data-view)  
     5.1. [Purpose](#51-purpose)  
     5.2. [Data Model and Data Flow](#52-data-model-and-data-flow)  
+    5.3. [DPP Data Composition](#53-dpp-data-composition)
 6. [Deployment View]()  
 7. [Architectural Decisions and Rationale]()  
 8. [Summary and Outlook]()  
@@ -62,7 +64,7 @@
 
 This SAS defines the architectural design of the Digital Product Passport (DPP  &ndash; dt. *Digitaler Produkt Pass*) software, including API endpoint specifications, frontend integration within the BaSyx WebUI, component responsibilities, and deployment considerations.
 
-==The SAS defines how the system fulfills the functional and non-functional requirements defined in the *[Software Requirements Specifications (SRS)]()*.==
+==The SAS defines how the system fulfills the functional and non-functional requirements defined in the *[Software Requirements Specifications (SRS)](/PROJECT/SRS/SRS.md)*.==
 
 #### **Scope:**  
 
@@ -331,6 +333,49 @@ The system does not maintain its own persistent storage. Instead, it retrieves p
 
 The backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
 
-<br><br>
+<br>
 
-==*more to be done* ~NB==
+### 5.3. DPP Data Composition
+
+**Relevant Submodels:**  
+The DPP of a product includes information about the following seven Submodels:
+
+- Digital Nameplate *&mdash; (IDTA-02035-1)*
+- Handover Documentation *&mdash; (IDTA-02035-2)*
+- Product Carbon Footprint *&mdash; (IDTA-02035-3)*
+- Technical Data *&mdash; (IDTA-02035-4)*
+- Product Condition *&mdash; (IDTA-02035-5)*
+- Material Composition *&mdash; (IDTA-02035-6)*
+- Circularity *&mdash; (IDTA-02035-7)*
+
+All relevant Submodels are stored in the AAS and need to be retrieved in order to return the DPP of a product.
+
+<br>
+
+**Data flow &mdash; DPP request:**  
+
+| **Step (no.)** | **Step (title)** | **Description** | **Involved endpoint(s)** |
+|----------------|------------------|-----------------|--------------------------|
+| **1**          | Request          | User or third-party-application requests the DPP of a product | Frontend / DPP API endpoint |
+| **2**          | Data retrieval   | DPP API has to gather the necessary information about the submodels of the product | DPP API <br> BaSyx Environment API |
+| **3**          | Data mapping     | Reducing the response-data to the DPP-relevant keys and map the response to the required DPP scheme | DPP API |
+| **4**          | Response         | Respond with the correct DPP data object | DPP API <br> Third-Party-Application |
+| **5^\*^**      | Display data     | Display the data visually in the DPP Viewer | Frontend / User |
+
+*\* Only when request origins from the DPP Viewer*
+
+<br>
+
+**Important considerations:**
+
+*Hier bspw:  
+Mapping bei POST und PATCH API Calls, gleiches Schema wie Environment API anwenden, sodass möglichst wenig gemappt werden muss  
+Vorgaben der DIN-Norm akribisch berücksichtigen und Implementierung aufzeigen, Anmerkung zu OpenAPI File möglich  
+Parameterbenamung teils inkonsistent in Vorgaben, hier Äquivalente aufzeigen bzw. generell definieren (Zweck, Synonyme/Aliase, Format, Beispiel [immer das gleiche Beispiel zum Verständnis])*
+
+<br>
+
+**Ambiguities and further outlook:**  
+
+*Hier bspw:  
+Versionierung von DPPs, sehr wichtig aber (eventuell) kompliziert umzusetzen*
