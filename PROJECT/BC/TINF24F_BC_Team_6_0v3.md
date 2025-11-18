@@ -142,13 +142,13 @@ Expenses estimated for the 11-week project duration (Table 3).
 | Internet services and communication costs | 135 |
 | Software licenses | 10,000 |
 | Training | 1,000 |
-| **Total Other Costs** | **20,485** |
+| **Total Other Costs** | **10,485** |
 
 <p align="center"> <i>Table 3. Other costs calculation</i> </p> 
 
 The estimated total cost of developing the software product is:
 $$\text{Total Costs} = \text{Salary Costs} + \text{Other Costs}$$
-$$\text{Total Costs} = €38,700 + €20,485 = \mathbf{€59,185}$$
+$$\text{Total Costs} = €38,700 + €10,485 = \mathbf{€49,185}$$
 
 ![Gantt chart](images/Costs.png)
 
@@ -179,15 +179,15 @@ progress was systematically monitored.
 
 This is a commercial offer for the implementation of the DIN EN 18222 standard 
 (Digital Product Passport, DPP) in the Eclipse BaSyx framework. The details and the 
-offer sum of 59 185 € are illustrated in following table. It shows the total costs of the 
+offer sum of 49 185 € are illustrated in following table. It shows the total costs of the 
 project along with the profit **margin of ~ 30 %** and the offer. 
 
 | **Type of Costs** | **Costs, €** |
 | :--- | :---: |
 | **Salary Costs** | 38,700 |
-| **Other Costs** | 20,485 |
-| **Total Costs** | **59,185** |
-| **Profit (30%)** | 17,755.50 |
-| **Offer Sum** | **76,940.50** |
+| **Other Costs** | 10,485 |
+| **Total Costs** | **49,185** |
+| **Profit (30%)** | 14,755.50 |
+| **Offer Sum** | **63,940.50** |
 
-The total offer sum is **€76,940.50**.
+The total offer sum is **€63,940.50**.
