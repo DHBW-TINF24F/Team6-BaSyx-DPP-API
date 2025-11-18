@@ -7,7 +7,7 @@
 | **Metadata**    | **Value**                           |
 |-----------------|-------------------------------------|
 | **Projectname** | Team 6 BaSyx DPP API (DIN EN 18222) |
-| **Version**     | 2.1                                 |
+| **Version**     | 2.2                                 |
 | **Date**        | 2025-11-16                          |
 | **Author**      | [Noah Becker](https://github.com/noahdbecker) |
 
@@ -26,6 +26,7 @@
 | 1.6         | 2025-11-05 | Noah Becker | Altering Frontend & Backend Technologies |
 | 2.0         | 2025-11-07 | Noah Becker | Adapting software infrastructure to changing stakeholder needs |
 | 2.1         | 2025-11-16 | Noah Becker | Added partial information to DPP Data Composition |
+| 2.2         | 2025-11-18 | Noah Becker | &bull; Included White-Box-View / UML diagram *(Authors: Luca Schmoll & Magnus Lorcher)* <br> &bull; Added DPP API Specification and finish DPP Data Composition |
 
 ---
 
