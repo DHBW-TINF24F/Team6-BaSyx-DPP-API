@@ -48,11 +48,10 @@
 5. [Data View](#5-data-view)  
     5.1. [Purpose](#51-purpose)  
     5.2. [Data Model and Data Flow](#52-data-model-and-data-flow)  
-    5.3. [DPP Data Composition](#53-dpp-data-composition)
-6. [Deployment View]()  
-7. [Architectural Decisions and Rationale]()  
-8. [Summary and Outlook]()  
-9. [Appendices]()  
+    5.3. [DPP API Specification](#53-dpp-api-specification)
+    5.4. [DPP Data Composition](#54-dpp-data-composition)
+6. [Summary and Outlook]()  
+7. [Appendices]()  
 
 <br>
 
@@ -64,7 +63,7 @@
 
 This SAS defines the architectural design of the Digital Product Passport (DPP  &ndash; dt. *Digitaler Produkt Pass*) software, including API endpoint specifications, frontend integration within the BaSyx WebUI, component responsibilities, and deployment considerations.
 
-==The SAS defines how the system fulfills the functional and non-functional requirements defined in the *[Software Requirements Specifications (SRS)](/PROJECT/SRS/SRS.md)*.==
+The SAS defines how the system fulfills the functional and non-functional requirements defined in the *[Software Requirements Specifications (SRS)](/PROJECT/SRS/SRS.md)*.
 
 #### **Scope:**  
 
@@ -335,7 +334,36 @@ The backend acts as the sole integration and transformation point to ensure a co
 
 <br>
 
-### 5.3. DPP Data Composition
+### 5.3. DPP API Specification
+
+The [DIN EN 18222 (Draft)]() specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
+
+- **Life Cycle API (Main Methods):** Includes the main GET, PATCH and DELETE functionalities  
+- **Registry API for Register:** Covers access to external methods of the EC Registry, in order to register a new DPP at the registry of the EC  
+- **Fine Granular API Operations of the Life Cycle API:** Provides fine-granular access to individual ElementCollections and Elements  
+
+<br>
+
+**Requests:**  
+The important REST-API Calls **GET, PATCH, DELETE**, the necessary parameters as well as request bodies are specified and should be included in the OpenAPI specification like described.  
+
+<br>
+
+**Respones:**  
+Result objects should follow the described patterns *(in Table 13, 14, 15, 16)*. It is not outlined how the DPP Object itself should be structured!
+
+<br>
+
+**Important notice:**  
+As the DIN 18222 is still a draft, some things are listed contradictory multiple times. Also some information, e.g. about the definition of parameters, are unclear, therefore some assumptions will be taken.
+
+<br>
+
+*Further description to the data approach, how and where the data needed is retrieved, is described in the following [Chapter 5.4 – DPP Data Composition](#54-dpp-data-composition).*
+
+<br>
+
+### 5.4. DPP Data Composition
 
 **Relevant Submodels:**  
 The DPP of a product includes information about the following seven Submodels:
@@ -352,7 +380,7 @@ All relevant Submodels are stored in the AAS and need to be retrieved in order t
 
 <br>
 
-**Data flow &mdash; DPP request:**  
+**Data flow &mdash; Example: DPP request:**  
 
 | **Step (no.)** | **Step (title)** | **Description** | **Involved endpoint(s)** |
 |----------------|------------------|-----------------|--------------------------|
