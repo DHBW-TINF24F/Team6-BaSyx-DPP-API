@@ -245,7 +245,9 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 ### 3.2. White-Box View
 
-==tbd==
+<img src="./src/white-box-view/TINF24F_SAS_Team_6_White-Box-View_UML_R10.drawio.svg" alt="BaSyx DPP API – White-Box View / UML" width="100%" height="100%">
+
+*Figure 3-2 &mdash; White-Box View / UML diagram for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Magnus Lörcher)*
 
 <br><br>
 
@@ -338,14 +340,14 @@ The backend acts as the sole integration and transformation point to ensure a co
 
 The [DIN EN 18222 (Draft)]() specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
 
-- **Life Cycle API (Main Methods):** Includes the main GET, PATCH and DELETE functionalities  
+- **Life Cycle API (Main Methods):** Includes the main GET, POST, PATCH and DELETE functionalities  
 - **Registry API for Register:** Covers access to external methods of the EC Registry, in order to register a new DPP at the registry of the EC  
 - **Fine Granular API Operations of the Life Cycle API:** Provides fine-granular access to individual ElementCollections and Elements  
 
 <br>
 
 **Requests:**  
-The important REST-API Calls **GET, PATCH, DELETE**, the necessary parameters as well as request bodies are specified and should be included in the OpenAPI specification like described.  
+The important REST-API Calls **GET, POST, PATCH, DELETE**, the necessary parameters as well as request bodies are specified and should be included in the OpenAPI specification like described.  
 
 <br>
 
@@ -396,14 +398,26 @@ All relevant Submodels are stored in the AAS and need to be retrieved in order t
 
 **Important considerations:**
 
-*Hier bspw:  
-Mapping bei POST und PATCH API Calls, gleiches Schema wie Environment API anwenden, sodass möglichst wenig gemappt werden muss  
-Vorgaben der DIN-Norm akribisch berücksichtigen und Implementierung aufzeigen, Anmerkung zu OpenAPI File möglich  
-Parameterbenamung teils inkonsistent in Vorgaben, hier Äquivalente aufzeigen bzw. generell definieren (Zweck, Synonyme/Aliase, Format, Beispiel [immer das gleiche Beispiel zum Verständnis])*
+The less mapping, the more performance can be achieved. Therefore unnecessary mapping will be avoided, especially the POST and PATCH endpoints will follow the Environment API request body schemes so these can  just be piped through without much adjustment.
+
+The guidelines and specifications from the DIN EN 18222 should be respected meticulously, to achieve a standardized implementation of the DPP into the BaSyx Infrastructure. A first outline of the OpenAPI Specification based on the DIN EN 18222 can be found [here](/EXECUTABLE/swagger/din18222.yaml) *(local file)* and [here](https://srv01.noah-becker.de/uni/swe/swagger/) *(online SwaggerUI)*.
+
+The namings of the parameters in the DIN EN 18222 differ from the specifications in the BaSyx WebUI, the following table is designed to give a good overview about aliases, the purpose and the format of the parameters necessary for a DPP:
+
+| **Parameter (DIN EN 18222)** | **Alias (BaSyx)** | **Purpose**            | **Format** | **Example^\*^** |
+|------------------------------|-------------------|------------------------|------------|-----------------|
+| dppId                        | aasIdentifier     | Identify the AAS-Shell | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==* |
+| productId                    | *Global Asset ID* | Identify the product <br> *Implementation remains to be discussed* | Input needs to be base64-encoded | <https://pk.harting.com/?.20P=ZSN1> <br> *aHR0cHM6Ly9way5oYXJ0aW5nLmNvbS8/LjIwUD1aU04x* |
+| elementId                    | submodelIdentifier | Identify a specific submodel | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==* |
+| elementPath                  | idShortPath <br> *+ addition* | Take a specified path to an element in a submodel (dot-separated) <br> **Implementation:** {submodelIdentifier}.idShortPath | submodelIdentifier needs to be base64-encoded <br> Rest of idShortPath is "normal" | https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9.ProductCarbonFootprint.PublicationDate <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==.ProductCarbonFootprint.PublicationDate* |
+
+<br>
+
+*\* [This](https://dpp40.harting.com:3000/?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==) HARTING AAS-Shell is used for example data.*
 
 <br>
 
 **Ambiguities and further outlook:**  
 
-*Hier bspw:  
-Versionierung von DPPs, sehr wichtig aber (eventuell) kompliziert umzusetzen*
+- **Versioning of DPPs:** Having a look in the DIN, there is noted that explicit versions are expected. The dppId, like defined, describes an AAS-Shell, but should also include a version to statisfy the DIN needs.
+- **productId parameter:** The productId parameter, like defined, can not solely be used to make an API-Call to the Environment API. *This remains to be dicussed with the stakeholders*
