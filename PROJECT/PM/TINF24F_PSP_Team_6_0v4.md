@@ -138,6 +138,7 @@ Time frame and phases:
 | Rolle: Project manager|  - Planning & control |
 | *E-mail: inf24271@lehre.dhbw-stuttgart.de* |  - PSP (Project structure plan) |
 | *MatrikelNr: 6401719* |  - BC (Business Case) |
+| |  - Usability Concept |
 | |  - Coding (Frontend)|
 | |  - Presentation |
 | |  - PowerPoint |
