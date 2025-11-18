@@ -8,7 +8,7 @@
 |-----------------|-------------------------------------|
 | **Projectname** | Team 6 BaSyx DPP API (DIN EN 18222) |
 | **Version**     | 2.2                                 |
-| **Date**        | 2025-11-16                          |
+| **Date**        | 2025-11-18                          |
 | **Author**      | [Noah Becker](https://github.com/noahdbecker) |
 
 ---
@@ -26,7 +26,7 @@
 | 1.6         | 2025-11-05 | Noah Becker | Altering Frontend & Backend Technologies |
 | 2.0         | 2025-11-07 | Noah Becker | Adapting software infrastructure to changing stakeholder needs |
 | 2.1         | 2025-11-16 | Noah Becker | Added partial information to DPP Data Composition |
-| 2.2         | 2025-11-18 | Noah Becker | &bull; Included White-Box-View / UML diagram *(Authors: Luca Schmoll & Magnus Lorcher)* <br> &bull; Added DPP API Specification and finish DPP Data Composition |
+| 2.2         | 2025-11-18 | Noah Becker | &bull; Included White-Box-View / UML diagram *(Authors: Luca Schmoll & Magnus Lorcher)* <br> &bull; Added DPP API Specification and finish DPP Data Composition <br> &bull; Added References |
 
 ---
 
@@ -49,10 +49,10 @@
 5. [Data View](#5-data-view)  
     5.1. [Purpose](#51-purpose)  
     5.2. [Data Model and Data Flow](#52-data-model-and-data-flow)  
-    5.3. [DPP API Specification](#53-dpp-api-specification)
-    5.4. [DPP Data Composition](#54-dpp-data-composition)
-6. [Summary and Outlook]()  
-7. [Appendices]()  
+6. [Technical Concept](#6-technical-concept)
+    6.1. [DPP API Specification](#61-dpp-api-specification)  
+    6.2. [DPP Data Composition](#62-dpp-data-composition)  
+7. [References](#7-references)  
 
 <br>
 
@@ -117,7 +117,7 @@ The system receives user requests via a web frontend, processes this data throug
 
 <br>
 
-<img src="./src/black-box-view/TINF24F_SAS_Team_6_Black-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
+<img src="./diagrams/black-box-view/TINF24F_SAS_Team_6_Black-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Black Box View" width="100%" height="100%">
 
 *Figure 2-1 &mdash; System Context Diagram (Black-Box-View) of the BaSyx DPP API showing external actors and data flows.*
 
@@ -203,7 +203,7 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 <br>
 
-<img src="./src/grey-box-view/TINF24F_SAS_Team_6_Grey-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Grey Box View" width="100%" height="100%">
+<img src="./diagrams/grey-box-view/TINF24F_SAS_Team_6_Grey-Box-View_R10.drawio.svg" alt="BaSyx DPP API – Grey Box View" width="100%" height="100%">
 
 *Figure 3-1 &mdash; Subsystem architecture overview of the BaSyx DPP (API), showing the central microservices and their integration points with existing BaSyx backend services.*
 
@@ -246,7 +246,7 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 ### 3.2. White-Box View
 
-<img src="./src/white-box-view/TINF24F_SAS_Team_6_White-Box-View_UML_R10.drawio.svg" alt="BaSyx DPP API – White-Box View / UML" width="100%" height="100%">
+<img src="./diagrams/white-box-view/TINF24F_SAS_Team_6_White-Box-View_UML_R10.drawio.svg" alt="BaSyx DPP API – White-Box View / UML" width="100%" height="100%">
 
 *Figure 3-2 &mdash; White-Box View / UML diagram for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Magnus Lörcher)*
 
@@ -256,7 +256,7 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 ### 4.1. Communication Diagram
 
-<img src="./src/communication-diagram/TINF24F_SAS_Team_6_Communication-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Communication Diagram" width="100%" height="100%">
+<img src="./diagrams/communication-diagram/TINF24F_SAS_Team_6_Communication-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Communication Diagram" width="100%" height="100%">
 
 *Figure 4-1 &mdash; Communication Diagram for the DPP Data Retrieval &ndash; Communication flow between user, frontend, Traefik, backend, and the BaSyx Environment API during a Digital Product Passport (DPP) request.*
 
@@ -278,7 +278,7 @@ It shows the chronological order of messages exchanged between the involved comp
 
 <br>
 
-<img src="./src/sequence-diagram/TINF24F_SAS_Team_6_Sequence-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Sequence Diagram" width="100%" height="100%">
+<img src="./diagrams/sequence-diagram/TINF24F_SAS_Team_6_Sequence-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Sequence Diagram" width="100%" height="100%">
 
 *Figure 4-2 &mdash; Sequence Diagram for DPP Data Retrieval &ndash; chronological interaction between the user, frontend, Traefik, backend, and the BaSyx Environment API endpoints during a Digital Product Passport (DPP) request.*
 
@@ -335,11 +335,17 @@ The system does not maintain its own persistent storage. Instead, it retrieves p
 
 The backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
 
+<br><br>
+
+## 6. Technical Concept
+
+…
+
 <br>
 
-### 5.3. DPP API Specification
+### 6.1. DPP API Specification
 
-The [DIN EN 18222 (Draft)]() specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
+The [DIN EN 18222 (Draft)](./files/DIN_EN_18222_Draft.pdf) specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
 
 - **Life Cycle API (Main Methods):** Includes the main GET, POST, PATCH and DELETE functionalities  
 - **Registry API for Register:** Covers access to external methods of the EC Registry, in order to register a new DPP at the registry of the EC  
@@ -362,22 +368,22 @@ As the DIN 18222 is still a draft, some things are listed contradictory multiple
 
 <br>
 
-*Further description to the data approach, how and where the data needed is retrieved, is described in the following [Chapter 5.4 – DPP Data Composition](#54-dpp-data-composition).*
+*Further description to the data approach, how and where the data needed is retrieved, is described in the following [Chapter 6.2 – DPP Data Composition](#62-dpp-data-composition).*
 
 <br>
 
-### 5.4. DPP Data Composition
+### 6.2. DPP Data Composition
 
 **Relevant Submodels:**  
 The DPP of a product includes information about the following seven Submodels:
 
-- Digital Nameplate *&mdash; ([IDTA-02035-1](./IDTA-02035-1_Battery_Digital_Nameplate_1_0.pdf))*
-- Handover Documentation *&mdash; ([IDTA-02035-2](./IDTA-02035-2_Battery_Handover_Documentation_1_0.pdf))*
-- Product Carbon Footprint *&mdash; ([IDTA-02035-3](./IDTA-02035-3_Battery_CarbonFootprint_1_0.pdf))*
-- Technical Data *&mdash; ([IDTA-02035-4](./IDTA-02035-4_Battery_TechnicalData_1_0.pdf))*
-- Product Condition *&mdash; ([IDTA-02035-5](./IDTA-02035-5_Product_Condition_1_0.pdf))*
-- Material Composition *&mdash; ([IDTA-02035-6](./IDTA-02035-6_Material_Composition_1_0.pdf))*
-- Circularity *&mdash; ([IDTA-02035-7](./IDTA-02035-7_Circularity_1_0.pdf))*
+- Digital Nameplate *&mdash; ([IDTA-02035-1](./files/IDTA-02035-1_Battery_Digital_Nameplate_1_0.pdf))*
+- Handover Documentation *&mdash; ([IDTA-02035-2](./files/IDTA-02035-2_Battery_Handover_Documentation_1_0.pdf))*
+- Product Carbon Footprint *&mdash; ([IDTA-02035-3](./files/IDTA-02035-3_Battery_CarbonFootprint_1_0.pdf))*
+- Technical Data *&mdash; ([IDTA-02035-4](./files/IDTA-02035-4_Battery_TechnicalData_1_0.pdf))*
+- Product Condition *&mdash; ([IDTA-02035-5](./files/IDTA-02035-5_Product_Condition_1_0.pdf))*
+- Material Composition *&mdash; ([IDTA-02035-6](./files/IDTA-02035-6_Material_Composition_1_0.pdf))*
+- Circularity *&mdash; ([IDTA-02035-7](./files/IDTA-02035-7_Circularity_1_0.pdf))*
 
 All relevant Submodels are stored in the AAS and need to be retrieved in order to return the DPP of a product.
 
@@ -410,7 +416,7 @@ The namings of the parameters in the DIN EN 18222 differ from the specifications
 | dppId                        | aasIdentifier     | Identify the AAS-Shell | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==* |
 | productId                    | *Global Asset ID* | Identify the product <br> *Implementation remains to be discussed* | Input needs to be base64-encoded | <https://pk.harting.com/?.20P=ZSN1> <br> *aHR0cHM6Ly9way5oYXJ0aW5nLmNvbS8/LjIwUD1aU04x* |
 | elementId                    | submodelIdentifier | Identify a specific submodel | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==* |
-| elementPath                  | idShortPath <br> *+ addition* | Take a specified path to an element in a submodel (dot-separated) <br> **Implementation:** {submodelIdentifier}.idShortPath | submodelIdentifier needs to be base64-encoded <br> Rest of idShortPath is "normal" | https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9.ProductCarbonFootprint.PublicationDate <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==.ProductCarbonFootprint.PublicationDate* |
+| elementPath                  | idShortPath <br> *+ addition* | Take a specified path to an element in a submodel (dot-separated) <br> **Implementation:** {submodelIdentifier}.idShortPath | submodelIdentifier needs to be base64-encoded <br> Rest of idShortPath is "normal" | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9.ProductCarbonFootprint.PublicationDate> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==.ProductCarbonFootprint.PublicationDate* |
 
 <br>
 
@@ -422,3 +428,22 @@ The namings of the parameters in the DIN EN 18222 differ from the specifications
 
 - **Versioning of DPPs:** Having a look in the DIN, there is noted that explicit versions are expected. The dppId, like defined, describes an AAS-Shell, but should also include a version to statisfy the DIN needs.
 - **productId parameter:** The productId parameter, like defined, can not solely be used to make an API-Call to the Environment API. *This remains to be dicussed with the stakeholders*
+
+
+<br><br>
+
+## 7. References
+
+| **NR.** | **Referenz** | **Titel** | **Version** | **Link** |
+|---------|--------------|-----------|-------------|----------|
+| 1       | DIN EN 18222 | Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability | 2025 | [Link](/PROJECT/SAS/files/DIN_EN_18222_Draft.pdf)
+| 2       | IDTA-02035-1 | Digital Battery Passport - Part 1 | 2025 |
+| 3       | IDTA-02035-2 | Digital Battery Passport - Part 2 | 2025 |
+| 4       | IDTA-02035-3 | Digital Battery Passport - Part 3 | 2025 |
+| 5       | IDTA-02035-4 | Digital Battery Passport - Part 4 | 2025 |
+| 6       | IDTA-02035-5 | Digital Battery Passport - Part 5 | 2025 |
+| 7       | IDTA-02035-6 | Digital Battery Passport - Part 6 | 2025 |
+| 8       | IDTA-02035-7 | Digital Battery Passport - Part 7 | 2025 |
+| 9       | HARTING      | [DPP Lösung Harting](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ) | - |
+| 10      | SRS          | [Software Requirement Specification](/PROJECT/SRS/SRS.md) | 2025 |
+| 11      | Aufgabenstellung | <a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">Team 6: BaSyx API Aufgabenstellung</a> | 2025 |
