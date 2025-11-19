@@ -185,7 +185,6 @@ The chosen microservice-based architecture allows modular development and simpli
 Using Docker ensures consistent environments across development and production.  
 Traefik dynamically routes requests between containers and provides secure HTTPS access.  
 The GitHub Actions pipeline ensures continuous integration and deployment, improving code quality and deployment speed.  
-*This design was selected to meet key stakeholder concerns regarding scalability, maintainability, and automation.*
 
 <br><br>
 
@@ -338,10 +337,6 @@ The backend acts as the sole integration and transformation point to ensure a co
 <br><br>
 
 ## 6. Technical Concept
-
-…
-
-<br>
 
 ### 6.1. DPP API Specification
 
