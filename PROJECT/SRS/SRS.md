@@ -241,7 +241,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Eine Seitenleiste mit den DPP relevanten Submodellen existiert.|
 
-<img src="./screenshots/FR-FE-02.png" style="height: 300px; width: 500px">
+<p align="center"><img src="./screenshots/FR-FE-02.png" style="height: 300px; width: 500px"></p>
 <p align="center"> <i>Abbildung 2: Seitenleiste der HARTING-Lösung</i> </p>
 
 ### FR-FE-03
@@ -260,7 +260,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|3 - Mittel|
 |Akzeptanzkriterium|Ein Highlighting der aktuellen Kategorie existiert|
 
-<img src="./screenshots/FR-FE-04.png" style="height: 300px; width: 500px">
+<p align="center"><img src="./screenshots/FR-FE-04.png" style="height: 300px; width: 500px"></p>
 <p align="center"> <i>Abbildung 3: Highlighting des Submodells innerhalb des DPP Viewers der HARTING Lösung</i> </p>
 
 ### FR-FE-05
@@ -271,7 +271,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Ein Menü mit Wechsel in die anderen Modi muss Verfügbar sein.|
 
-<img src="./screenshots/FR-FE-05.png" style="height: 300px; width: 500px">
+<p align="center"><img src="./screenshots/FR-FE-05.png" style="height: 300px; width: 500px"></p>
 <p align="center"> <i>Abbildung 5: Menüwechsel innerhalb der HARTING Lösung</i> </p>
 
 ### FR-FE-06
@@ -282,7 +282,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|3 - Mittel|
 |Akzeptanzkriterium|Die Informationen sind auffindbar.|
 
-<img src="./screenshots/FR-FE-06.png" style="height: 300px; width: 500px">
+<p align="center"><img src="./screenshots/FR-FE-06.png" style="height: 300px; width: 500px"></p>
 <p align="center"> <i>Abbildung 6: Headerinformationen des DPP innerhalb der HARTING Lösung</i> </p>
 
 ### FR-FE-07
@@ -293,7 +293,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|5 - Sehr hoch|
 |Akzeptanzkriterium|Die Informationen sind im Viewer übersichtlich verfügbar.|
 
-<img src="./screenshots/FR-FE-07.png" style="height: 300px; width: 500px">
+<p align="center"><img src="./screenshots/FR-FE-07.png" style="height: 300px; width: 500px"></p>
 <p align="center"> <i>Abbildung 7: Übersicht der zweispaltigen Darstellung innerhalb der HARTING Lösung</i> </p>
 
 ### FR-FE-08
@@ -312,7 +312,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Priorität|3 - Mittel|
 |Akzeptanzkriterium|Tooltips sind auffindbars|
 
-<img src="./screenshots/FR-FE-09.png" style="height: 300px; width: 500px">
+<p align="center"><img src="./screenshots/FR-FE-09.png" style="height: 300px; width: 500px"></p>
 <p align="center"> <i>Abbildung 8: Tooltips innerhalb der HARTING-Lösung</i> </p>
 
 ### FR-FE-10
