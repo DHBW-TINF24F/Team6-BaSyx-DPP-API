@@ -31,6 +31,7 @@
 | 2.0         | 2025-11-07 | Noah Becker | Adapting software infrastructure to changing stakeholder needs |
 | 2.1         | 2025-11-16 | Noah Becker | Added partial information to DPP Data Composition |
 | 2.2         | 2025-11-18 | Noah Becker | &bull; Included White-Box-View / UML diagram *(Authors: Luca Schmoll & Magnus Lorcher)* <br> &bull; Added DPP API Specification and finish DPP Data Composition <br> &bull; Added References |
+| 2.3         | 2025-11-19 | Noah Becker | Restructuring and finalizing content |
 
 ---
 
