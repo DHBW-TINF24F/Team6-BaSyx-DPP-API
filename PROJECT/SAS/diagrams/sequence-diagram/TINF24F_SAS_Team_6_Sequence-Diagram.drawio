@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
-    <mxGraphModel dx="695" dy="498" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1429" dy="582" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -127,6 +127,18 @@
             <mxPoint x="625" y="140" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="oNlupmKnYkE5GriHts6h-2" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="40" y="360" width="310" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="oNlupmKnYkE5GriHts6h-3" value="" style="endArrow=none;dashed=1;html=1;rounded=0;dashPattern=1 4;strokeColor=#F59121;" edge="1" parent="oNlupmKnYkE5GriHts6h-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="11" as="sourcePoint" />
+            <mxPoint x="20" y="11" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oNlupmKnYkE5GriHts6h-4" value="Traefik Reverse Proxy only in use on server deployment" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=11;" vertex="1" parent="oNlupmKnYkE5GriHts6h-2">
+          <mxGeometry x="30" width="280" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

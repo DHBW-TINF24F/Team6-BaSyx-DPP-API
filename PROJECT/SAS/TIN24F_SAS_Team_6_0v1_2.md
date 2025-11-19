@@ -21,17 +21,7 @@
 
 | **Version** | **Date**   | **Author**  | **Comment**                         |
 |-------------|------------|-------------|-------------------------------------|
-| 1.0         | 2025-10-22 | Noah Becker | Initialize and first sketch of content |
-| 1.1         | 2025-10-22 | Noah Becker | Introduction |
-| 1.2         | 2025-10-25 | Noah Becker | Stakeholders and Concerns |
-| 1.3         | 2025-10-26 | Noah Becker | Architectural Overview &mdash; System Context |
-| 1.4         | 2025-10-28 | Noah Becker | &bull; Architectural Overview &mdash; Design Approach <br> &bull; Structural Views &mdash; Grey-Box View <br> &bull; Behavioral Views &mdash; Communication Diagram |
-| 1.5         | 2025-10-29 | Noah Becker | &bull; Behavioral Views &mdash; Sequence Diagram |
-| 1.6         | 2025-11-05 | Noah Becker | Altering Frontend & Backend Technologies |
-| 2.0         | 2025-11-07 | Noah Becker | Adapting software infrastructure to changing stakeholder needs |
-| 2.1         | 2025-11-16 | Noah Becker | Added partial information to DPP Data Composition |
-| 2.2         | 2025-11-18 | Noah Becker | &bull; Included White-Box-View / UML diagram *(Authors: Luca Schmoll & Magnus Lorcher)* <br> &bull; Added DPP API Specification and finish DPP Data Composition <br> &bull; Added References |
-| 2.3         | 2025-11-19 | Noah Becker | Restructuring and finalizing content |
+| 1.0         | 2025-11-19 | Noah Becker | First architecture specifications   |
 
 ---
 
@@ -108,7 +98,7 @@ The BaSyx DPP API operates as part of a broader environment that includes extern
 To define what the system communicates with &ndash; *who* or *what* it depends on, and *what* depends on it.
 
 **Context Description:**
-The system receives user requests via a web frontend, processes this data through the exisiting AAS API, maps these responses to the DPP requirements, and produces an API response.
+The system receives requests, processes this data through the exisiting AAS API, maps these responses to the DPP requirements, and produces an API response.
 
 | **External Entity**     | **Type**     | **Interaction / Data Flow**                    | **Communication Channel** |
 |-------------------------|--------------|------------------------------------------------|---------------------------|
@@ -248,7 +238,7 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 <img src="./diagrams/white-box-view/TINF24F_SAS_Team_6_White-Box-View_UML_R10.drawio.svg" alt="BaSyx DPP API – White-Box View / UML" width="100%" height="100%">
 
-*Figure 3-2 &mdash; White-Box View / UML diagram for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Magnus Lörcher)*
+*Figure 3-2 &mdash; White-Box View / UML diagram for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Fabian Steiss)*
 
 <br><br>
 
