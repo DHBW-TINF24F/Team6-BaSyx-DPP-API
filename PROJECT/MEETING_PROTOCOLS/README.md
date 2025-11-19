@@ -2,7 +2,9 @@
 
 
 ## Table of Contents
-- [Meeting 28.10.2025 - Feedback from Herr Rentschler](#review)
+- [Meeting 19.11.2025 – Final discussion for presentation](#finalPresentationMeeting)
+- [Meeting 10.11.2025 - Show and Tell](#showAndTell)
+- [Meeting 06.11.2025 - Feedback from Herr Rentschler](#review)
 - [Meeting 06.11.2025 - Quick Meeting for Presentation](#presentationMeeting)
 - [Meeting 04.11.2025 - Status team members II](#status2)
 - [Meeting 28.10.2025 - Status team members I](#status)
@@ -12,6 +14,149 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+
+
+<a id="finalPresentationMeeting">
+
+## Meeting 19.11.2025 – Final discussion for presentation
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Who is going to do what in the presentation|All|8 min|
+||||
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 19.11.2025  
+**Time:** 09:00 – 09:32
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß 
+
+---
+
+### I. Goal  
+Final presentation round, who does what
+
+### II. Status  
+All documents are almost ready, a few still need some final touches.
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Everyone introduces themselves
+- Manuel introduces the project
+- Use case Magnus
+- Functional requirements Luca
+- Non-functional requirements Magnus
+- Business case Nataliia
+- Tools used Fabian
+- Project plan Nataliia
+- Risk analysis Nataliia
+- Solution approach Noah
+- System architecture Noah
+- Mockups Felix
+- Questions - everyone
+
+### V. Future meeting
+This was the last meeting for this Project Phase. The next meeting is planned for next year.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+|Close GitHub Issues|Nataliia|21.11.2025|
+---
+
+**Notes:**  
+
+
+<a id="showAndTell">
+
+## Meeting 10.11.2025 – Show and Tell
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Show and Tell|All|20 min|
+||||
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 10.11.2025  
+**Time:** 12:34 – 12:56
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß (remote) 
+
+---
+
+### I. Goal  
+This weekly is intended for showing and discussing.
+
+### II. Status  
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Swagger?
+- Show presentation itself, or present? -> Just show
+- Documents for editing, Luca has started, Magnus not yet
+- Which wireframes does Luca need from Felix? (Front-end requirements must be defined -> based on Harting solution (Luca))
+
+- Document format references at the very bottom of the sources
+- Presentation of API mapping, diagrams to be added, patches, registry still missing, and others ...
+- Ask Rentschler for a meeting
+- We definitely need unit tests
+- Nataliia should look at SAS
+
+
+### V. Future meeting
+The next meeting is planned for 19.11.2025.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+||||
+---
+
+**Notes:**  
+
+---
 
 
 <a id="review">
@@ -215,19 +360,19 @@ Quick overview of who is presenting a topic
 
 ### IV. Discussion Points
 
-- Vorstellung macht jeder selbst
-- Manuel macht die Vorstellung des projekts + (Tests von Lucas SRS)
-- Use Case Luca
-- Funktionale Anforderungen macht Luca
-- Nicht Funktionale Anforderungen macht Magnus 
-- Business Case macht Nataliia
-- Verwendete Tools macht Fabian
-- Projektplan macht Nataliia 
-- Risikoanalyse macht Nataliia
-- Systemarchitektur macht Noah
-- Lösungsansatz macht Noah
-- Mockups macht Felix
-- Fragen - alle
+- Everyone introduces themselves
+- Manuel introduces the project + (tests by Lucas SRS)
+- Use case Luca
+- Functional requirements Luca
+- Non-functional requirements Magnus
+- Business case Nataliia
+- Tools used Fabian
+- Project plan Nataliia
+- Risk analysis Nataliia
+- System architecture Noah
+- Solution approach Noah
+- Mockups Felix
+- Questions - everyone
 
 
 ### V. Future meeting
@@ -326,6 +471,7 @@ The next meeting is planned for 04.11.2025.
 ---
 
 
+<a id="status">
 
 ## Meeting 28.10.2025 – Status team members
 <table style="width:100%;border-collapse:collapse;">
