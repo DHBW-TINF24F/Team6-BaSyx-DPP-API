@@ -15,19 +15,6 @@
 
 ---
 
-### Teamaufteilung
-|Name|Mail|Rolle|
-|---|---|---|
-|Nataliia Chubak|inf24271@lehre.dhbw-stuttgart.de |Projektleitung|
-|Luca Schmoll|inf24137@lehre.dhbw-stuttgart.de|Product Owner|
-|Magnus Lörcher|inf24155@lehre.dhbw-stuttgart.de|Product Owner|
-|Noah Becker|inf24038@lehre.dhbw-stuttgart.de|Systemarchitekt|
-|Fabian Steiß|inf24138@lehre.dhbw-stuttgart.de |Dokumentation|
-|Felix Schulz|inf24075@lehre.dhbw-stuttgart.de|UI/UX Design|
-|Manuel Lutz|Inf24224@lehre.dhbw-stuttgart.de|Testmanagement|
-
----
-
 ### Dokumenthistorie
 
 |Version|Autor|Datum|Kommentar|
