@@ -318,10 +318,10 @@ The system does not maintain its own persistent storage. Instead, it retrieves p
 
 **Data Flow Overview:**  
 
-**1.** The frontend requests DPP data from the backend.
-**2.** The backend queries the BaSyx Environment API endpoints for AAS and Submodel data.
-**3.** The backend validates and maps this data into a unified DPP schema.
-**4.** The processed result is returned as JSON to the frontend (and optionally external API consumers).
+**1.** The frontend requests DPP data from the backend.  
+**2.** The backend queries the BaSyx Environment API endpoints for AAS and Submodel data.  
+**3.** The backend validates and maps this data into a unified DPP schema.  
+**4.** The processed result is returned as JSON to the frontend (and optionally external API consumers).  
 
 The backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
 
