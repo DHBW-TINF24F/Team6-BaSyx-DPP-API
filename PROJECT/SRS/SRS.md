@@ -242,6 +242,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Akzeptanzkriterium|Eine Seitenleiste mit den DPP relevanten Submodellen existiert.|
 
 <img src="./screenshots/FR-FE-02.png" style="height: 300px; width: 500px">
+<p align="center"> <i>Abbildung 2: Seitenleiste der HARTING-Lösung</i> </p>
 
 ### FR-FE-03
 |ID|FR-FE-03|
@@ -260,6 +261,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Akzeptanzkriterium|Ein Highlighting der aktuellen Kategorie existiert|
 
 <img src="./screenshots/FR-FE-04.png" style="height: 300px; width: 500px">
+<p align="center"> <i>Abbildung 3: Highlighting des Submodells innerhalb des DPP Viewers der HARTING Lösung</i> </p>
 
 ### FR-FE-05
 |ID|FR-FE-05|
@@ -270,6 +272,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Akzeptanzkriterium|Ein Menü mit Wechsel in die anderen Modi muss Verfügbar sein.|
 
 <img src="./screenshots/FR-FE-05.png" style="height: 300px; width: 500px">
+<p align="center"> <i>Abbildung 5: Menüwechsel innerhalb der HARTING Lösung</i> </p>
 
 ### FR-FE-06
 |ID|FR-FE-06|
@@ -280,16 +283,18 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Akzeptanzkriterium|Die Informationen sind auffindbar.|
 
 <img src="./screenshots/FR-FE-06.png" style="height: 300px; width: 500px">
+<p align="center"> <i>Abbildung 6: Headerinformationen des DPP innerhalb der HARTING Lösung</i> </p>
 
 ### FR-FE-07
 |ID|FR-FE-07|
 |---|---|
 |Name|Anzeige der einzelnen Kategorien|
-|Beschreibung|Das System muss eine übersichtliche, zweispaltige Darstellung der Informationen innerhalb des einzelen Modelle bieten.|
+|Beschreibung|Das System muss eine übersichtliche, zweispaltige Darstellung der Informationen innerhalb des einzelnen Modelle bieten.|
 |Priorität|5 - Sehr hoch|
 |Akzeptanzkriterium|Die Informationen sind im Viewer übersichtlich verfügbar.|
 
 <img src="./screenshots/FR-FE-07.png" style="height: 300px; width: 500px">
+<p align="center"> <i>Abbildung 7: Übersicht der zweispaltigen Darstellung innerhalb der HARTING Lösung</i> </p>
 
 ### FR-FE-08
 |ID|FR-FE-08|
@@ -308,6 +313,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 |Akzeptanzkriterium|Tooltips sind auffindbars|
 
 <img src="./screenshots/FR-FE-09.png" style="height: 300px; width: 500px">
+<p align="center"> <i>Abbildung 8: Tooltips innerhalb der HARTING-Lösung</i> </p>
 
 ### FR-FE-10
 |ID|FR-FE-10|
@@ -372,7 +378,7 @@ Contract[Contract‑Tests DIN EN 18222]
   Performance[Leistungstests] --> Integration
   Unit[Unit‑Tests Mapping/Validation] --> |kontinuierlich|Unit[Unit‑Tests Mapping/Validation]
 ```
-<p align="center"> <i>Abbildung 5: Teststrategie</i> </p>
+<p align="center"> <i>Abbildung 9: Teststrategie</i> </p>
 
 ## 7. Mockups/Wireframes
 Mockups und Wireframes können <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PM/Mockups%20%26%20Wireframes">hier</a> gefunden werden.
