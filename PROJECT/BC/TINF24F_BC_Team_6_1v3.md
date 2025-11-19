@@ -1,38 +1,42 @@
-# BUSINESS CASE: BaSyx DPP API 
+# Business case: BaSyx DPP API
 
-**TIN24F, SWL Practice project 2025/2026**
+## Project 6: API for the Digital Product Passport (DPP) in the BaSyx Framework
 
-| | |
-| :--- | :--- |
-| **Author:** | Nataliia Chubak |
-| **Project:** | BaSyx DPP API |
-| **Clients:** | Rentschler Markus, Pawel Wojcik |
-| **Address:** | Lerchenstraße 1, 70178 Stuttgart |
+## Customer
+|Name|Mail|
+|---|---|
+|Markus Rentschler|rentschler@lehre.dhbw-stuttgart.de|
+|Pawel Wojcik|pawel.wojcik@lehre.dhbw-stuttgart.de|
 
 ---
 
-## Project Team (Team 6)
+## Definition of tasks
+ > **DIN EN 18222** “Digital product passport – Application programming interfaces (APIs) for product passport lifecycle management and searchability” describes a REST API that is to be implemented in the BaSyx framework as part of this task, both on the backend and frontend sides. The exact task can be found <a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">here</a>.
 
-| **Position** | **Name** | **e-Mail** |
+
+---
+
+## Team 6
+| **Name** | **e-Mail** | **Position** |
 | :--- | :--- | :--- |
-| Project Manager | Nataliia Chubak | `<inf24271@lehre.dhbw-stuttgart.de>` |
-| Product Manager | Luca Schmoll | `<inf24137@lehre.dhbw-stuttgart.de>` |
-| Product Manager | Magnus Lörcher | `<inf24155@lehre.dhbw-stuttgart.de>` |
-| Test Manager | Manuel Lutz | `<inf24224@lehre.dhbw-stuttgart.de>` |
-| System Architect | Noah Becker | `<inf24038@lehre.dhbw-stuttgart.de>` |
-| Technical Writer | Fabian Steiß | `<inf24138@lehre.dhbw-stuttgart.de>` |
-| UI-Designer | Felix Schulz | `<inf24075@lehre.dhbw-stuttgart.de>` |
+|  Nataliia Chubak | <inf24271@lehre.dhbw-stuttgart.de>|Project Manager |
+|  Luca Schmoll | <inf24137@lehre.dhbw-stuttgart.de> |Product Manager |
+|  Magnus Lörcher | <inf24155@lehre.dhbw-stuttgart.de>|Product Manager |
+| Manuel Lutz |<inf24224@lehre.dhbw-stuttgart.de> |Test Manager | 
+|  Noah Becker | <inf24038@lehre.dhbw-stuttgart.de> |System Architect |
+|  Fabian Steiß | <inf24138@lehre.dhbw-stuttgart.de> |Technical Writer |
+|  Felix Schulz |<inf24075@lehre.dhbw-stuttgart.de> |UI-Designer |
 
 ---
 
-## Change History
+## Version Control
 
 | **Version** | **Date** | **Author** | **Comment** |
 | :--- | :--- | :--- | :--- |
 | 1.0 | 26.09.2025 | Nataliia Chubak | Initial Business Case (BC) |
 | 1.1 | 27.09.2025 | Nataliia Chubak | Update BC and financial calculation |
 | 1.2 | 10.10.2025 | Luca Schmoll | Convert to Markdown |
-
+| 1.3 | 02.11.2025 | Nataliia Chubak | Add Gantt diagram |
 ---
 
 ## Table of Contents
@@ -64,15 +68,15 @@ Each member of the project has **180 hours** available. The distribution of thes
 | **Customer Dialogue** | 10 | 5 | 5 | 0 | 0 | 0 | 0 | 20 |
 | **Leading Project** | 40 | 10 | 10 | 0 | 0 | 0 | 0 | 60 |
 | **Research** | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 105 |
-| **Documentation** | 15 | 0 | 0 | 30 | 0 | 15 | 0 | 60 |
-| **Coding** | 45 | 90 | 90 | 95 | 115 | 75 | 115 | 625 |
+| **Documentation** | 25 | 15 | 15 | 30 | 20 | 25 | 25 | 155 |
+| **Coding** | 45 | 85 | 85 | 95 | 105 | 75 | 100 | 590 |
 | **Testing** | 0 | 0 | 0 | 0 | 0 | 30 | 5 | 35 |
 | **Meetings** | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 105 |
-| **GitHub Management** | 5 | 10 | 10 | 10 | 20 | 15 | 15 | 85 |
-| **Presentation** | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 105 |
+| **GitHub Management** | 5 | 10 | 10 | 20 | 20 | 15 | 15 | 95 |
+| **Presentation** | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 35 |
 | **Total** | **180** | **180** | **180** | **180** | **180** | **180** | **180** | **1260** |
 
-*Table 1. Expected working hours.*
+<p align="center"> <i>Table 1. Expected working hours</i> </p>  
 
 ---
 
@@ -85,12 +89,15 @@ The project milestones are:
 * **Planning and Requirements Analysis:** Weeks 1-6
 * **Design and Architecture:** Weeks 7-11
 
+## Gantt chart 3rd Semester
 
+![Gantt chart](images/Gantt_analyse.png)
 
-![Timeline](Timeline.png)
+<p align="center"> <i>Figur.1 Gantt chart 3rd Semester (Phase I)</i> </p>  
 
+![Gantt chart](images/Gantt_design.png)
 
-*Figure 1. Project timeline.*
+<p align="center"> <i>Figur.2 Gantt chart 3rd Semester (Phase II)</i> </p>  
 
 ---
 
@@ -121,7 +128,7 @@ Based on 180 hours per team member (Table 2).
 | UI-Designer | 28 | 5,040 |
 | **Total Salary Costs** | **215** | **38,700** |
 
-*Table 2. Salary calculation based on hourly wages.*
+<p align="center"> <i>Table 2. Salary calculation based on hourly wages</i> </p>  
 
 ### Other Costs
 
@@ -137,11 +144,16 @@ Expenses estimated for the 11-week project duration (Table 3).
 | Training | 1,000 |
 | **Total Other Costs** | **20,485** |
 
-*Table 3. Other costs calculation.*
+<p align="center"> <i>Table 3. Other costs calculation</i> </p> 
 
 The estimated total cost of developing the software product is:
 $$\text{Total Costs} = \text{Salary Costs} + \text{Other Costs}$$
 $$\text{Total Costs} = €38,700 + €20,485 = \mathbf{€59,185}$$
+
+![Gantt chart](images/Costs.png)
+
+<p align="center"> <i>Figur.3 Project cost distribution</i> </p>  
+
 
 ---
 
@@ -150,7 +162,7 @@ $$\text{Total Costs} = €38,700 + €20,485 = \mathbf{€59,185}$$
 The team identified the following key risks:
 
 * *Risks associated with a sudden decline* in the project's operating capacity.  
-* **Communication risks* (insufficient communication between team members). To 
+* *Communication risks* (insufficient communication between team members). To 
 solve this problem, it was decided to hold regular meetings, use the GitHub and Jira services.
 * **Technical risks** (sudden failure of the Internet connection or power supply for an 
 extended period of time, unplanned unavailability of equipment).   
@@ -173,7 +185,7 @@ project along with the profit **margin of ~ 30 %** and the offer.
 | **Type of Costs** | **Costs, €** |
 | :--- | :---: |
 | **Salary Costs** | 38,700 |
-| **Other Costs** | 20,485 |
+| **Other Costs** | 10,485 |
 | **Total Costs** | **59,185** |
 | **Profit (30%)** | 17,755.50 |
 | **Offer Sum** | **76,940.50** |
