@@ -1,19 +1,23 @@
-# **System Architecture Specification (SAS)**
+# Software Requirement Specification (SRS)
 
-*TIN24F, Software Engineering &mdash; Practice project 2025/2026*
+## Projekt 6: API für den Digitalen Produktpass (DPP) im BaSyx Framework
 
-<br>
+### Customer
 
-| **Metadata**    | **Value**                           |
-|-----------------|-------------------------------------|
-| **Projectname** | Team 6 BaSyx DPP API (DIN EN 18222) |
-| **Version**     | 2.2                                 |
-| **Date**        | 2025-11-18                          |
-| **Author**      | [Noah Becker](https://github.com/noahdbecker) |
+|Name|Mail|
+|---|---|
+|Markus Rentschler|<rentschler@lehre.dhbw-stuttgart.de>|
+|Pawel Wojcik|<pawel.wojcik@lehre.dhbw-stuttgart.de>|
 
 ---
 
-##### Change History
+### Task Description
+
+> The DIN EN 18222 “Digital Product Passport – Application Programming Interfaces (APIs) for lifecycle management and product passport searchability” defines a REST API that must be implemented as part of this assignment within the BaSyx framework, including both backend and frontend components. The detailed task description can be found [here](https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md).
+
+---
+
+### Change History
 
 | **Version** | **Date**   | **Author**  | **Comment**                         |
 |-------------|------------|-------------|-------------------------------------|
@@ -30,31 +34,27 @@
 
 ---
 
-<br>
-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)  
-    1.1. [Purpose and Scope](#11-purpose-and-scope)  
-    1.2. [System Overview](#12-system-overview)  
+    1. [Purpose and Scope](#11-purpose-and-scope)  
+    2. [System Overview](#12-system-overview)  
 2. [Architectural Overview](#2-architectural-overview)  
-    2.1. [System Context](#21-system-context)  
-    2.2. [Design Approach](#22-design-approach)  
+    1. [System Context](#21-system-context)  
+    2. [Design Approach](#22-design-approach)  
 3. [Structural Views](#3-structural-views)  
-    3.1. [Grey-Box View](#31-grey-box-view)  
-    3.2. [White-Box View](#32-white-box-view)  
+    1. [Grey-Box View](#31-grey-box-view)  
+    2. [White-Box View](#32-white-box-view)  
 4. [Behavioral Views](#4-behavioral-views)  
-    4.1. [Communication Diagram](#41-communication-diagram)  
-    4.2. [Sequence Diagrams](#42-sequence-diagram)  
+    1. [Communication Diagram](#41-communication-diagram)  
+    2. [Sequence Diagrams](#42-sequence-diagram)  
 5. [Data View](#5-data-view)  
-    5.1. [Purpose](#51-purpose)  
-    5.2. [Data Model and Data Flow](#52-data-model-and-data-flow)  
+    1. [Purpose](#51-purpose)  
+    2. [Data Model and Data Flow](#52-data-model-and-data-flow)  
 6. [Technical Concept](#6-technical-concept)
-    6.1. [DPP API Specification](#61-dpp-api-specification)  
-    6.2. [DPP Data Composition](#62-dpp-data-composition)  
+    1. [DPP API Specification](#61-dpp-api-specification)  
+    2. [DPP Data Composition](#62-dpp-data-composition)  
 7. [References](#7-references)  
-
-<br>
 
 ---
 
