@@ -77,7 +77,7 @@ Ideally, we would also add a new entry in the BaSyx UI under the “AAS SM Visua
 -   [AAS Web UI overview](https://wiki.basyx.org/en/latest/content/user_documentation/basyx_components/web_ui/index.html)
 -   [DIN EN 18222](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021)
 -   [Tutorials & Resources](https://github.com/DHBW-TINF24F/.github/blob/main/Tutorials.md)
--   [PowerPoint](https://1drv.ms/p/c/94b53bce14d0456b/EVwut7JiukRCs4097VqIiFMBA16DA1QQZXdYSsWuQjsq4Q?e=AmxA4S)
+-   [PowerPoint]([https://1drv.ms/p/c/94b53bce14d0456b/EVwut7JiukRCs4097VqIiFMBA16DA1QQZXdYSsWuQjsq4Q?e=AmxA4S](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/PRESENTATION/Team%206%20BaSyx%20DPP%20API.pptx))
 
 
 
