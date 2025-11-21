@@ -63,7 +63,7 @@ Ideally, we would also add a new entry in the BaSyx UI under the “AAS SM Visua
 | Component | Technology |
 |------------|-------------|
 | **Backend** | Java / Spring Boot (BaSyx SDK) |
-| **Frontend** | React / TypeScript (BaSyx UI) |
+| **Frontend** | Vue.js (BaSyx UI) |
 | **Infrastructure** | Eclipse BaSyx Framework |
 | **API Definition** | OpenAPI 3.0 / Swagger |
 | **Data Model** | Asset Administration Shell (AAS) |
