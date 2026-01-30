@@ -14,6 +14,7 @@ import About from '@/pages/About.vue';
 import Page404 from '@/pages/Page404.vue';
 import SMEditor from '@/pages/SMEditor.vue';
 import SMViewer from '@/pages/SMViewer.vue';
+import DesignSkeletton from '@/pages/DesignSkeletton.vue';
 import { useAASStore } from '@/store/AASDataStore';
 import { useEnvStore } from '@/store/EnvironmentStore';
 import { useNavigationStore } from '@/store/NavigationStore';
@@ -25,6 +26,12 @@ const staticRoutes: Array<RouteRecordRaw> = [
         name: 'AASViewer',
         component: AASViewer,
         meta: { name: 'AAS Viewer', subtitle: 'Visualize Asset Administration Shells' },
+    },
+    {
+        path: '/design',
+        name: 'DesignSkeletton',
+        component: DesignSkeletton,
+        meta: { name: 'Design Skeletton', subtitle: 'Design Testing Page' },
     },
     {
         path: '/aaseditor',
