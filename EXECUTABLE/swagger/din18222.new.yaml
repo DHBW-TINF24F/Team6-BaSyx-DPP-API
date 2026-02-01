@@ -473,7 +473,6 @@ components:
                 value:
                   type: string
                   example: "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ-ProductCarbonFootprint.ExplanatoryStatement-375e4720.pdf"
-            PCFLifeCyclePhase:
 
     DPPElementCollectionResponse:
       type: object
