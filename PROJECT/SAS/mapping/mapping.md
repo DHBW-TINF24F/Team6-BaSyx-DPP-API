@@ -10,6 +10,7 @@ Dieses Dokument dient der Nachvollziehbarkeit der internen DPP API Abläufe, ins
 | 1.1     | 2025-11-09 | Luca Schmoll & Noah Becker | Refactor sequences & write down open questions |
 | 1.2     | 2025-11-12 | Noah Becker                | Refactor Fine-Granular API Calls |
 | 1.3     | 2025-11-13 | Noah Becker                | Refactor all API-Calls due to new dppId structure |
+| 1.4     | 2026-02-02 | Noah Becker                | Minor changes |
 
 ---
 
@@ -63,7 +64,7 @@ sequenceDiagram
 | **Input-Parameter** | **Description** | **Format** | **Note** |
 |---------------------|-----------------|------------|----------|
 | **dppId**           | DPP-Identifier  | *base64-encoded* | [See here](#parameter) |
-| **Request body**<br>aasIdentifier<br>dpp | <br>AAS-Identifier<br>Submodels | <br>*base64-encoded*<br>[See here](#parameter) | -
+| **Request body**<br>aasIdentifier<br>dpp | <br>AAS-Identifier<br>Submodels | <br>*base64-encoded*<br>[See here](#parameter) | - |
 
 | **API-Call** | **Parameter** | **Return** | **Note** |
 |--------------|---------------|------------|----------|
