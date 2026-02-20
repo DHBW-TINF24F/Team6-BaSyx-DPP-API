@@ -56,10 +56,10 @@
 
 <tr>
 <th>Schema*</th>
-<td><code>!</code> <a href="#only-dppid-schema">Only dppId schema</a> <code>!</code> <br> Payload: -</td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-updated">DPP updated</a></td>
-<td><code>!</code> <a href="#without-result-object">Only statusCode schema</a> <code>!</code> <br> Payload: -</td>
-<td><code>!</code> <a href="#registry-schema">Registry schema</a> <code>!</code> <br> Payload: -</td>
+<td><code>!</code> <a href="#only-dppid-schema">Only dppId schema</a> <code>!</code></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><code>!</code> <a href="#without-result-object">Only statusCode schema</a> <code>!</code></td>
+<td><code>!</code> <a href="#registry-schema">Registry schema</a> <code>!</code></td>
 </tr>
 
 <tr>
@@ -91,10 +91,10 @@
 
 <tr>
 <th>Schema*</th>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-property">DPP Property</a></td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-property">DPP Property</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
 </tr>
 
 <tr>
