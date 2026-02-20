@@ -21,10 +21,18 @@
 
 <tr>
 <th>Schema*</th>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-object">DPP object</a></td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-object">DPP object</a></td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-object">DPP object</a></td>
-<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-identifiers">DPP Identifiers</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a></td>
+</tr>
+
+<tr>
+<th>Payload</th>
+<td><a href="#dpp-object">DPP object</a></td>
+<td><a href="#dpp-object">DPP object</a></td>
+<td><a href="#dpp-object">DPP object</a></td>
+<td><a href="#dpp-identifiers">DPP Identifiers</a></td>
 </tr>
 
 <tr>
@@ -55,6 +63,14 @@
 </tr>
 
 <tr>
+<th>Payload</th>
+<td>-</td>
+<td><a href="#dpp-updated">DPP updated</a></td>
+<td>-</td>
+<td>-</td>
+</tr>
+
+<tr>
 <td colspan="5"></td>
 </tr>
 
@@ -79,6 +95,14 @@
 <td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-property">DPP Property</a></td>
 <td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
 <td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-property">DPP Property</a></td>
+</tr>
+
+<tr>
+<th>Payload</th>
+<td><a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
+<td><a href="#dpp-property">DPP Property</a></td>
+<td><a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
+<td><a href="#dpp-property">DPP Property</a></td>
 </tr>
 
 </table>
