@@ -21,10 +21,10 @@
 
 <tr>
 <th>Schema*</th>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-object">DPP object</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-object">DPP object</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-object">DPP object</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-identifiers">DPP Identifiers</a></td>
 </tr>
 
 <tr>
@@ -48,10 +48,10 @@
 
 <tr>
 <th>Schema*</th>
-<td><code>!</code> <a href="#only-dppid-schema">Only dppId schema</a> <code>!</code></td>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><code>!</code> <a href="#without-result-object">Only statusCode schema</a> <code>!</code></td>
-<td><code>!</code> <a href="#registry-schema">Registry schema</a> <code>!</code></td>
+<td><code>!</code> <a href="#only-dppid-schema">Only dppId schema</a> <code>!</code> <br> Payload: -</td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-updated">DPP updated</a></td>
+<td><code>!</code> <a href="#without-result-object">Only statusCode schema</a> <code>!</code> <br> Payload: -</td>
+<td><code>!</code> <a href="#registry-schema">Registry schema</a> <code>!</code> <br> Payload: -</td>
 </tr>
 
 <tr>
@@ -75,10 +75,10 @@
 
 <tr>
 <th>Schema*</th>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><a href="#with-result-object">Normal schema</a></td>
-<td><a href="#with-result-object">Normal schema</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-property">DPP Property</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-dataelementcollection">DPP DataElementCollection</a></td>
+<td><a href="#with-result-object">Normal schema</a> <br> Payload: <a href="#dpp-property">DPP Property</a></td>
 </tr>
 
 </table>
@@ -91,12 +91,26 @@
 
 ---
 
-## `payload`-Object / DPP
+## `payload`-Object
+
+### DPP object
 > *This object contains the main DPP information to the requested DPP entry.*
 
 ```json
 // to be done
+
+"payload": [
+
+]
 ```
+
+### DPP Identifiers
+
+### DPP updated
+
+### DPP DataElementCollection
+
+### DPP Property
 
 <br>
 
@@ -129,7 +143,7 @@ This result object only comes into place, when the action perfomed was succesful
 }
 ```
 
-This occurence may only happen with the API-Call `DeleteDPPById` / `DELETE /dpps/{dppId}`.
+This occurence only happen with the API-Call `DeleteDPPById` / `DELETE /dpps/{dppId}`.
 
 <br>
 
@@ -139,9 +153,23 @@ This occurence may only happen with the API-Call `DeleteDPPById` / `DELETE /dpps
 
 ### Only dppId schema
 
+```json
+{
+    "statusCode": <string: [Success: "SuccessCreated" / ...]>,
+    "dppID": <string: identifier>
+}
+```
+
 <br>
 
 ### Registry schema
+
+```json
+{
+    "statusCode": <string: [Success: "SuccessCreated" / ...]>,
+    "registryIdentifier": <string: identifier>
+}
+```
 
 <br>
 
