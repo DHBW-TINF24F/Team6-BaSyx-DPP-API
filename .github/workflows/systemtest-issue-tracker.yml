@@ -66,7 +66,7 @@ jobs:
 
           ### Test Output (last 200 lines)
           \`\`\`
-          ${{ steps.run-tests.outputs.test_log }}
+          $(cat SOURCE/aas-web-ui/test-results-trimmed.log 2>/dev/null || echo "No detailed log available")
           \`\`\`
 
           Please investigate the test failures and fix the issues.
@@ -75,7 +75,7 @@ jobs:
 
           # Create the issue using GitHub CLI (with GITHUB_TOKEN)
           echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-          gh issue create --title "$TITLE" --body "$BODY" --label "bug,systemtest" --assignee "${{ github.actor }}"
+          gh issue create --title "$TITLE" --label "bug,systemtest" --body "$BODY"
 
 
       - name: Upload test coverage
