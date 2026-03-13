@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: 'yarn'
           cache-dependency-path: 'SOURCE/aas-web-ui/yarn.lock'
 
@@ -34,7 +34,7 @@ jobs:
       - name: Run tests
         id: run-tests
         working-directory: SOURCE/aas-web-ui
-        run: yarn test 2>&1 | tee test-results.log
+        run: yarn test:coverage 2>&1 | tee test-results.log
         continue-on-error: true
 
       - name: Check test results
