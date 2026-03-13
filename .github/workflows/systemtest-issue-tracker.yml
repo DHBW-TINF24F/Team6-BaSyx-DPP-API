@@ -31,41 +31,47 @@ jobs:
         working-directory: SOURCE/aas-web-ui
         run: yarn install
 
-      - name: Run tests
+      - name: Run tests (with coverage)
         id: run-tests
         working-directory: SOURCE/aas-web-ui
-        run: yarn test:coverage 2>&1 | tee test-results.log
+        run: |
+          set -o pipefail
+          yarn test:coverage 2>&1 | tee test-results.log
+
+          # Keep last 200 lines of output to avoid huge issue bodies
+          tail -n 200 test-results.log > test-results-trimmed.log
+
+          echo "test_log<<EOF" >> $GITHUB_OUTPUT
+          cat test-results-trimmed.log >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
 
-      - name: Check test results
+      - name: Create issue on test failure
         if: steps.run-tests.outcome == 'failure'
-        run: |
-          echo "Tests failed, creating issue..."
-          # Get the current date
-          DATE=$(date +'%Y-%m-%d %H:%M:%S')
-          # Create issue title
-          TITLE="Systemtest Failure: Tests failed on $DATE"
-          # Create issue body
-          BODY="## Systemtest Failure
+        uses: peter-evans/create-issue@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Systemtest Failure: Tests failed on ${{ github.ref }}"
+          body: |
+            ## Systemtest Failure
 
-          The automated system tests have failed.
+            The automated system tests have failed.
 
-          **Triggered by:** ${{ github.event_name }}
-          **Branch:** ${{ github.ref_name }}
-          **Commit:** ${{ github.sha }}
-          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            **Triggered by:** ${{ github.event_name }}
+            **Branch:** ${{ github.ref_name }}
+            **Commit:** ${{ github.sha }}
+            **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          ### Test Output
-          \`\`\`
-          $(cat SOURCE/aas-web-ui/test-results.log 2>/dev/null || echo "No detailed log available")
-          \`\`\`
+            ### Test Output (last 200 lines)
+            ```
+            ${{ steps.run-tests.outputs.test_log }}
+            ```
 
-          Please investigate the test failures and fix the issues.
+            Please investigate the test failures and fix the issues.
 
-          /cc @${{ github.actor }}"
-
-          # Create the issue using GitHub CLI
-          gh issue create --title "$TITLE" --body "$BODY" --label "bug,systemtest"
+            /cc @${{ github.actor }}
+          labels: "bug,systemtest"
+          assignees: "${{ github.actor }}"
 
       - name: Upload test coverage
         if: steps.run-tests.outcome == 'success'
