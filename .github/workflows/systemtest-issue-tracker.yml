@@ -48,30 +48,35 @@ jobs:
 
       - name: Create issue on test failure
         if: steps.run-tests.outcome == 'failure'
-        uses: peter-evans/create-issue@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Systemtest Failure: Tests failed on ${{ github.ref }}"
-          body: |
-            ## Systemtest Failure
+        run: |
+          echo "Tests failed, creating issue..."
+          # Get the current date
+          DATE=$(date +'%Y-%m-%d %H:%M:%S')
+          # Create issue title
+          TITLE="Systemtest Failure: Tests failed on $DATE"
+          # Create issue body
+          BODY="## Systemtest Failure
 
-            The automated system tests have failed.
+          The automated system tests have failed.
 
-            **Triggered by:** ${{ github.event_name }}
-            **Branch:** ${{ github.ref_name }}
-            **Commit:** ${{ github.sha }}
-            **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          **Triggered by:** ${{ github.event_name }}
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            ### Test Output (last 200 lines)
-            ```
-            ${{ steps.run-tests.outputs.test_log }}
-            ```
+          ### Test Output (last 200 lines)
+          \`\`\`
+          ${{ steps.run-tests.outputs.test_log }}
+          \`\`\`
 
-            Please investigate the test failures and fix the issues.
+          Please investigate the test failures and fix the issues.
 
-            /cc @${{ github.actor }}
-          labels: "bug,systemtest"
-          assignees: "${{ github.actor }}"
+          /cc @${{ github.actor }}"
+
+          # Create the issue using GitHub CLI (with GITHUB_TOKEN)
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          gh issue create --title "$TITLE" --body "$BODY" --label "bug,systemtest" --assignee "${{ github.actor }}"
+
 
       - name: Upload test coverage
         if: steps.run-tests.outcome == 'success'
