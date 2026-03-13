@@ -1,0 +1,76 @@
+name: Systemtest Issue Tracker
+on:
+  push:
+    branches:
+      - main
+      - testing
+  pull_request:
+    branches:
+      - main
+      - testing
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  test-and-track-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          cache-dependency-path: 'SOURCE/aas-web-ui/yarn.lock'
+
+      - name: Install dependencies
+        working-directory: SOURCE/aas-web-ui
+        run: yarn install
+
+      - name: Run tests
+        id: run-tests
+        working-directory: SOURCE/aas-web-ui
+        run: yarn test 2>&1 | tee test-results.log
+        continue-on-error: true
+
+      - name: Check test results
+        if: steps.run-tests.outcome == 'failure'
+        run: |
+          echo "Tests failed, creating issue..."
+          # Get the current date
+          DATE=$(date +'%Y-%m-%d %H:%M:%S')
+          # Create issue title
+          TITLE="Systemtest Failure: Tests failed on $DATE"
+          # Create issue body
+          BODY="## Systemtest Failure
+
+          The automated system tests have failed.
+
+          **Triggered by:** ${{ github.event_name }}
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ### Test Output
+          \`\`\`
+          $(cat SOURCE/aas-web-ui/test-results.log 2>/dev/null || echo "No detailed log available")
+          \`\`\`
+
+          Please investigate the test failures and fix the issues.
+
+          /cc @${{ github.actor }}"
+
+          # Create the issue using GitHub CLI
+          gh issue create --title "$TITLE" --body "$BODY" --label "bug,systemtest"
+
+      - name: Upload test coverage
+        if: steps.run-tests.outcome == 'success'
+        uses: codecov/codecov-action@v3
+        with:
+          file: SOURCE/aas-web-ui/coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
