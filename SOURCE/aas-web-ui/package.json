@@ -3,6 +3,10 @@
   "version": "3.0.0",
   "description": "AAS Web UI",
   "type": "module",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=22 <25"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "vite",
@@ -13,6 +17,7 @@
     "lint:fix": "eslint --fix ./",
     "test": "vitest",
     "test:watch": "vitest --watch",
+    "test:integration": "vitest run tests/integration",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui"
   },
@@ -70,9 +75,9 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^10.5.0",
     "jsdom": "^27.0.0",
+    "postcss": "^8.4.32",
     "prettier": "^3.6.2",
     "sass": "^1.93.2",
-    "postcss": "^8.4.32",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.0",
     "unplugin-auto-import": "^20.2.0",

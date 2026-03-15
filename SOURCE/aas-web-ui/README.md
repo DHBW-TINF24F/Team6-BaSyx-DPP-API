@@ -65,6 +65,19 @@ npm run lint:fix
 pnpm lint:fix
 ```
 
+### Run the prepared STR integration tests in WSL
+
+The prepared system and integration tests referenced by the STR are located in `tests/integration`.
+
+For a reproducible WSL setup, use Node.js 24 and Yarn via Corepack:
+
+```
+corepack enable
+yarn install
+yarn test:integration
+yarn test:coverage
+```
+
 ### Customize configuration
 
 See [Configuration Reference](https://vitejs.dev/config/).

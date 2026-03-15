@@ -27,16 +27,26 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: 'SOURCE/aas-web-ui/yarn.lock'
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
         working-directory: SOURCE/aas-web-ui
         run: yarn install
 
-      - name: Run tests (with coverage)
+      - name: Run system tests
         id: run-tests
         working-directory: SOURCE/aas-web-ui
         run: |
           set -o pipefail
-          yarn test:coverage 2>&1 | tee test-results.log
+
+          {
+            echo "=== Run frontend test suite with coverage ==="
+            yarn test:coverage
+            echo
+            echo "=== Run prepared integration tests from STR ==="
+            yarn test:integration
+          } 2>&1 | tee test-results.log
 
           # Keep last 200 lines of output to avoid huge issue bodies
           tail -n 200 test-results.log > test-results-trimmed.log
