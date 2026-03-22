@@ -292,10 +292,22 @@
 }
 ```
 
-### DPP partial Object
-*--> is input body parameter*
-
 ### DPP Identifiers
+```json
+"payload": {
+    "dpps": [
+        {
+            "dppId": "<string: dppId>"
+            // To be declared if additional information like version or name is needed to be included
+        },
+        {
+            "dppId": "<string: dppId>"
+            // To be declared if additional information like version or name is needed to be included
+        },
+        // ...
+    ]
+}
+```
 
 ### DPP DataElementCollection
 
