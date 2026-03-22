@@ -174,8 +174,8 @@
                         {
                         "type": "Submodel",
                         "value": "https://dpp40.harting.com/shells/ZSN1/submodels/Nameplate/3/0",
-                        "reference": "https://admin-shell.io/zvei/nameplate/3/0/Nameplate", // aus GET /submodels/{submodelIdentifier}/$metadata
-                        "payload": { // aus GET /submodels/{submodelIdentifier}/$value
+                        "reference": "https://admin-shell.io/zvei/nameplate/3/0/Nameplate", // from GET /submodels/{submodelIdentifier}/$metadata
+                        "payload": { // from GET /submodels/{submodelIdentifier}/$value
                             "ProductArticleNumberOfManufacturer": [
                                 {
                                 "en": "09 30 024 0301, 09 33 024 2702, 09 33 000 6204"
@@ -286,13 +286,17 @@
             "type": "ExternalReference"
         },
         {
-            // ... für die oben genannten Submodels
+            // ... for the previously mentioned relevant submodels
         }
     ]
 }
 ```
 
 ### DPP Identifiers
+Input parameters: `productId`
+> [!NOTE]
+> `productId` = `aasIdentifier`
+
 ```json
 "payload": {
     "dpps": [
@@ -310,8 +314,127 @@
 ```
 
 ### DPP DataElementCollection
+Input parameters: `dppId` and `elementId`
+> Get, for API call required parameter, `submodelIdentifier` from `dppId` via `GET /dpps/{dppId}`.payload.administration.id
+
+> [!NOTE]
+> `elementId` = `submodelIdentifier`
+
+```json
+"payload": {
+    // content from BaSyx AAS Environment Component API: GET /submodels/{submodelIdentifier}/$value
+
+    // Example:
+    {
+        "ProductArticleNumberOfManufacturer": "09 30 024 0301, 09 33 024 2702, 09 33 000 6204",
+        "ManufacturerName": [
+            {
+                "de": "HARTING Electric Stiftung & Co. KG"
+            }
+        ],
+        "AddressInformation": {
+            "Company": [
+                {
+                    "de": "HARTING Electric Stiftung & Co. KG"
+                }
+            ],
+            "Phone": {
+                "TypeOfTelephone": "Office",
+                "TelephoneNumber": [
+                    {
+                        "de": "+49 5772 47-97100"
+                    }
+                ]
+            },
+            "NationalCode": [
+                {
+                    "de": "DE"
+                }
+            ],
+            "AddressOfAdditionalLink": "https://harting.com",
+            "Zipcode": [
+                {
+                    "de": "32339"
+                }
+            ],
+            "Street": [
+                {
+                    "de": "Wilhelm-Harting-Str. 1"
+                }
+            ],
+            "StateCounty": [
+                {
+                    "de": "Nordrhein-Westfalen"
+                }
+            ],
+            "CityTown": [
+                {
+                    "de": "Espelkamp"
+                }
+            ]
+        },
+        "OrderCodeOfManufacturer": "09300240301, 09330242702, 09330006204",
+        "CountryOfOrigin": "",
+        "Markings": [
+            {
+            "MarkingFile": {
+                "contentType": "image/png",
+                "value": "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvTmFtZXBsYXRlLzMvMA-Markings[0].MarkingFile-12670f46.png"
+            },
+            "MarkingName": "Communauté Européenne (CE)"
+            }
+        ],
+        "ManufacturerProductType": "Han 24B Assembly ZSN1",
+        "HardwareVersion": "",
+        "FirmwareVersion": "",
+        "ManufacturerProductFamily": [
+            {
+                "de": "Han® B"
+            },
+            {
+                "en": "Han® B"
+            }
+        ],
+        "CompanyLogo": {
+            "contentType": "image/png",
+            "value": "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvTmFtZXBsYXRlLzMvMA-CompanyLogo-a4d968da.png"
+        },
+        "SoftwareVersion": "",
+        "ManufacturerProductRoot": [
+            {
+                "de": "Han®"
+            },
+            {
+                "en": "Han®"
+            }
+        ],
+        "SerialNumber": "",
+        "URIOfTheProduct": "https://b2b.harting.com/ebusiness/de/hcpproductconfigurator?zConfID=ZSN1",
+        "ManufacturerProductDesignation": [
+            {
+                "de": "Han 24B Assembly ZSN1"
+            },
+            {
+                "en": "Han 24B Assembly ZSN1"
+            }
+        ],
+        "DateOfManufacture": ""
+    }
+}
+```
 
 ### DPP Property
+> [!ERROR] Still missing
+
+Input parameters: `dppId` and `elementPath`
+
+> **noahdbecker:** Not quite sure how to build up the input parameter `elementPath` as there is the need to have the submodelIdentifier at any time
+
+```json
+"payload": {
+    // content from BaSyx AAS Environment Component API: GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value
+}
+```
 
 <br>
 
