@@ -1,23 +1,72 @@
 package com.team6.dpp.controller;
 
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
-import java.util.ArrayList;
+import java.util.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.regex.Matcher;
+import java.util.Base64;
+import java.util.regex.Pattern;
+
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
+
+
 
 @RestController
 @RequestMapping("/api/v1/dpp")
 public class DppController {
+
+    private String HostUrl = "https://dpp40.harting.com:8081";
     
     @GetMapping("/health")
     public String health() {
         return "DPP Backend ready!";
     }
     
+    /* productId is the AAS Identifyer
+    X 1. call /shells/{aasidentifier}
+                ^
+        Simulieren mit: https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ
+    2. find the 7 relevant submodles
+    3. create a Dpp return Object
+    */ 
     @GetMapping("/{productId}")
     public String getDpp(@PathVariable String productId) {
-        return "{\"productId\":\"" + productId + "\", \"status\":\"active\"}";
+        String Base64ProductId = Base64.getEncoder().encodeToString(productId);
+
+
+        // do the call to /shells
+        RestClient restClient = RestClient.create();
+ 
+        JsonNode result = restClient.get().uri(HostUrl + "/shells/" + Base64ProductId).retrieve().body(JsonNode.class);
+        JsonNode submodles = result.get("submodels");
+        
+        ObjectNode n = new ObjectNode();
+        n.putPOJO()
+        
+        for (JsonNode submodel: submodels) {
+            String SubmodelName = submodel.get("keys")[0].get("value");
+
+            // create regex pattern to find the important subshells
+            Pattern pattern = Pattern.compile("Nameplate|CarbonFootprint|TechnicalData|HandoverDocumentation|ProductCondition|MaterialComposition|Circularity");
+            Matcher matcher = pattern.matcher(SubmodelName);
+            boolean matchFound = matcher.find();
+
+            // TODO: if we find an important submodel fetch it and append it to the response
+            if(matchFound) {
+                String SubmodelIdentifyier = Base64.getEncoder().encodeToString(submodel);
+                JsonNode SubResponse = restClient.get().uri(HostUrl + "/submodels/" + SubmodelIdentifyier);
+            }
+
+        }        
+            return response.toString();
     }
+   
 
     // lifecycle API
 
