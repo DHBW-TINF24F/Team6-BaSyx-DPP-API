@@ -101,7 +101,7 @@ Time frame and phases:
 
 | Nr  | Milestone name             | Week   | Responsible person                  | Deliverable |
 |-----|----------------------------|--------|-------------------------------------|-------------|
-| M1  | Project-Kickoff            | 1      | Whole team                          | 1. Project kick-off protocol (protocol of the first meeting)<br>2. Task distribution matrix (roles and initial responsibilities) |
+| M1  | Project-Kickoff I         | 1      | Whole team                          | 1. Project kick-off protocol (protocol of the first meeting)<br>2. Task distribution matrix (roles and initial responsibilities) |
 | M2  | Analysing the requirements | 2–4    | Nataliia Chubak, Magnus Lörcher     | 1. Detailed stakeholder analysis<br>2. Business case (BC)<br>3. Customer Requirements Specification (CRS) |
 | M3  | Project plan               | 5–6    | Nataliia Chubak                     | 1. Project structure plan (initial rough schedule and scoping)<br>2. Initial product backlog (prioritised CRS requirements) |
 
@@ -115,6 +115,24 @@ Time frame and phases:
 | M7  | Final preparation                      | 11       | Whole team, Manuel Lutz                        | 1. Final project plan update (parallelised tasks, dependencies)<br>2. PowerPoint presentation (first version) |
 | M8  | Semester-Review                        | 21.11.25 | Whole team                                     | 1. Presentation – results of analysis & design phase, final repository |
 
+
+### Phase III: Implementation 
+
+| Nr  | Milestone name                        | Week     | Responsible person                             | Deliverable |
+|-----|----------------------------------------|----------|------------------------------------------------|-------------|
+| M9 | Project-Kickoff II | 12 | Nataliia Chubak | 1. Update Project structure plan, including Implementation and Testing<br> 2. Create Gantt-Diagram for 4th semester <br> 3. Create task distribution matrix (initial responsibilities) |
+| M10 | Backend implementation | 13 | Fabian Steiß, Luca Schmoll, Magnus Lörcher | Implementation of backend into an exiting backend<br> 1. XX <br> |
+| M11 | Frontend implementation | 14 | Noah Becker, Felix Schulz, Nataliia Chubak | XX<br> 1. XX<br> |
+| M12 | Demo Server | 15 | Noah Becker | Configuration and protection of a server accessible via the internet for demonstating functionality |
+
+### Phase IV: Testing
+| Nr  | Milestone name                        | Week     | Responsible person                             | Deliverable |
+|-----|----------------------------------------|----------|------------------------------------------------|-------------|
+| M13 | Functional testing | 16 | Manuel Lutz | 1. Modular tests<br> 2. Validation tests<br> |
+| M14 | Integration and system tests | 17 | Manuel Lutz | 1. End-to-end test<br> 2. Interaction test<br> |
+| M15 | Usability testing | 17 | Manuel Lutz | User Acceptance Test |
+| M16 | Documentation Review | 18 | Whole team | Preparation the documentation:<br> 1. PM -> Nataliia Chubak<br> 2. UserDocu -> Fabian Steiß<br> 3. STR -> Manuel Lutz<br> 4.STP -> Manuel Lutz<br> 5. MOD (Web Interface) -> Felix Schulz<br> 6. Meeting Minutes -> Nataliia Chubak |
+
 ---
 
 ## 6. Gantt chart 3rd Semester
@@ -127,6 +145,18 @@ Time frame and phases:
 ![Gantt chart](images/Gantt_design.png)
 
 <p align="center"> <i>Figur.3 Gantt chart 3rd Semester (Phase II)</i> </p> 
+
+---
+
+## 6. Gantt chart 4th Semester
+
+
+
+<p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase III)</i> </p>  
+
+
+
+<p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase IV)</i> </p> 
 
 ---
 
@@ -210,7 +240,7 @@ Time frame and phases:
 
 ![Risk matrix](images/matrix.JPG)
 
-<p align="center"> <i>Figur.4 Risk matrix</i> </p> 
+<p align="center"> <i>Figur.6 Risk matrix</i> </p> 
 
 ---
 
@@ -241,14 +271,14 @@ The Jira platform is also used for more detailed control over the progress of ta
 
 * **With the customer:**
 
-All documents are visible in the GitHub repository. The documents PM, BC, CRS, SAS, SRS and MeetingMinutes are in the PROJECT folder.
+All documents and implementation with testing processes are visible in the GitHub repository. The documents PM, BC, CRS, SAS, SRS, STR, STP, User Documentation and Meeting Minutes are in the PROJECT folder.
 
 ---
 
 ## 10. Project deliveries
-The project´s deadline (first part) is officially set on 21.11.2025.
+The project´s deadline is officially set on 22.05.2026.
 
-Officially, the following tasks must be completed in the project (first part):
+Officially, the following tasks must be completed in the project:
 * **GitHub:** The GitHub repository needs to be cleaned up, and its wiki has to be updated.
 * **Documentation:** The complete set of documents must be delivered:
     * CRS (Customer Requirement Specification)
@@ -258,4 +288,10 @@ Officially, the following tasks must be completed in the project (first part):
     * PSP (Project structure plan - PM)
     * Protokolle (Protocols/Meeting Minutes)
     * Mockups
-* **Product presentation I**
+    * Meetings Minutes
+    * MODs
+    * STR (System Test Report)
+    * STP (Software Test Plan)
+    * User Documentation
+* **Product presentation II**
+* **Code: The source code and an executable version has to be published on GitHub Repository**
