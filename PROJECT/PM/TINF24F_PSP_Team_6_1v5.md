@@ -154,11 +154,11 @@ Time frame and phases:
 ## 7. Gantt chart 4th Semester
 
 
-![Gantt chart](images/Gantt_dev.png)
+![Gantt chart](images/Gantt_dev.jpg)
 <p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase III - Development)</i> </p>  
 
 
-![Gantt chart](images/Gantt_testing.png)
+![Gantt chart](images/Gantt_testing.jpg)
 <p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase IV - Testing)</i> </p> 
 
 ---
