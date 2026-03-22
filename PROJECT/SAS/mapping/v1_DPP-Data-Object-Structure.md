@@ -117,15 +117,44 @@
 
 ## `payload`-Object
 
+> **Relevant Submodels:**
+>> "Nameplate"
+>> "HandoverDocumentation"
+>> "CarbonFootprint"
+>> "TechnicalData"
+>> "ProductCondition"
+>> "MaterialComposition"
+>> "Circularity"
+
 ### DPP object
 > *This object contains the main DPP information to the requested DPP entry.*
 
 ```json
 // to be done
 
-"payload": [
+"payload": {
+    "administration": {
+        "creator": {
 
-]
+        },
+        "version": ""
+    },
+    "id": "",
+    "assetInformation": {
+        "assetKind": "Type",
+        "defaultThumbnail": {
+            "contentType": "image/png",
+            "path": "..."
+        },
+        "globalAssetId": "..."
+    },
+    "": {
+
+    },
+    "submodels": [
+
+    ]
+}
 ```
 
 ### DPP Identifiers
