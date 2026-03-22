@@ -1,0 +1,6 @@
+[submodule "EXECUTABLE/frontend"]
+	path = EXECUTABLE/frontend
+	url = https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API_Frontend.git
+[submodule "EXECUTABLE/backend"]
+	path = EXECUTABLE/backend
+	url = https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API_Backend.git
