@@ -1,3 +1,5 @@
+name: swe_team-6-basyx-dpp-api_dev
+
 services: 
   # Swagger Editor
   swagger:
