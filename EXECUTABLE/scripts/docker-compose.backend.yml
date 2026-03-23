@@ -69,21 +69,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  
-  # BaSyx WebUI
-  basyx-aas-web-ui:
-    image: eclipsebasyx/aas-gui:SNAPSHOT
-    container_name: basyx-aas-web-ui
-    ports:
-      - '3000:3000'
-    environment:
-      AAS_REGISTRY_PATH: http://localhost:8082/shell-descriptors
-      SUBMODEL_REGISTRY_PATH: http://localhost:8083/submodel-descriptors
-      AAS_REPO_PATH: http://localhost:8081/shells
-      SUBMODEL_REPO_PATH: http://localhost:8081/submodels
-      CD_REPO_PATH: http://localhost:8081/concept-descriptions
-      AAS_DISCOVERY_PATH: http://localhost:8084/lookup/shells
-    restart: always
-    depends_on:
-      basyx-aas-env:
-        condition: service_healthy
