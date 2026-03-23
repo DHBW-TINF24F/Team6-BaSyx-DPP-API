@@ -14,17 +14,23 @@ if [ "$start_docker" = "y" ]; then
 fi
 
 if [ "$DOCKER_BACKEND" = "1" ]; then
-    echo "Starting backend dependencies via Docker..."
-    docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.backend.yml" up -d
-    echo "Backend dependencies started."
+    #echo "Starting backend dependencies via Docker..."
+    #docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.backend.yml" up -d
+    #echo "Backend dependencies started."
+    echo ""
+    echo "Starting backend dependencies via Docker... (to be done)"
 fi
 
 
 # Start the frontend
-echo "Starting frontend... (CTRL+C to stop)"
+echo ""
 echo -e "${YELLOW}!NOTE: On first startup, this may take a while${COLOR_OFF}"
+echo "Starting frontend... (CTRL+C to stop)"
 
 cd "$PRJ_ROOT/SOURCE/frontend/aas-web-ui"
 
 yarn install
 yarn dev
+
+# Back to project root
+cd $PRJ_ROOT
