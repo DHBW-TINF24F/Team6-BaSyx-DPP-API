@@ -1,12 +1,14 @@
 #!/bin/bash
 
 PRJ_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DOCKER_FRONTEND='0'
 DOCKER_BACKEND='0'
+RED='\033[0;31m'
 YELLOW='\033[1;33m'
 COLOR_OFF='\033[0m'
 
 # Run the backend dependencies
-echo -e "Do you also want to start the backend dependencies (via Docker)?  (y/n) Default:n ${ColorOff}"
+echo -e "${YELLOW}Do you also want to start the backend dependencies (via Docker)?  (y/n) Default:n ${COLOR_OFF}"
 read start_docker
 
 if [ "$start_docker" = "y" ]; then
@@ -22,9 +24,22 @@ if [ "$DOCKER_BACKEND" = "1" ]; then
 fi
 
 
-# Start the frontend
+# Containerized vs dev frontend
+echo -e "${YELLOW}Do you want to build and run the frontend in a container instead of starting the dev server?  (y/n) Default:n ${COLOR_OFF}"
+read build_frontend_container
+
+if [ "$build_frontend_container" = "y" ]; then
+    DOCKER_FRONTEND='1'
+fi
+if [ "$DOCKER_FRONTEND" = "1" ]; then
+    echo "Building and running the frontend in a container... (to be done)"
+    exit 0
+fi
+
+
+# Start the frontend (dev)
 echo ""
-echo -e "${YELLOW}!NOTE: On first startup, this may take a while${COLOR_OFF}"
+echo -e "${RED}!NOTE: On first startup, this may take a while${COLOR_OFF}"
 echo "Starting frontend... (CTRL+C to stop)"
 
 cd "$PRJ_ROOT/SOURCE/frontend/aas-web-ui"
