@@ -16,12 +16,18 @@ if [ "$start_docker" = "y" ]; then
 fi
 
 if [ "$DOCKER_BACKEND" = "1" ]; then
-    #echo "Starting backend dependencies via Docker..."
-    #docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.backend.yml" up -d
-    #echo "Backend dependencies started."
+    echo "Starting backend dependencies via Docker..."
+
+    docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.backend.yml" up -d
+    
+    echo "Backend dependencies started."
     echo ""
-    echo "Starting backend dependencies via Docker... (to be done)"
+    
+    #echo "Starting backend dependencies via Docker... (to be done)"
 fi
+
+echo -e "${RED}If you want to start the backend in DEV mode, please execute the backend dev script afterwards ${COLOR_OFF}"
+echo ""
 
 
 # Containerized vs dev frontend
@@ -32,11 +38,13 @@ if [ "$build_frontend_container" = "y" ]; then
     DOCKER_FRONTEND='1'
 fi
 if [ "$DOCKER_FRONTEND" = "1" ]; then
-    echo "Building and running the frontend in a container... (to be done)"
+    echo "Building and running the frontend in a container..."
+    docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.frontend.yml" up -d
+    echo "Frontend container started."
     exit 0
 fi
 
-
+docker stop basyx-aas-web-ui
 # Start the frontend (dev)
 echo ""
 echo -e "${RED}!NOTE: On first startup, this may take a while${COLOR_OFF}"
