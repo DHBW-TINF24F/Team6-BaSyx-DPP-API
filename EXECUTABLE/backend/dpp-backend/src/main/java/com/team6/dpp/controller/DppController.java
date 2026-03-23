@@ -37,20 +37,19 @@ public class DppController {
     */ 
     @GetMapping("/{productId}")
     public String getDpp(@PathVariable String productId) {
-        String Base64ProductId = Base64.getEncoder().encodeToString(productId);
+        String Base64ProductId = Base64.getEncoder().encodeToString(productId.getBytes());
 
 
         // do the call to /shells
         RestClient restClient = RestClient.create();
  
         JsonNode result = restClient.get().uri(HostUrl + "/shells/" + Base64ProductId).retrieve().body(JsonNode.class);
-        JsonNode submodles = result.get("submodels");
+        JsonNode submodels = result.get("submodels");
         
-        ObjectNode n = new ObjectNode();
-        n.putPOJO()
+        ObjectNode n = new ObjectNode(null);
         
         for (JsonNode submodel: submodels) {
-            String SubmodelName = submodel.get("keys")[0].get("value");
+            String SubmodelName = submodel.get("keys").get(0).get("value").toString();
 
             // create regex pattern to find the important subshells
             Pattern pattern = Pattern.compile("Nameplate|CarbonFootprint|TechnicalData|HandoverDocumentation|ProductCondition|MaterialComposition|Circularity");
@@ -59,12 +58,14 @@ public class DppController {
 
             // TODO: if we find an important submodel fetch it and append it to the response
             if(matchFound) {
-                String SubmodelIdentifyier = Base64.getEncoder().encodeToString(submodel);
-                JsonNode SubResponse = restClient.get().uri(HostUrl + "/submodels/" + SubmodelIdentifyier);
+                String SubmodelIdentifyier = Base64.getEncoder().encodeToString(SubmodelName.getBytes());
+                JsonNode SubResponse = restClient.get().uri(HostUrl + "/submodels/" + SubmodelIdentifyier).retrieve().body(JsonNode.class);
             }
 
         }        
-            return response.toString();
+            // TODO:
+            //return response.toString();
+            return null;
     }
    
 
