@@ -1,11 +1,35 @@
 #!/bin/bash
 
 PRJ_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DOCKER_RESET='0'
 DOCKER_FRONTEND='0'
 DOCKER_BACKEND='0'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 COLOR_OFF='\033[0m'
+
+# Reset Docker containers and images
+echo -e "${YELLOW}Do you want to reset the Docker containers and images (without mongo)?  (y/n) Default:n ${COLOR_OFF}"
+read reset_docker
+if [ "$reset_docker" = "y" ]; then
+    DOCKER_RESET='1'
+fi
+
+if [ "$DOCKER_RESET" = "1" ]; then
+    echo "Stopping and removing Docker containers..."
+    docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.backend.yml" down
+    docker compose -f "$PRJ_ROOT/EXECUTABLE/scripts/docker-compose.frontend.yml" down
+
+    echo "Removing Docker images..."
+    docker rmi eclipsebasyx/aas-gui:SNAPSHOT --force
+    docker rmi eclipsebasyx/aas-registry-log-mongodb:2.0.0-SNAPSHOT --force
+    docker rmi eclipsebasyx/submodel-registry-log-mongodb:2.0.0-SNAPSHOT --force
+    docker rmi eclipsebasyx/aas-environment:2.0.0-SNAPSHOT --force
+    docker rmi eclipsebasyx/aas-discovery:2.0.0-SNAPSHOT --force
+
+    echo "Docker containers and images reset."
+    echo ""
+fi
 
 # Run the backend dependencies
 echo -e "${YELLOW}Do you also want to start the backend dependencies (via Docker)?  (y/n) Default:n ${COLOR_OFF}"
