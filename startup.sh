@@ -26,7 +26,7 @@ if [ "$DOCKER_BACKEND" = "1" ]; then
     #echo "Starting backend dependencies via Docker... (to be done)"
 fi
 
-echo -e "${RED}If you want to start the backend in DEV mode, please execute the backend dev script afterwards ${COLOR_OFF}"
+echo -e "${RED}If you want to start the backend in DEV mode, please execute the backend dev script afterwards in a separate terminal ${COLOR_OFF}"
 echo ""
 
 
