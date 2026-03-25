@@ -1,0 +1,34 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
+  <diagram name="Seite-1" id="cn_iA5SmI6hUZw0bVsu8">
+    <mxGraphModel dx="336" dy="174" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-1" value="CarbonFootprint:ProductCarbonFootprint.PCFCO2eq&amp;nbsp;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="350" y="435" width="430" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-4" value="" style="shape=crossbar;whiteSpace=wrap;html=1;rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="418" y="450" width="90" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-5" value="Submodel idShort" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=8;" vertex="1" parent="1">
+          <mxGeometry x="430" y="460" width="70" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-6" value="" style="shape=crossbar;whiteSpace=wrap;html=1;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="513" y="450" width="197" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-7" value="idShortPath" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=8;" vertex="1" parent="1">
+          <mxGeometry x="576.5" y="460" width="70" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-8" value="Separated by &quot;:&quot;&lt;div style=&quot;padding-top: 0px; margin-top: 0px;&quot;&gt;.[0] --&amp;gt; &lt;span style=&quot;background-color: light-dark(rgb(150, 115, 166), rgb(237, 237, 237));&quot;&gt;&lt;font style=&quot;color: rgb(255, 255, 255);&quot;&gt;Submodel idShort&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;.[1] --&amp;gt; &lt;span style=&quot;background-color: light-dark(rgb(108, 142, 191), rgb(237, 237, 237));&quot;&gt;idShortPath&lt;/span&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=8;" vertex="1" parent="1">
+          <mxGeometry x="488.25" y="490" width="153.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="M5CLkteq27PGd3Py5ZkC-9" value="" style="endArrow=classic;html=1;rounded=0;fontColor=#F60013;strokeColor=#F60013;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="420" as="sourcePoint" />
+            <mxPoint x="510" y="438" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

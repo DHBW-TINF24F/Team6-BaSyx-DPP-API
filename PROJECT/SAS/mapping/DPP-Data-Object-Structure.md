@@ -299,6 +299,7 @@ Input parameters: `productId`
 
 ```json
 "payload": {
+    "productId": "<input parameter [not base64]>",
     "dpps": [
         {
             "dppId": "<string: dppId>"
@@ -319,6 +320,9 @@ Input parameters: `dppId` and `elementId`
 
 > [!NOTE]
 > `elementId` = `submodelIdentifier`
+
+> [!WARNING]
+> Only show requested DataElementCollection/Submodel if it exists in the requested DPP (previously executed check nessecary!)
 
 ```json
 "payload": {
@@ -428,7 +432,11 @@ Input parameters: `dppId` and `elementId`
 
 Input parameters: `dppId` and `elementPath`
 
-> **noahdbecker:** Not quite sure how to build up the input parameter `elementPath` as there is the need to have the submodelIdentifier at any time
+> [!NOTE]
+> **`elementPath`-structure:**
+> `<DPP Submodel ID short: [Digital]Nameplate|HandoverDocumentation|CarbonFootprint|...>`**.**`<Rest of idShortPath beginning from submodel-sublevel: e.g. ProductCarbonFootprint.PCFCO2eq>`
+>
+> ![[./src/DPP-Property_structure.drawio.png]]
 
 ```json
 "payload": {
