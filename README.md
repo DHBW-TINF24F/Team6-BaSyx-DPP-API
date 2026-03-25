@@ -2,7 +2,7 @@
 
 
 
-#   TINF24F_Team6_BaSyx_DPP_APIz
+#   TINF24F_Team6_BaSyx_DPP_API
 
 <hr>
 <p align="center"><a href="https://srv01.noah-becker.de/uni/swe/swagger/">Swagger</a> &bull;
@@ -72,6 +72,12 @@ Ideally, we would also add a new entry in the BaSyx UI under the “AAS SM Visua
 | **Data Model** | Asset Administration Shell (AAS) |
 | **Hosting** | <div>Traefik (Reverse Proxy) & Docker<br><li> [Swagger](https://srv01.noah-becker.de/uni/swe/swagger/) OpenAPI Spezifikation<br><li> [BaSyx WebUI](https://srv01.noah-becker.de/uni/swe/basyx/) Applikation</div> |
 | **Documentation** | Markdown, GitHub Wiki, Swagger UI |
+
+---
+
+## Developer Documentation
+
+For an in-depth developer documentation, how to setup the environment and how all in this repo used dependencies work together, either have a look at the [Developer README](./README.dev.md) or the [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md).
 
 ---
 
