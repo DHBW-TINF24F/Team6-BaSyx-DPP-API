@@ -176,118 +176,118 @@
     "submodels": [
         {
             "keys": [
-                        {
-                        "type": "Submodel",
-                        "value": "https://dpp40.harting.com/shells/ZSN1/submodels/Nameplate/3/0",
-                        "reference": "https://admin-shell.io/zvei/nameplate/3/0/Nameplate", // from GET /submodels/{submodelIdentifier}/$metadata
-                        "payload": { // from GET /submodels/{submodelIdentifier}/$value
-                            "ProductArticleNumberOfManufacturer": [
-                                {
+                {
+                    "type": "Submodel",
+                    "value": "https://dpp40.harting.com/shells/ZSN1/submodels/Nameplate/3/0",
+                    "reference": "https://admin-shell.io/zvei/nameplate/3/0/Nameplate", // from GET /submodels/{submodelIdentifier}/$metadata
+                    "payload": { // from GET /submodels/{submodelIdentifier}/$value
+                        "ProductArticleNumberOfManufacturer": [
+                            {
                                 "en": "09 30 024 0301, 09 33 024 2702, 09 33 000 6204"
-                                }
-                            ],
-                            "ManufacturerName": [
-                                {
+                            }
+                        ],
+                        "ManufacturerName": [
+                            {
                                 "de": "HARTING Electric Stiftung & Co. KG"
-                                }
-                            ],
-                            "OrderCodeOfManufacturer": [
-                                {
+                            }
+                        ],
+                        "OrderCodeOfManufacturer": [
+                            {
                                 "en": "09300240301, 09330242702, 09330006204"
-                                }
-                            ],
-                            "CountryOfOrigin": "",
-                            "YearOfConstruction": "",
-                            "Markings": {
-                                "Marking": {
+                            }
+                        ],
+                        "CountryOfOrigin": "",
+                        "YearOfConstruction": "",
+                        "Markings": {
+                            "Marking": {
                                 "MarkingFile": {
                                     "contentType": "image/png",
                                     "value": "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvTmFtZXBsYXRlLzIvMA-Markings.Marking.MarkingFile-8abf5add.png"
                                 },
                                 "MarkingName": ""
-                                }
-                            },
-                            "ManufacturerProductType": [
-                                {
+                            }
+                        },
+                        "ManufacturerProductType": [
+                            {
                                 "de": "Han 24B Assembly ZSN1"
-                                },
-                                {
+                            },
+                            {
                                 "en": "Han 24B Assembly ZSN1"
-                                }
-                            ],
-                            "ContactInformation": {
-                                "Company": [
+                            }
+                        ],
+                        "ContactInformation": {
+                            "Company": [
                                 {
                                     "de": "HARTING Electric Stiftung & Co. KG"
                                 }
-                                ],
-                                "Phone": {
+                            ],
+                            "Phone": {
                                 "TypeOfTelephone": "Office",
                                 "TelephoneNumber": [
                                     {
-                                    "de": "+49 5772 47-97100"
+                                        "de": "+49 5772 47-97100"
                                     }
                                 ]
-                                },
-                                "NationalCode": [
+                            },
+                            "NationalCode": [
                                 {
                                     "de": "DE"
                                 }
-                                ],
-                                "AddressOfAdditionalLink": "https://harting.com",
-                                "Zipcode": [
+                            ],
+                            "AddressOfAdditionalLink": "https://harting.com",
+                            "Zipcode": [
                                 {
                                     "de": "32339"
                                 }
-                                ],
-                                "Street": [
+                            ],
+                            "Street": [
                                 {
                                     "de": "Wilhelm-Harting-Str. 1"
                                 }
-                                ],
-                                "StateCounty": [
+                            ],
+                            "StateCounty": [
                                 {
                                     "de": "Nordrhein-Westfalen"
                                 }
-                                ],
-                                "CityTown": [
+                            ],
+                            "CityTown": [
                                 {
                                     "de": "Espelkamp"
                                 }
-                                ]
-                            },
-                            "ManufacturerProductFamily": [
-                                {
-                                "de": "Han® B"
-                                },
-                                {
-                                "en": "Han® B"
-                                }
-                            ],
-                            "CompanyLogo": {
-                                "contentType": "image/png",
-                                "value": "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvTmFtZXBsYXRlLzIvMA-CompanyLogo-ad7a78d6.png"
-                            },
-                            "ManufacturerProductRoot": [
-                                {
-                                "de": "Han®"
-                                },
-                                {
-                                "en": "Han®"
-                                }
-                            ],
-                            "URIOfTheProduct": "https://b2b.harting.com/ebusiness/de/hcpproductconfigurator?zConfID=ZSN1",
-                            "ManufacturerProductDesignation": [
-                                {
-                                "de": "Han 24B Assembly ZSN1"
-                                },
-                                {
-                                "en": "Han 24B Assembly ZSN1"
-                                }
                             ]
+                        },
+                        "ManufacturerProductFamily": [
+                            {
+                                "de": "Han® B"
+                            },
+                            {
+                                "en": "Han® B"
                             }
-                        }
-                    ],
+                        ],
+                        "CompanyLogo": {
+                            "contentType": "image/png",
+                            "value": "aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvTmFtZXBsYXRlLzIvMA-CompanyLogo-ad7a78d6.png"
+                        },
+                        "ManufacturerProductRoot": [
+                            {
+                                "de": "Han®"
+                            },
+                            {
+                                "en": "Han®"
+                            }
+                        ],
+                        "URIOfTheProduct": "https://b2b.harting.com/ebusiness/de/hcpproductconfigurator?zConfID=ZSN1",
+                        "ManufacturerProductDesignation": [
+                            {
+                                "de": "Han 24B Assembly ZSN1"
+                            },
+                            {
+                                "en": "Han 24B Assembly ZSN1"
+                            }
+                        ]
+                    }
+                }
+            ],
             "type": "ExternalReference"
         },
         {
@@ -314,7 +314,7 @@ Input parameters: `productId`
 
 ```json
 "payload": {
-    "productId": "<input parameter [not base64]>",
+    "productId": "<input parameter [not base64]>", // NEW
     "dpps": [
         {
             "dppId": "<string: dppId>"
