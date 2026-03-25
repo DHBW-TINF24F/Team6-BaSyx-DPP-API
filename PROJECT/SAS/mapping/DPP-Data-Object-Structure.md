@@ -126,8 +126,13 @@
 >> "MaterialComposition"
 >> "Circularity"
 
+<br>
+
 ### DPP object
 > *This object contains the main DPP information to the requested DPP entry.*
+
+<details>
+<summary><strong>v1</strong> &mdash; 2026-03-22</summary>
 
 ```json
 "payload": {
@@ -292,10 +297,20 @@
 }
 ```
 
+</details>
+
+<br>
+
 ### DPP Identifiers
 Input parameters: `productId`
 > [!NOTE]
 > `productId` = `aasIdentifier`
+
+<details>
+<summary><strong>v2</strong> &mdash; 2026-03-25</summary>
+
+> [!INFO]
+> **V2:** Added productId as attribute at the top.
 
 ```json
 "payload": {
@@ -314,8 +329,37 @@ Input parameters: `productId`
 }
 ```
 
+</details>
+
+<details>
+<summary><strong>v1</strong> &mdash; 2026-03-22</summary>
+
+```json
+"payload": {
+    "dpps": [
+        {
+            "dppId": "<string: dppId>"
+            // To be declared if additional information like version or name is needed to be included
+        },
+        {
+            "dppId": "<string: dppId>"
+            // To be declared if additional information like version or name is needed to be included
+        },
+        // ...
+    ]
+}
+```
+
+</details>
+
+<br>
+
 ### DPP DataElementCollection
 Input parameters: `dppId` and `elementId`
+
+<details>
+<summary><strong>v1</strong> &mdash; 2026-03-22</summary>
+
 > Get, for API call required parameter, `submodelIdentifier` from `dppId` via `GET /dpps/{dppId}`.payload.administration.id
 
 > [!NOTE]
@@ -426,11 +470,16 @@ Input parameters: `dppId` and `elementId`
     }
 }
 ```
+</details>
+
+<br>
 
 ### DPP Property
-> [!ERROR] Still missing
 
 Input parameters: `dppId` and `elementPath`
+
+<details>
+<summary><strong>v1</strong> &mdash; 2026-03-025</summary>
 
 > [!NOTE]
 > **`elementPath`-structure:**
@@ -443,6 +492,8 @@ Input parameters: `dppId` and `elementPath`
     // content from BaSyx AAS Environment Component API: GET /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value
 }
 ```
+
+</details>
 
 <br>
 
