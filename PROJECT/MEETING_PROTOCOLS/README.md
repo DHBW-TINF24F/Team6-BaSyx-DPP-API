@@ -1,7 +1,10 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 
+
 ## Table of Contents
+- [Meeting 20.03.2026 - "Back, but not end" - Backend Strategy](#backendStrategy)
+- [Meeting 13.03.2026 - New start](#newStart) 
 - [Meeting 19.11.2025 – Final discussion for presentation](#finalPresentationMeeting)
 - [Meeting 10.11.2025 - Show and Tell](#showAndTell)
 - [Meeting 06.11.2025 - Feedback from Herr Rentschler](#review)
@@ -14,6 +17,122 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+
+
+<a id="backendStrategy">
+
+## Meeting 20.03.2026 - "Back, but not end" - Backend Strategy
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Infrastructure | Backend Team  | 20 min|
+| 2 | Stakeholder Feedback Review | Noah Becker | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 20.03.2026  
+**Time:** 10:00 – 10:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Felix Schulz
+
+---
+
+### I. Objectives
+1. Finalizing the server-side architecture and the implementation plan.
+2. Review and integrate feedback received from Mr.Rentschler.
+
+### II. Discussion Points
+1. Noah Becker shared the latest updates from the meeting with Mr. Rentschler (refer to the documentation shared in the group chat).
+2. Environment Setup -> Docker
+3. Selecting a Testing Strategy
+4. Defining Endpoints 
+
+### III To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Start of backend development | Noah Becker, Fabian Steiß, Magnus Lörcher, Luca Schmoll | 03.04.2026 | 
+| Update the BaSyx Backend services on Server to newest available version | Noah Becker | 27.03.20226 |
+| Develop Docker Container | Fabian Steiß, Magnus Lörcher | 27.03.2026 |
+| Develop Java spring | Fabian Steiß | 27.03.2026 | 
+| Conduct systematic testing | Manuel Lutz | 25.03.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 27.03.2026
+
+---
+
+<a id="newStart">
+
+## Meeting 13.03.2026 - New start
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Next Phase Planning & Resource Allocation | Nataliia Chubak | 20 min 
+| 2 | Task Tracker Setup & Workflow Definition | Nataliia Chubak | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 13.03.2026  
+**Time:** 09:00 – 09:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Phase planning   
+</td>
+</tr>
+</table>>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß 
+
+---
+
+### I. Objectives
+1. Organizational: Define the development plan for the upcoming sprint and distribute responsibilities.
+2. Establish a task-tracking system to monitor progress.
+3. Distill key action items from recent feedback sessions.
+
+### II. Discussion Points
+1. Comprehensive review of the feedback provided by the lecturers; identifying core areas for improvement.
+2. Discussion of the strategy for further project implementation.
+
+### III To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Develop a detailed roadmap for upcoming feature implementation | Nataliia Chubak | 20.03.2026 |
+| Update project documentation (README.md) | Fabian Steiß | 20.03.2026 |
+| Update Project structure plan, including Implementation and Testing | Nataliia Chubak | 20.03.2026 |
+| Create Gantt-Diagram for 4th semester| Nataliia Chubak | 20.03.2026 |
+|Create task distribution matrix (initial responsibilities)| Nataliia Chubak | 20.03.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 20.03.2026
+
+---
+
+
 
 
 <a id="finalPresentationMeeting">

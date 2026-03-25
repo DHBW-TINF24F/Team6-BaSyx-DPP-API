@@ -49,10 +49,11 @@
 4.  [Work breakdown structure](#4-work-breakdown-structure-psp)
 5.  [Milestones and delivarebles](#5-milestones-and-deliverables)
 6.  [Gantt chart 3rd Semester](#6-gantt-chart-3rd-semester)
-7.  [Risks](#7-risks)
-8.  [Soft- and Hardware requirements](#8-soft--and-hardware-requirements)
-9.  [Communication and reporting](#9-communication-and-reporting)
-10. [Project deliveries](#10-project-deliveries)
+7.  [Gantt chart 4th Semester](#7-gantt-chart-4th-semester)
+8.  [Risks](#7-risks)
+9.  [Soft- and Hardware requirements](#8-soft--and-hardware-requirements)
+10.  [Communication and reporting](#9-communication-and-reporting)
+11. [Project deliveries](#10-project-deliveries)
 
 ---
 
@@ -116,22 +117,24 @@ Time frame and phases:
 | M8  | Semester-Review                        | 21.11.25 | Whole team                                     | 1. Presentation – results of analysis & design phase, final repository |
 
 
-### Phase III: Implementation 
+### Phase III: Development
 
 | Nr  | Milestone name                        | Week     | Responsible person                             | Deliverable |
 |-----|----------------------------------------|----------|------------------------------------------------|-------------|
 | M9 | Project-Kickoff II | 12 | Nataliia Chubak | 1. Update Project structure plan, including Implementation and Testing<br> 2. Create Gantt-Diagram for 4th semester <br> 3. Create task distribution matrix (initial responsibilities) |
-| M10 | Backend implementation | 13 | Fabian Steiß, Luca Schmoll, Magnus Lörcher | Implementation of backend into an exiting backend<br> 1. XX <br> |
-| M11 | Frontend implementation | 14 | Noah Becker, Felix Schulz, Nataliia Chubak | XX<br> 1. XX<br> |
-| M12 | Demo Server | 15 | Noah Becker | Configuration and protection of a server accessible via the internet for demonstating functionality |
+| M10 | Backend implementation | 13-14 | Fabian Steiß, Luca Schmoll, Magnus Lörcher | Implementation of backend into an exiting backend<br> 1. Develop Java spring <br> 2. Implementation of the DPP API-Specification <br> 3. Update the BaSyx Backend services <br> 4. Develop Docker Container <br> 5. Mock backend data for frontend development <br> |
+| M11 | Frontend implementation | 15-16 | Noah Becker, Felix Schulz, Nataliia Chubak | 1. Connect to Backend <br> 2. Frontend implementation <br> 3. Develop Editor <br> 4. Develop of Quick-Actions <br> 5.Dashboard-Functions <br> 6.Develop of Search/Filter Tabs |
+| M12 | Demo Server | 17 | Noah Becker | Configuration and protection of a server accessible via the internet for demonstating functionality |
 
 ### Phase IV: Testing
 | Nr  | Milestone name                        | Week     | Responsible person                             | Deliverable |
 |-----|----------------------------------------|----------|------------------------------------------------|-------------|
-| M13 | Functional testing | 16 | Manuel Lutz | 1. Modular tests<br> 2. Validation tests<br> |
+| M13 | Functional testing | 18 | Manuel Lutz | 1. Creating Issue-Tracker for Systemtest <br> 2. Modular tests<br> 3. Validation tests<br> |
 | M14 | Integration and system tests | 17 | Manuel Lutz | 1. End-to-end test<br> 2. Interaction test<br> |
-| M15 | Usability testing | 17 | Manuel Lutz | User Acceptance Test |
-| M16 | Documentation Review | 18 | Whole team | Preparation the documentation:<br> 1. PM -> Nataliia Chubak<br> 2. UserDocu -> Fabian Steiß<br> 3. STR -> Manuel Lutz<br> 4.STP -> Manuel Lutz<br> 5. MOD (Web Interface) -> Felix Schulz<br> 6. Meeting Minutes -> Nataliia Chubak |
+| M15 | Usability testing | 19 | Manuel Lutz | User Acceptance Test |
+| M16 | Documentation Review | 20-21 | Whole team | Preparation the documentation:<br> 1. PM -> Nataliia Chubak<br> 2. UserDocu -> Fabian Steiß<br> 3. STR -> Manuel Lutz<br> 4.STP -> Manuel Lutz<br> 5. MOD (Web Interface) -> Felix Schulz<br> 7. MOD <br>  8. MOD <br> 9. MOD <br> 10. Meeting Minutes -> Nataliia Chubak |
+| M17 | Final Presentation | 22.05.2026 | Whole team | Final presentation – results of development & testing + final repository |
+
 
 ---
 
@@ -139,24 +142,24 @@ Time frame and phases:
 
 ![Gantt chart](images/Gantt_analyse.png)
 
-<p align="center"> <i>Figur.2 Gantt chart 3rd Semester (Phase I)</i> </p>  
+<p align="center"> <i>Figur.2 Gantt chart 3rd Semester (Phase I - Analysis)</i> </p>  
 
 
 ![Gantt chart](images/Gantt_design.png)
 
-<p align="center"> <i>Figur.3 Gantt chart 3rd Semester (Phase II)</i> </p> 
+<p align="center"> <i>Figur.3 Gantt chart 3rd Semester (Phase II - Design)</i> </p> 
 
 ---
 
-## 6. Gantt chart 4th Semester
+## 7. Gantt chart 4th Semester
 
 
+![Gantt chart](images/Gantt_dev.jpg)
+<p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase III - Development)</i> </p>  
 
-<p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase III)</i> </p>  
 
-
-
-<p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase IV)</i> </p> 
+![Gantt chart](images/Gantt_testing.jpg)
+<p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase IV - Testing)</i> </p> 
 
 ---
 
@@ -172,7 +175,7 @@ Time frame and phases:
 | |  - Coding (Frontend)|
 | |  - Presentation |
 | |  - PowerPoint |
-| | - Meetings Minutes (X-X Weeks)
+| | - Meetings Minutes (12-21 Weeks)
 | **Magnus Lörcher** |
 | Role: Product manager |  - CRS (Customer Requirements Specification) |
 | *E-mail: inf24155@lehre.dhbw-stuttgart.de* | - Market and demand analysis|
@@ -209,7 +212,7 @@ Time frame and phases:
 | *E-mail: inf24038@lehre.dhbw-stuttgart.de* | - Backend implementation |
 | *MatrikelNr: 1871817* | - Infrastructure setup |
 | | - Usability concept |
-| | - Coding (Frontend) |
+| | - Coding (Full stack) |
 | | - Presentation |
 | **Felix Schulz** | |
 | Role: UI-Designer | - UI-implementation |
@@ -218,13 +221,12 @@ Time frame and phases:
 | | - Executable|
 | | - MOD (Web-Interface) |
 | | - Coding (Frontend) |
-| | - Testing |
 | | - Presentation |
 | | - PowerPoint I |
 
 ---
 
-## 7. Risks
+## 8. Risks
 
 | **Nr** | **Risk** | **Probability** | **Amount of damage** | **Effects** | **Measure** |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -244,7 +246,7 @@ Time frame and phases:
 
 ---
 
-## 8. Soft- and Hardware requirements
+## 9. Soft- and Hardware requirements
 
 
 | Component | Technology |
@@ -260,7 +262,7 @@ Time frame and phases:
 
 ---
 
-## 9. Communication and reporting
+## 10. Communication and reporting
 
 * **Within the team:** 
 
@@ -275,7 +277,7 @@ All documents and implementation with testing processes are visible in the GitHu
 
 ---
 
-## 10. Project deliveries
+## 11. Project deliveries
 The project´s deadline is officially set on 22.05.2026.
 
 Officially, the following tasks must be completed in the project:
@@ -293,5 +295,5 @@ Officially, the following tasks must be completed in the project:
     * STR (System Test Report)
     * STP (Software Test Plan)
     * User Documentation
-* **Product presentation II**
+* **Product presentation I&II**
 * **Code: The source code and an executable version has to be published on GitHub Repository**
