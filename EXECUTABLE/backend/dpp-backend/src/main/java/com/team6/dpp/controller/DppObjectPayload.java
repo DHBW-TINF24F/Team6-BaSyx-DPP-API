@@ -115,9 +115,9 @@ public class DppObjectPayload {
 
         marking.putObject("MarkingFile")
 
-                .put("contentType", "image/png")
+                .putPOJO("contentType", result.get("assetInformation").get("defaultThumbnail").get("contentType"))
 
-                .put("value", "aHR0cHM6... (gekürzt für Übersichtlichkeit)");
+                .putPOJO("value", result.get("assetInformation").get("defaultThumbnail").get("path"));
 
         marking.put("MarkingName", "");
 
