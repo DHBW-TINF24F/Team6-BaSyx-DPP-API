@@ -41,7 +41,7 @@ public class DppObjectPayload {
 
         ObjectNode assetInfo = administration.putObject("assetInformation");
 
-        assetInfo.put("assetKind", result.get("assetInformation").get("assetKind"));
+        assetInfo.putPOJO("assetKind", result.get("assetInformation").get("assetKind"));
 
         assetInfo.putObject("defaultThumbnail")
 
