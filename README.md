@@ -11,6 +11,9 @@
 <a href="https://1drv.ms/p/c/94b53bce14d0456b/EVwut7JiukRCs4097VqIiFMBA16DA1QQZXdYSsWuQjsq4Q?e=AmxA4S">Presentation</a>
 <hr>
 
+<img style="height:70" src="./SOURCE/media/basyx_icon.svg" >
+
+<img src="./SOURCE/media/screenshot_frontend.png" >
 
 This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) standard, integrated into the Eclipse BaSyx framework.  
 
@@ -72,6 +75,12 @@ Ideally, we would also add a new entry in the BaSyx UI under the “AAS SM Visua
 
 ---
 
+## Developer Documentation
+
+For an in-depth developer documentation, how to setup the environment and how all in this repo used dependencies work together, either have a look at the [Developer README](./README.dev.md) or the [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md).
+
+---
+
 ## Useful Links
 -   [BaSyx Hack - Useful API information](https://basyxhack.iese.de/docs.html#gettingstarted)
 -   [AAS Web UI overview](https://wiki.basyx.org/en/latest/content/user_documentation/basyx_components/web_ui/index.html)
@@ -82,18 +91,5 @@ Ideally, we would also add a new entry in the BaSyx UI under the “AAS SM Visua
 
 
 
-## Roadmap
-
-- [x] Open API specification
-- [x] Development environment
-- [x] Issue tracker
-- [x] GitHub Wiki
-- [ ] Documents
-    - [x] Business sase
-    - [x] Customer request specifications
-    - [x] Software requirements specifications
-    - [x] Project management
-    - [ ] Meeting minutes
-    - [ ] Presentation
 
 Go to [open issues](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/issues) or [roadmap](https://github.com/orgs/DHBW-TINF24F/projects/9) for a full list of proposed features (and known issues).
