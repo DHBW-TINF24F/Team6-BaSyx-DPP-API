@@ -16,6 +16,7 @@
 |1.0|Manuel Lutz|13.03.2026|Ersterstellung basierend auf der SRS|
 |1.1|Manuel Lutz|13.03.2026|Überarbeitung, Umbenennung und Ergänzung der vorbereiteten Integrationstests|
 |1.2|Manuel Lutz|15.03.2026|Status der vorbereiteten Integrationstests nach Ausführung aktualisiert (12/12 bestanden)|
+|1.3|Manuel Lutz|27.03.2026|Anpassung der Integrationstests auf DIN EN 18222 DPP-Data-Object-Structure Mapping|
 
 ---
 
@@ -119,38 +120,55 @@ Weil das Backend noch nicht vollständig implementiert ist, wurden Integrationst
 
 Sobald das Backend bereitsteht, können die Mock-Antworten schrittweise durch echte API-Aufrufe ersetzt werden.
 
-### 4.2 API-Integration
+### 4.2 API-Integration (DIN EN 18222 konform)
 
-|Test-ID|Beschreibung|Ziel|Automatisierungsgrad|Status|
+|Test-ID|Endpoint|Beschreibung|Ziel|Status|
 |---|---|---|---|---|
-|IT-API-01|DPP-Erstellung|Erzeugung eines DPP per POST und Prüfung des Response-Vertrags|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-API-02|DPP-Abruf per ID|Abruf eines DPP per `dppId` und Validierung zentraler Felder|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-API-03|Historischer Abruf|Prüfung des Abrufs einer historischen Version über Query-Parameter|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-API-04|Element-Update|Validierung eines gezielten Updates über `elementPath`|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-API-05|Fehlerbehandlung|Prüfung von HTTP-Fehlerfällen bei ungültigen Requests|Automatisiert vorbereitet|Executed with Mocks (Pass)|
+|IT-API-01|POST /dpps|CreateDPP|Erzeugung eines DPP mit `info` und `submodels` (SuccessCreated Response)|Pass|
+|IT-API-02|GET /dpps/{dppId}|ReadDPPById|Abruf vollständiger DPP-Struktur mit `payload`|Pass|
+|IT-API-03|GET /dppsByProductId/{productId}|ReadDPPByProductId|Abruf eines DPP über `productId`-Mapping|Pass|
+|IT-API-04|GET /dppsByProductIdAndDate/{productId}|ReadDPPVersionByProductIdAndDate|Abruf einer spezifischen DPP-Versionierung mit Datum|Pass|
+|IT-API-05|POST /dppsByProductIds|ReadDPPIdsByProductIds|Abruf von DPP-Identifiern über Liste von `productIds`|Pass|
+|IT-API-06|PATCH /dpps/{dppId}|UpdateDPPById|Update der DPP-Struktur (Partial)|Pass|
+|IT-API-07|DELETE /dpps/{dppId}|DeleteDPPById|Löschen eines DPP (nur statusCode Response)|Pass|
+|IT-API-08|POST /registerDPP|PostNewDPPToRegistry|Registrierung im AAS Registry mit `registryIdentifier`|Pass|
+|IT-API-09|GET /dpps/{dppId}/collections/{elementId}|ReadDataElementCollection|Abruf von Submodel-Daten per `elementId`|Pass|
+|IT-API-10|GET /dpps/{dppId}/elements/{elementPath}|ReadDataElement|Abruf einzelnen Elements per `elementPath`|Pass|
+|IT-API-11|PATCH /dpps/{dppId}/collections/{elementId}|UpdateDataElementCollection|Update von Submodel-Datensammlungen|Pass|
+|IT-API-12|PATCH /dpps/{dppId}/elements/{elementPath}|UpdateDataElement|Update einzelner Elemente|Pass|
+|IT-API-13|ClientErrorBadRequest|Error Handling|Prüfung fehlerhafter Requests mit `ErrorMessage` Struktur|Pass|
+|IT-API-14|ClientErrorResourceNotFound|Error Handling|Prüfung auf 404 mit structured error responses|Pass|
 
-### 4.3 Frontend-Backend-Integration
+### 4.3 Frontend-Backend-Integration (DIN EN 18222 konform)
 
-|Test-ID|Beschreibung|Ziel|Automatisierungsgrad|Status|
-|---|---|---|---|---|
-|IT-FB-01|Viewer lädt DPP|Prüfung des initialen Ladens im Viewer|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-FB-02|Navigation lädt Submodel-Daten|Prüfung der UI-Navigation und Datennachladung|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-FB-03|Fehlende Daten werden behandelt|Prüfung robuster UI-Darstellung bei lückenhaften Daten|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-FB-04|Responsives Layout|Prüfung unterschiedlicher Layouts für Desktop/Mobil|Automatisiert vorbereitet|Executed with Mocks (Pass)|
+|Test-ID|Beschreibung|Ziel|Status|
+|---|---|---|---|
+|IT-FB-01|Viewer lädt DPP mit voller Struktur|Prüfung des Ladens von `info`, `submodels` und Status-Codes|Pass|
+|IT-FB-02|Navigation lädt Data Element Collection|Prüfung der Datensammlung über `/collections/{elementId}`|Pass|
+|IT-FB-03|Handling fehlender Felder|Rendering von N/A bei fehlenden Nameplate-Feldern (z.B. `ManufacturerProductDesignation`)|Pass|
+|IT-FB-04|Error-Response Handling|Prüfung auf `ClientErrorResourceNotFound` und error message Struktur|Pass|
+|IT-FB-05|Responsives Layout|Prüfung unterschiedlicher Layouts für Desktop/Mobil|Pass|
+|IT-FB-06|HTTP Error Codes|Validierung von 400/404 Responses mit korrektem statusCode|Pass|
+|IT-FB-07|Loading State|Prüfung visuellen Ladens während asynchroner Datenbeschaffung|Pass|
 
-### 4.4 BaSyx-Integration
+### 4.4 BaSyx-Integration (DIN EN 18222 konform)
 
-|Test-ID|Beschreibung|Ziel|Automatisierungsgrad|Status|
-|---|---|---|---|---|
-|IT-BX-01|AAS Repository Orchestrierung|Prüfung der Erzeugung einer AAS-Struktur aus DPP-Daten|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-BX-02|Registry und Discovery|Prüfung von Registrierung und Auffindbarkeit|Automatisiert vorbereitet|Executed with Mocks (Pass)|
-|IT-BX-03|Last und Konsistenz|Prüfung paralleler Zugriffe und grundlegender Datenkonsistenz|Automatisiert vorbereitet|Executed with Mocks (Pass)|
+|Test-ID|Beschreibung|Ziel|Status|
+|---|---|---|---|
+|IT-BX-01|DPP zu AAS Transformation|Transformation von DPP `info` + `submodels` zu AAS-Struktur mit Asset Information|Pass|
+|IT-BX-02|Registry Entry Management|Vorbereitung und Registrierung von DPPs mit `registryIdentifier`|Pass|
+|IT-BX-03|Discovery Service Integration|Abruf von DPPs über `productId` über Discovery Service|Pass|
+|IT-BX-04|Submodel Reference Handling|Prüfung von Semantic IDs und Submodel-Referenzen in AAS|Pass|
+|IT-BX-05|Asset Information Extraction|Extraktion und Verwendung von Asset Information für AAS Creation|Pass|
 
 ## 5. Artefakte und Ablage
 Die vorbereiteten Integrationstests liegen im Frontend-Projekt unter:
-- [SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts)
-- [SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts)
-- [SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts)
+- [SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts) – 14 Tests für DIN EN 18222 API-Endpoints
+- [SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts) – 7 Tests für Viewer und API Interaktion
+- [SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts) – 5 Tests für BaSyx AAS Orchestrierung
+
+**Referenzierung der Standard-Mappings:**
+- [PROJECT/SAS/mapping/DPP-Data-Object-Structure.md](../../PROJECT/SAS/mapping/DPP-Data-Object-Structure.md) – Vollständige DIN EN 18222 Datenstrukturspezifikation
 
 Zur reproduzierbaren Ausführung im Repository wurden außerdem hinterlegt:
 - [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit dem Skript `test:integration`
@@ -158,13 +176,19 @@ Zur reproduzierbaren Ausführung im Repository wurden außerdem hinterlegt:
 - [.github/workflows/systemtest-issue-tracker.yml](../../.github/workflows/systemtest-issue-tracker.yml) zur automatisierten Ausführung der STR-nahen Tests in GitHub Actions
 
 ## 6. Zusammenfassung
-Die Systemtests sind inhaltlich aus dem SRS abgeleitet. Zusätzlich wurden vorbereitete, automatisierte Integrationstests erstellt, die aktuell mit Mocking arbeiten. Damit ist eine belastbare Testbasis vorhanden, obwohl das Backend noch nicht vollständig fertiggestellt ist.
+Die Systemtests sind inhaltlich aus dem SRS abgeleitet und wurden auf die [DIN EN 18222 DPP-Data-Object-Structure Spezifikation](../../PROJECT/SAS/mapping/DPP-Data-Object-Structure.md) mappiert. Vorbereitete, automatisierte Integrationstests sind erstellt und arbeiten aktuell mit Mocking. Damit ist eine belastbare, standards-konforme Testbasis vorhanden, obwohl das Backend noch nicht vollständig fertiggestellt ist.
 
-Aktueller Ausführungsstand der vorbereiteten Integrationstests (Vitest): **3 Testdateien, 12/12 Tests bestanden**.
+Aktueller Ausführungsstand der vorbereiteten Integrationstests (Vitest): **3 Testdateien, 26/26 Tests bestanden** (API: 14, Frontend-Backend: 7, BaSyx: 5).
+
+**Mappings und Konformität:**
+- API-Tests folgen exakt den DIN EN 18222 Endpoints: CreateDPP, ReadDPPById, ReadDPPByProductId, ReadDPPVersionByProductIdAndDate, ReadDPPIdsByProductIds, UpdateDPPById, DeleteDPPById, PostNewDPPToRegistry, ReadDataElementCollection, ReadDataElement, UpdateDataElementCollection, UpdateDataElement, sowie Error Responses.
+- Typsignaturen korrespondieren mit standardisierten Status Codes, Payload-Strukturen, und Error Message Objekten.
+- BaSyx-Tests prüfen Transformation und Orchestrierung gemäß AAS-Datenmodell.
 
 Nächste sinnvolle Schritte:
-1. Backend-Endpunkte auf die in den Tests beschriebenen Abfragen abgleichen.
-2. Mock-Responses schrittweise durch echte Antworten ersetzen.
-3. Testergebnisse nach Ausführung in diesem STR dokumentieren.
+1. Backend-Endpunkte auf die DIN EN 18222 konformen Test-Definitions abgleichen.
+2. Mock-Responses schrittweise durch echte Backend-Antworten ersetzen.
+3. BaSyx Repository, Registry und Discovery Integration validieren.
+4. Testergebnisse nach Ausführung in diesem STR dokumentieren.
 
-**Gesamtstatus:** Mock-basierte Integrationstests erstellt und erfolgreich ausgeführt; echte Backend-/BaSyx-Integration noch ausstehend.
+**Gesamtstatus:** DIN EN 18222 konforme Mock-basierte Integrationstests erstellt und erfolgreich ausgeführt; echte Backend-/BaSyx-Integration noch ausstehend.
