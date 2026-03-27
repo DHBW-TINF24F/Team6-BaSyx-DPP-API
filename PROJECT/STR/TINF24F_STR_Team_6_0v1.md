@@ -56,7 +56,7 @@ Dieses STR dokumentiert die geplanten und vorbereiteten Systemtests für die Imp
 Da das Backend aktuell noch nicht vollständig implementiert ist, liegt der Schwerpunkt dieses Dokuments auf:
 - der vollständigen Ableitung der Systemtestfälle aus dem SRS,
 - der Vorbereitung automatisierbarer Integrationstests mit Mocks,
-- der Definition einer klaren Überführung auf echte Backend- und BaSyx-Integrationen.
+- der Definition einer klaren Überführung auf echte Backend und BaSyx-Integrationen.
 
 ## 2. Testumgebung
 - **Zielplattform:** Web-Anwendung im BaSyx-Kontext
