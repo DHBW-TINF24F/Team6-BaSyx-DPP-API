@@ -148,13 +148,13 @@ Sobald das Backend bereitsteht, können die Mock-Antworten schrittweise durch ec
 
 ## 5. Artefakte und Ablage
 Die vorbereiteten Integrationstests liegen im Frontend-Projekt unter:
-- [SOURCE/aas-web-ui/tests/integration/DppApiIntegration.test.ts](../../SOURCE/aas-web-ui/tests/integration/DppApiIntegration.test.ts)
-- [SOURCE/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts](../../SOURCE/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts)
-- [SOURCE/aas-web-ui/tests/integration/BaSyxIntegration.test.ts](../../SOURCE/aas-web-ui/tests/integration/BaSyxIntegration.test.ts)
+- [SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts)
+- [SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts)
+- [SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts)
 
 Zur reproduzierbaren Ausführung im Repository wurden außerdem hinterlegt:
-- [SOURCE/aas-web-ui/package.json](../../SOURCE/aas-web-ui/package.json) mit dem Skript `test:integration`
-- [SOURCE/aas-web-ui/package.json](../../SOURCE/aas-web-ui/package.json) mit `engines.node` zur Vorgabe der unterstützten Node.js-Versionen für WSL und CI
+- [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit dem Skript `test:integration`
+- [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit `engines.node` zur Vorgabe der unterstützten Node.js-Versionen für WSL und CI
 - [.github/workflows/systemtest-issue-tracker.yml](../../.github/workflows/systemtest-issue-tracker.yml) zur automatisierten Ausführung der STR-nahen Tests in GitHub Actions
 
 ## 6. Zusammenfassung

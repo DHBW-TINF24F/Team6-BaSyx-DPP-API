@@ -25,18 +25,18 @@ jobs:
         with:
           node-version: '24'
           cache: 'yarn'
-          cache-dependency-path: 'SOURCE/aas-web-ui/yarn.lock'
+          cache-dependency-path: 'SOURCE/frontend/aas-web-ui/yarn.lock'
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Install dependencies
-        working-directory: SOURCE/aas-web-ui
+        working-directory: SOURCE/frontend/aas-web-ui
         run: yarn install
 
       - name: Run system tests
         id: run-tests
-        working-directory: SOURCE/aas-web-ui
+        working-directory: SOURCE/frontend/aas-web-ui
         run: |
           set -o pipefail
 
@@ -76,7 +76,7 @@ jobs:
 
           ### Test Output (last 200 lines)
           \`\`\`
-          $(cat SOURCE/aas-web-ui/test-results-trimmed.log 2>/dev/null || echo "No detailed log available")
+          $(cat SOURCE/frontend/aas-web-ui/test-results-trimmed.log 2>/dev/null || echo "No detailed log available")
           \`\`\`
 
           Please investigate the test failures and fix the issues.
@@ -92,6 +92,6 @@ jobs:
         if: steps.run-tests.outcome == 'success'
         uses: codecov/codecov-action@v3
         with:
-          file: SOURCE/aas-web-ui/coverage/lcov.info
+          file: SOURCE/frontend/aas-web-ui/coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
