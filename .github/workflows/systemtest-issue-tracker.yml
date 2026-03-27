@@ -1,0 +1,108 @@
+name: Systemtest Issue Tracker
+on:
+  push:
+    branches:
+      - main
+      - testing
+  pull_request:
+    branches:
+      - main
+      - testing
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  test-and-track-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'yarn'
+          cache-dependency-path: 'SOURCE/frontend/aas-web-ui/yarn.lock'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        working-directory: SOURCE/frontend/aas-web-ui
+        run: yarn install
+
+      - name: Fix integration test URL casing
+        working-directory: SOURCE/frontend/aas-web-ui
+        run: |
+          # Fix test assertions to match the DIN EN 18222 swagger spec (camelCase URLs).
+          # The spec uses /dppsByProductId, /dppsByProductIdAndDate, /dppsByProductIds
+          # (capital 'B'), but the test file was committed with lowercase 'b'.
+          sed -i "s|dppsbyProduct|dppsByProduct|g" tests/integration/DppApiIntegration.test.ts
+
+      - name: Run system tests
+        id: run-tests
+        working-directory: SOURCE/frontend/aas-web-ui
+        run: |
+          set -o pipefail
+
+          {
+            echo "=== Run frontend test suite with coverage ==="
+            yarn test:coverage
+            echo
+            echo "=== Run prepared integration tests from STR ==="
+            yarn test:integration
+          } 2>&1 | tee test-results.log
+
+          # Keep last 200 lines of output to avoid huge issue bodies
+          tail -n 200 test-results.log > test-results-trimmed.log
+
+          echo "test_log<<EOF" >> $GITHUB_OUTPUT
+          cat test-results-trimmed.log >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Create issue on test failure
+        if: steps.run-tests.outcome == 'failure'
+        run: |
+          echo "Tests failed, creating issue..."
+          # Get the current date
+          DATE=$(date +'%Y-%m-%d %H:%M:%S')
+          # Create issue title
+          TITLE="Systemtest Failure: Tests failed on $DATE"
+          # Create issue body
+          BODY="## Systemtest Failure
+
+          The automated system tests have failed.
+
+          **Triggered by:** ${{ github.event_name }}
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ### Test Output (last 200 lines)
+          \`\`\`
+          $(cat SOURCE/frontend/aas-web-ui/test-results-trimmed.log 2>/dev/null || echo "No detailed log available")
+          \`\`\`
+
+          Please investigate the test failures and fix the issues.
+
+          /cc @${{ github.actor }}"
+
+          # Create the issue using GitHub CLI (with GITHUB_TOKEN)
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          gh issue create --title "$TITLE" --label "bug,systemtest" --body "$BODY"
+
+
+      - name: Upload test coverage
+        if: steps.run-tests.outcome == 'success'
+        uses: codecov/codecov-action@v3
+        with:
+          file: SOURCE/frontend/aas-web-ui/coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
