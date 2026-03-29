@@ -3,6 +3,7 @@
 
 
 ## Table of Contents
+- [Meeting 27.03.2026 - DPP Structure &Repo Integration](#dppIntegration)
 - [Meeting 20.03.2026 - "Back, but not end" - Backend Strategy](#backendStrategy)
 - [Meeting 13.03.2026 - New start](#newStart) 
 - [Meeting 19.11.2025 – Final discussion for presentation](#finalPresentationMeeting)
@@ -17,6 +18,68 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+
+<a id="dppIntegration">
+
+## Meeting 27.03.2026 - DPP Structure & Repo Integration
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | DPP Object & DIN-Payload | Noah Becker  | 10 min|
+| 2 |  Repository & Submodule Setup | Noah Becker | 10 min |
+| 3 | Spring Boot Prototyping | Magnus Lörcher, Luca Schmoll, Fabian Steiß | 15 min |
+| 4 | Frontend Strategy | Frontend Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 27.03.2026  
+**Time:** 11:00 – 11:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Felix Schulz
+
+---
+
+### I. Objectives
+1. Defining the DPP object structure based on AAS endpoints and DIN standards.
+2. Restructuring the project repositories to enable efficient collaboration between front-end and back-end teams.
+3. Evaluating the initial steps of the Spring Boot implementation.
+
+### II. Discussion Points
+1. DPP Object Modeling: The team reviewed the Digital Product Passport (DPP) object. The payload (specific attributes in the JSON response object)
+ was defined in accordance with the DIN standard. The data is aggregated from the existing AAS Environment API endpoints.
+2. Repository Structure (GitHub): To enable direct work on the codebase, the aas-web-ui (frontend) and basyx-java-server-sdk (backend) repositories 
+were forked within the TINF24 organization.
+3. Two new repos: Team6-BaSyx-DPP-API_Frontend & Team6-BaSyx-DPP-API_Backend.
+4. These are now linked to the main repo via Git submodules to enable parallel changes without manually switching repos.
+5. Backend prototyping: Luca, Magnus, and Fabian have begun implementing the backend model in Spring Boot. 
+This was initially done in an external test environment to verify the logic without directly affecting the complex BaSyx codebase.
+
+### III. To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Frontend: implementation of the first user interface elements (buttons, layout structure)| Frontend Team | 03.04.2026 | 
+| Frontend: Map the JSON payload to UI components | Frontend Team | 03.04.20226 |
+| Familiarize with the BaSyx codebase (backend) | Felix Schulz, Nataliia Chubak | 03.04.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 02.04.2026
+
+---
 
 
 <a id="backendStrategy">
