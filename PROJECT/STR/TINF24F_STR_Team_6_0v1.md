@@ -17,6 +17,7 @@
 |1.1|Manuel Lutz|13.03.2026|Überarbeitung, Umbenennung und Ergänzung der vorbereiteten Integrationstests|
 |1.2|Manuel Lutz|15.03.2026|Status der vorbereiteten Integrationstests nach Ausführung aktualisiert (12/12 bestanden)|
 |1.3|Manuel Lutz|27.03.2026|Anpassung der Integrationstests auf DIN EN 18222 DPP-Data-Object-Structure Mapping|
+|1.4|Manuel Lutz|30.03.2026|Methoden-/Endpoint-Abgleich mit API-Mapping (PATCH/POST, Date-Query, Namenskonventionen) präzisiert|
 
 ---
 
@@ -75,16 +76,16 @@ Da das Backend aktuell noch nicht vollständig implementiert ist, liegt der Schw
 |---|---|---|---|---|---|
 |TC-BE-01|Erstellung eines DPP|1. Sende POST Request mit DPP-Daten<br>2. Prüfe Validierung<br>3. Speichere in AAS|Neues DPP-Submodel in AAS| |Not Executed|
 |TC-BE-02|Abrufen eines DPP per ID|1. Sende GET Request mit `dppId`<br>2. Erhalte vollständige Daten|Volle DPP-Daten zurück| |Not Executed|
-|TC-BE-03|Updaten eines DPP per ID|1. Sende PUT Request mit Updates<br>2. Prüfe Integrität<br>3. Aktualisiere Submodelle|Aktualisierte Daten gespeichert| |Not Executed|
+|TC-BE-03|Updaten eines DPP per ID|1. Sende PATCH Request mit Updates<br>2. Prüfe Integrität<br>3. Aktualisiere Submodelle|Aktualisierte Daten gespeichert| |Not Executed|
 |TC-BE-04|Löschen eines DPP per ID|1. Sende DELETE Request mit `dppId`<br>2. Entferne aus System|DPP nicht mehr auffindbar| |Not Executed|
 |TC-BE-05|Abrufen eines DPP per `productId`|1. Sende GET mit `productId`<br>2. Mappe zu `dppId`<br>3. Erhalte Daten|Zugeordnetes DPP zurück| |Not Executed|
 |TC-BE-06|Abrufen eines älteren DPP per Zeitstempel|1. Sende GET mit `productId` und Zeitstempel<br>2. Erhalte historische Version|Historische DPP-Daten| |Not Executed|
-|TC-BE-07|Abrufen mehrerer DPPs per Liste|1. Sende GET mit Liste von `productIds`<br>2. Erhalte Liste von `dppIds`|Liste von DPPs| |Not Executed|
+|TC-BE-07|Abrufen mehrerer DPPs per Liste|1. Sende POST mit Liste von `productIds` im Body<br>2. Erhalte Liste von `dppIds`|Liste von DPPs| |Not Executed|
 |TC-BE-08|Registrierung im AAS Registry|1. Registriere neues DPP<br>2. Prüfe Registry|DPP im Registry auffindbar| |Not Executed|
 |TC-BE-09|Abrufen spezifischer Submodel-Daten|1. Sende GET mit `dppId` und `elementId`<br>2. Erhalte Submodel-Element|Gespeicherte Daten zurück| |Not Executed|
-|TC-BE-10|Updaten spezifischer Submodel-Daten|1. Sende PUT mit `dppId`, `elementId` und Daten<br>2. Aktualisiere Element|Element aktualisiert| |Not Executed|
+|TC-BE-10|Updaten spezifischer Submodel-Daten|1. Sende PATCH mit `dppId`, `elementId` und Daten<br>2. Aktualisiere Element|Element aktualisiert| |Not Executed|
 |TC-BE-11|Abrufen eines Elements per `elementPath`|1. Sende GET mit `dppId` und `elementPath`<br>2. Erhalte einzelnes Element|Element zurück| |Not Executed|
-|TC-BE-12|Updaten eines Elements per `elementPath`|1. Sende PUT mit `dppId`, `elementPath` und Daten<br>2. Aktualisiere Element|Element aktualisiert| |Not Executed|
+|TC-BE-12|Updaten eines Elements per `elementPath`|1. Sende PATCH mit `dppId`, `elementPath` und Daten<br>2. Aktualisiere Element|Element aktualisiert| |Not Executed|
 |TC-BE-13|Fehler bei ungültigen Parametern|1. Sende Request mit falschen Parametern<br>2. Erhalte HTTP Error|Korrekte Fehlerantwort| |Not Executed|
 
 ### 3.2 Frontend-Testfälle
@@ -122,12 +123,20 @@ Sobald das Backend bereitsteht, können die Mock-Antworten schrittweise durch ec
 
 ### 4.2 API-Integration (DIN EN 18222 konform)
 
+Mapping-Referenzstand für die folgenden API-Tests:
+- Basis: DPP-Data-Object-Structure **v1 (2026-03-22)**
+- Hinweis: **v2 (2026-03-25)** ist im Mapping-Dokument als "in work" gekennzeichnet und daher noch nicht als verbindliche Testbasis verwendet.
+
+Namenskonventionen aus dem Mapping sind bewusst unterschiedlich und werden in den Tests entsprechend abgebildet:
+- CreateDPP-Response verwendet `dppID`
+- DPP-Identifier-Listen verwenden `dppId`
+
 |Test-ID|Endpoint|Beschreibung|Ziel|Status|
 |---|---|---|---|---|
 |IT-API-01|POST /dpps|CreateDPP|Erzeugung eines DPP mit `info` und `submodels` (SuccessCreated Response)|Pass|
 |IT-API-02|GET /dpps/{dppId}|ReadDPPById|Abruf vollständiger DPP-Struktur mit `payload`|Pass|
 |IT-API-03|GET /dppsByProductId/{productId}|ReadDPPByProductId|Abruf eines DPP über `productId`-Mapping|Pass|
-|IT-API-04|GET /dppsByProductIdAndDate/{productId}|ReadDPPVersionByProductIdAndDate|Abruf einer spezifischen DPP-Versionierung mit Datum|Pass|
+|IT-API-04|GET /dppsByProductIdAndDate/{productId}?date={ISO-8601}|ReadDPPVersionByProductIdAndDate|Abruf einer spezifischen DPP-Versionierung mit Datum|Pass|
 |IT-API-05|POST /dppsByProductIds|ReadDPPIdsByProductIds|Abruf von DPP-Identifiern über Liste von `productIds`|Pass|
 |IT-API-06|PATCH /dpps/{dppId}|UpdateDPPById|Update der DPP-Struktur (Partial)|Pass|
 |IT-API-07|DELETE /dpps/{dppId}|DeleteDPPById|Löschen eines DPP (nur statusCode Response)|Pass|
