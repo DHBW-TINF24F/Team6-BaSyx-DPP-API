@@ -35,6 +35,12 @@ The startup process of the Vite Dev Setup should start.
 > [!IMPORTANT]
 > To work with the backend, ensure you are turning the corresponding docker container <span style="text-decoration: underline">**off**</span>, so the local Maven dev server can hop on the port.
 
-The backend runs via the integrated Maven Server, directly ran through the IDE (IntelliJ).
+**Development Steps:**
+1. `git checkout backend_test`
+2. `cd EXECUTABLE/backend/dpp-backend/`
+3. `mvn clean install`
+4. `java -jar target/dpp-backend-0.0.1-SNAPSHOT.jar`
 
-`Currently, I (Noah) have not that much insights into the development procedure with Maven in IntelliJ, as i did not had time to look in it closely at this moment.`
+**Server runs at:** `http://localhost:8080`
+
+**More information:** [Detailed README](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/backend_test/EXECUTABLE/backend/dpp-backend/README.md)

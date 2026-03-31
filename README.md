@@ -11,9 +11,12 @@
 <a href="https://1drv.ms/p/c/94b53bce14d0456b/EVwut7JiukRCs4097VqIiFMBA16DA1QQZXdYSsWuQjsq4Q?e=AmxA4S">Presentation</a>
 <hr>
 
-<img style="height:70" src="./SOURCE/media/basyx_icon.svg" >
+![](./SOURCE/media/basyx_logo.png)     
 
-<img src="./SOURCE/media/screenshot_frontend.png" >
+
+<img src="./SOURCE/media/dpp_harting.png" >
+<br>
+<br>
 
 This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) standard, integrated into the Eclipse BaSyx framework.  
 
