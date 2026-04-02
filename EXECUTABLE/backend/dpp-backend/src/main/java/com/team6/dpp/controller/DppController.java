@@ -295,6 +295,33 @@ public class DppController {
     }
 
     /**
+     * Fetches submodel data by identifier
+     */
+    @GetMapping("/api/v1/dpp/submodels/{identifier}")
+    public ResponseEntity<ObjectNode> getSubmodelByIdentifier(@PathVariable String identifier) {
+        String decodedUrl = decodeIdentifier(identifier);
+        if (decodedUrl == null || decodedUrl.isBlank()) {
+            return createErrorResponse(400, "Ungültiger Submodel-Identifier");
+        }
+
+        try {
+            logger.info("Fetching submodel by identifier: {}", identifier);
+            JsonNode submodelData = fetchSubmodelPayload(decodedUrl);
+
+            ObjectNode response = mapper.createObjectNode();
+            response.put("statusCode", 200);
+            response.put("identifier", identifier);
+            response.put("url", decodedUrl);
+            response.set("data", submodelData != null ? submodelData : mapper.createObjectNode());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to fetch submodel by identifier {}: {}", identifier, e.getMessage());
+            return createErrorResponse(500, "Fehler beim Abrufen des Submodels");
+        }
+    }
+
+    /**
      * Fetches submodel data via WebClient and adds to target array
      */
     private void processSubmodelWebClient(String submodelUrl, ArrayNode target) {
@@ -432,6 +459,7 @@ public class DppController {
         administration.put("idShort", shell.path("idShort").asText("HARTING_AAS_ZSN1"));
 
         ArrayNode submodels = payload.putArray("submodels");
+        ObjectNode submodelIdentifiers = payload.putObject("submodelIdentifiers");
 
         String[] relevantSubmodels = {
                 "Digital Nameplate",
@@ -444,16 +472,12 @@ public class DppController {
         };
 
         Map<String, ObjectNode> submodelMap = new LinkedHashMap<>();
+        Map<String, String> urlToIdentifier = new HashMap<>();
+
         for (String model : relevantSubmodels) {
             ObjectNode entry = mapper.createObjectNode();
             entry.put("type", "ExternalReference");
             entry.put("name", model);
-            entry.put("note", "Placeholder: actual data to be populated later");
-
-            ObjectNode payloadPlaceholder = mapper.createObjectNode();
-            payloadPlaceholder.put("note", "Placeholder: GET /submodels/{submodelIdentifier}/$value wird später implementiert");
-            entry.set("payload", payloadPlaceholder);
-
             submodelMap.put(model, entry);
         }
 
@@ -464,45 +488,88 @@ public class DppController {
                 if (!keys.isArray() || keys.isEmpty()) continue;
 
                 String submodelUrl = keys.get(0).path("value").asText("");
-                String name = mapSubmodelName(submodelUrl);
+                if (submodelUrl.isBlank()) continue;
 
-                ObjectNode found = name != null ? submodelMap.get(name) : null;
-                if (found == null) {
-                    // Falls unbekanntes Submodel, hinzufügen als generischer Eintrag
-                    ObjectNode generic = mapper.createObjectNode();
-                    generic.put("type", "ExternalReference");
-                    generic.put("name", submodelUrl);
-                    generic.put("reference", "Placeholder: from /submodels/{submodelIdentifier}/$metadata");
-                    ObjectNode payloadData = mapper.createObjectNode();
-                    payloadData.put("note", "Placeholder: submodel data wird später geladen");
-                    generic.set("payload", payloadData);
-                    generic.put("sourceUrl", submodelUrl);
-                    submodels.add(generic);
-                    continue;
+                String name = mapSubmodelName(submodelUrl);
+                String identifier = encodeIdentifier(submodelUrl);
+                urlToIdentifier.put(submodelUrl, identifier);
+
+                ObjectNode submodelEntry = mapper.createObjectNode();
+                submodelEntry.put("type", "ExternalReference");
+                
+                if (name != null) {
+                    submodelEntry.put("name", name);
+                    submodelEntry.put("identifier", identifier);
                 }
 
-                ArrayNode keyArray = found.putArray("keys");
+                // Baue keys Array mit dynamischen reference und payload
+                ArrayNode keyArray = submodelEntry.putArray("keys");
                 ObjectNode keyItem = keyArray.addObject();
                 keyItem.put("type", "Submodel");
                 keyItem.put("value", submodelUrl);
-                keyItem.put("reference", "Placeholder: from /submodels/{submodelIdentifier}/$metadata");
 
-                // Versuche, payload automatisch zu befüllen
-                JsonNode smPayload = fetchSubmodelPayload(submodelUrl);
-                if (smPayload != null) {
-                    found.set("payload", smPayload);
-                    found.remove("note");
+                // Hole $metadata für reference
+                JsonNode metadata = fetchSubmodelMetadata(submodelUrl);
+                String reference = metadata != null ? metadata.path("reference").asText(null) : null;
+                if (reference != null && !reference.isBlank()) {
+                    keyItem.put("reference", reference);
+                } else {
+                    keyItem.put("reference", "Placeholder: $metadata nicht verfügbar");
                 }
 
-                submodelMap.put(name, found);
+                // Hole $value für payload
+                JsonNode payloadData = fetchSubmodelPayload(submodelUrl);
+                if (payloadData != null && !payloadData.isNull()) {
+                    keyItem.set("payload", payloadData);
+                } else {
+                    ObjectNode placeholderPayload = mapper.createObjectNode();
+                    placeholderPayload.put("note", "Placeholder: $value nicht verfügbar");
+                    keyItem.set("payload", placeholderPayload);
+                }
+
+                submodels.add(submodelEntry);
+                if (name != null) {
+                    submodelIdentifiers.put(name, identifier);
+                }
             }
         }
 
-        for (ObjectNode entry : submodelMap.values()) {
-            submodels.add(entry);
+        // Füge nicht gefundene relevante Submodels als Platzhalter hinzu
+        for (String model : relevantSubmodels) {
+            if (!submodelIdentifiers.has(model)) {
+                ObjectNode placeholder = mapper.createObjectNode();
+                placeholder.put("type", "ExternalReference");
+                placeholder.put("name", model);
+                placeholder.put("identifier", "not-available");
+
+                ArrayNode keyArray = placeholder.putArray("keys");
+                ObjectNode keyItem = keyArray.addObject();
+                keyItem.put("type", "Submodel");
+                keyItem.put("value", "not-found");
+                keyItem.put("reference", "Placeholder: Submodel nicht in Shell gefunden");
+
+                ObjectNode placeholderPayload = mapper.createObjectNode();
+                placeholderPayload.put("note", "Placeholder: Submodel nicht in Shell gefunden");
+                keyItem.set("payload", placeholderPayload);
+
+                submodels.add(placeholder);
+            }
         }
 
         return payload;
+    }
+
+    private String encodeIdentifier(String url) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(url.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String decodeIdentifier(String identifier) {
+        try {
+            return new String(Base64.getUrlDecoder().decode(identifier), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Failed to decode identifier: {}", e.getMessage());
+            return null;
+        }
     }
 
     private String mapSubmodelName(String submodelUrl) {
@@ -530,13 +597,40 @@ public class DppController {
 
     private JsonNode fetchSubmodelPayload(String submodelUrl) {
         try {
+            String valueUrl = submodelUrl.endsWith("/") ? submodelUrl + "$value" : submodelUrl + "/$value";
+            logger.info("Fetching submodel payload from: {}", valueUrl);
             return webClient.get()
-                    .uri(submodelUrl)
+                    .uri(valueUrl)
                     .retrieve()
                     .bodyToMono(JsonNode.class)
                     .block();
         } catch (Exception e) {
             logger.warn("Failed to fetch submodel payload for {}: {}", submodelUrl, e.getMessage());
+            return null;
+        }
+    }
+
+    private JsonNode fetchSubmodelMetadata(String submodelUrl) {
+        try {
+            String metadataUrl = submodelUrl.endsWith("/") ? submodelUrl + "$metadata" : submodelUrl + "/$metadata";
+            logger.info("Fetching submodel metadata from: {}", metadataUrl);
+            JsonNode metadata = webClient.get()
+                    .uri(metadataUrl)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
+            
+            if (metadata != null && metadata.isObject()) {
+                ObjectNode meta = (ObjectNode) metadata;
+                // Wenn metadata ein Wrapper um die echten Daten ist, unwrappen
+                if (meta.has("result")) {
+                    meta = (ObjectNode) meta.get("result");
+                }
+                return meta;
+            }
+            return null;
+        } catch (Exception e) {
+            logger.warn("Failed to fetch submodel metadata for {}: {}", submodelUrl, e.getMessage());
             return null;
         }
     }
