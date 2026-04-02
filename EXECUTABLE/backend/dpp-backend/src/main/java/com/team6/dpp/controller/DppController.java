@@ -372,7 +372,7 @@ public class DppController {
             assetInformation.put("globalAssetId", "https://pk.harting.com/?.20P=ZSN1");
         }
 
-        administration.put("version", "1.0.1");
+        administration.put("version", shell.path("version").asText("1.0.1"));
         administration.put("id", shell.path("id").asText("https://dpp40.harting.com/shells/ZSN1"));
 
         if (shell.has("description")) {
@@ -395,13 +395,101 @@ public class DppController {
 
         administration.put("idShort", shell.path("idShort").asText("HARTING_AAS_ZSN1"));
 
-        // Submodels werden hier vorerst nicht geladen - Platzhalter einfügen.
         ArrayNode submodels = payload.putArray("submodels");
-        ObjectNode placeholderSubmodel = mapper.createObjectNode();
-        placeholderSubmodel.put("note", "Placeholder: Submodel-Logik kommt später als eigene Funktion");
-        submodels.add(placeholderSubmodel);
+
+        String[] relevantSubmodels = {
+                "Digital Nameplate",
+                "Handover Documentation",
+                "CarbonFootprint",
+                "TechnicalData",
+                "Condition",
+                "Material Composition",
+                "Circularity"
+        };
+
+        Map<String, ObjectNode> submodelMap = new LinkedHashMap<>();
+        for (String model : relevantSubmodels) {
+            ObjectNode entry = mapper.createObjectNode();
+            entry.put("type", "ExternalReference");
+            entry.put("name", model);
+            entry.put("note", "Placeholder: actual data to be populated later");
+
+            ObjectNode payloadPlaceholder = mapper.createObjectNode();
+            payloadPlaceholder.put("note", "Placeholder: GET /submodels/{submodelIdentifier}/$value wird später implementiert");
+            entry.set("payload", payloadPlaceholder);
+
+            submodelMap.put(model, entry);
+        }
+
+        JsonNode sourceSubmodels = shell.path("submodels");
+        if (sourceSubmodels.isArray()) {
+            for (JsonNode sm : sourceSubmodels) {
+                JsonNode keys = sm.path("keys");
+                if (!keys.isArray() || keys.isEmpty()) continue;
+
+                String submodelUrl = keys.get(0).path("value").asText("");
+                String name = mapSubmodelName(submodelUrl);
+
+                ObjectNode found = name != null ? submodelMap.get(name) : null;
+                if (found == null) {
+                    // Falls unbekanntes Submodel, hinzufügen als generischer Eintrag
+                    ObjectNode generic = mapper.createObjectNode();
+                    generic.put("type", "ExternalReference");
+                    generic.put("name", submodelUrl);
+                    generic.put("reference", "Placeholder: from /submodels/{submodelIdentifier}/$metadata");
+                    ObjectNode payloadData = mapper.createObjectNode();
+                    payloadData.put("note", "Placeholder: submodel data wird später geladen");
+                    generic.set("payload", payloadData);
+                    generic.put("sourceUrl", submodelUrl);
+                    submodels.add(generic);
+                    continue;
+                }
+
+                ArrayNode keyArray = found.putArray("keys");
+                ObjectNode keyItem = keyArray.addObject();
+                keyItem.put("type", "Submodel");
+                keyItem.put("value", submodelUrl);
+                keyItem.put("reference", "Placeholder: from /submodels/{submodelIdentifier}/$metadata");
+
+                // Versuche, payload automatisch zu befüllen
+                JsonNode smPayload = fetchSubmodelPayload(submodelUrl);
+                if (smPayload != null) {
+                    found.set("payload", smPayload);
+                    found.remove("note");
+                }
+
+                submodelMap.put(name, found);
+            }
+        }
+
+        for (ObjectNode entry : submodelMap.values()) {
+            submodels.add(entry);
+        }
 
         return payload;
+    }
+
+    private String mapSubmodelName(String submodelUrl) {
+        if (submodelUrl == null || submodelUrl.isBlank()) {
+            return null;
+        }
+        String lower = submodelUrl.toLowerCase();
+        if (lower.contains("nameplate")) {
+            return "Digital Nameplate";
+        } else if (lower.contains("handover")) {
+            return "Handover Documentation";
+        } else if (lower.contains("carbon")) {
+            return "CarbonFootprint";
+        } else if (lower.contains("technical")) {
+            return "TechnicalData";
+        } else if (lower.contains("condition")) {
+            return "Condition";
+        } else if (lower.contains("material")) {
+            return "Material Composition";
+        } else if (lower.contains("circular")) {
+            return "Circularity";
+        }
+        return null;
     }
 
     private JsonNode fetchSubmodelPayload(String submodelUrl) {
