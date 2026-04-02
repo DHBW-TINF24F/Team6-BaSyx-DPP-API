@@ -262,32 +262,30 @@ public class DppController {
                     .defaultHeader("Accept", "application/json")
                     .build();
 
-            ClientResponse response = client.get()
-                    .uri(id)
-                    .exchange()
-                    .block();
+            try {
+                JsonNode shell = client.get()
+                        .uri(id)
+                        .retrieve()
+                        .bodyToMono(JsonNode.class)
+                        .block();
 
-            if (response == null) {
-                return createErrorResponse(404, "DPP not found at given URL");
+                if (shell == null) {
+                    return createErrorResponse(404, "DPP not found at given URL");
+                }
+
+                // Build complete response with custom payload
+                ObjectNode root = mapper.createObjectNode();
+                root.put("statusCode", 200);
+                root.put("source", id);
+
+                ObjectNode payload = createCustomPayload(shell);
+                root.set("payload", payload);
+
+                return ResponseEntity.ok(root);
+            } catch (Exception e) {
+                logger.error("Failed to fetch shell from URL {}: {}", id, e.getMessage());
+                return createErrorResponse(500, "Failed to fetch DPP from URL");
             }
-
-            MediaType contentType = response.headers().contentType().orElse(MediaType.APPLICATION_JSON);
-            if (!MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
-                return createErrorResponse(415, "Content-Type nicht JSON: " + contentType.toString());
-            }
-
-            JsonNode shell = response.bodyToMono(JsonNode.class).block();
-
-            // Build complete response with custom payload
-            ObjectNode root = mapper.createObjectNode();
-            root.put("statusCode", 200);
-            root.put("source", id);
-
-            ObjectNode payload = createCustomPayload(shell);
-            root.set("payload", payload);
-
-            return ResponseEntity.ok(root);
-
         } catch (Exception e) {
             logger.error("Failed to fetch DPP from URL {}: {}", id, e.getMessage());
             return createErrorResponse(500, "Internal server error");
@@ -375,6 +373,7 @@ public class DppController {
     /**
      * Fetches submodel data via WebClient and adds to target array
      */
+    @SuppressWarnings("unused")
     private void processSubmodelWebClient(String submodelUrl, ArrayNode target) {
         try {
             logger.info("Fetching submodel: {}", submodelUrl);
@@ -398,6 +397,7 @@ public class DppController {
     /**
      * Legacy submodel processing method (RestClient)
      */
+    @SuppressWarnings("unused")
     private void processSubmodel(String submodelUrl, ArrayNode target) {
         try {
             JsonNode value = restClient.get()
@@ -416,8 +416,9 @@ public class DppController {
     }
 
     /**
-     * Copies standard shell fields to target node
+     * Copies standard shell fields to target node (deprecated - kept for reference)
      */
+    @SuppressWarnings("unused")
     private void copyShellFields(JsonNode source, ObjectNode target) {
         String[] fields = {"id", "idShort", "description", "displayName", "assetInformation"};
         for (String field : fields) {
@@ -650,11 +651,27 @@ public class DppController {
         try {
             String valueUrl = submodelUrl.endsWith("/") ? submodelUrl + "$value" : submodelUrl + "/$value";
             logger.info("Fetching submodel payload from: {}", valueUrl);
-            return webClient.get()
-                    .uri(valueUrl)
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .block();
+
+            try {
+                return restClient.get()
+                        .uri(valueUrl)
+                        .retrieve()
+                        .body(JsonNode.class);
+            } catch (Exception e) {
+                logger.warn("RestClient failed, trying WebClient for: {}", valueUrl);
+                // Fallback: versuche mit WebClient, aber ignoriere Non-JSON Responses
+                try {
+                    return webClient.get()
+                            .uri(valueUrl)
+                            .retrieve()
+                            .bodyToMono(JsonNode.class)
+                            .onErrorReturn(null)
+                            .block();
+                } catch (Exception webClientEx) {
+                    logger.warn("WebClient also failed for {}: {}", valueUrl, webClientEx.getMessage());
+                    return null;
+                }
+            }
         } catch (Exception e) {
             logger.warn("Failed to fetch submodel payload for {}: {}", submodelUrl, e.getMessage());
             return null;
@@ -665,21 +682,45 @@ public class DppController {
         try {
             String metadataUrl = submodelUrl.endsWith("/") ? submodelUrl + "$metadata" : submodelUrl + "/$metadata";
             logger.info("Fetching submodel metadata from: {}", metadataUrl);
-            JsonNode metadata = webClient.get()
-                    .uri(metadataUrl)
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .block();
-            
-            if (metadata != null && metadata.isObject()) {
-                ObjectNode meta = (ObjectNode) metadata;
-                // Wenn metadata ein Wrapper um die echten Daten ist, unwrappen
-                if (meta.has("result")) {
-                    meta = (ObjectNode) meta.get("result");
+
+            try {
+                JsonNode metadata = restClient.get()
+                        .uri(metadataUrl)
+                        .retrieve()
+                        .body(JsonNode.class);
+
+                if (metadata != null && metadata.isObject()) {
+                    ObjectNode meta = (ObjectNode) metadata;
+                    if (meta.has("result")) {
+                        meta = (ObjectNode) meta.get("result");
+                    }
+                    return meta;
                 }
-                return meta;
+                return null;
+            } catch (Exception e) {
+                logger.warn("RestClient failed, trying WebClient for metadata: {}", metadataUrl);
+                // Fallback: versuche mit WebClient
+                try {
+                    JsonNode metadata = webClient.get()
+                            .uri(metadataUrl)
+                            .retrieve()
+                            .bodyToMono(JsonNode.class)
+                            .onErrorReturn(null)
+                            .block();
+
+                    if (metadata != null && metadata.isObject()) {
+                        ObjectNode meta = (ObjectNode) metadata;
+                        if (meta.has("result")) {
+                            meta = (ObjectNode) meta.get("result");
+                        }
+                        return meta;
+                    }
+                    return null;
+                } catch (Exception webClientEx) {
+                    logger.warn("WebClient also failed for {}: {}", metadataUrl, webClientEx.getMessage());
+                    return null;
+                }
             }
-            return null;
         } catch (Exception e) {
             logger.warn("Failed to fetch submodel metadata for {}: {}", submodelUrl, e.getMessage());
             return null;
