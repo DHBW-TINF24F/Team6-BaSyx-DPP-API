@@ -27,6 +27,9 @@ public class DppController {
         "local", "http://localhost:8081"
     );
 
+    // Default DPP URL for /api/v1/dpp without id
+    private static final String DEFAULT_DPP_URL = "https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==";
+
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestClient restClient = RestClient.create();
     private final WebClient webClient = WebClient.builder().build();
@@ -237,7 +240,12 @@ public class DppController {
      * Fetches complete DPP (shell + submodels) directly from provided URL
      */
     @GetMapping("/api/v1/dpp")
-    public ResponseEntity<ObjectNode> getDppByUrl(@RequestParam String id) {
+    public ResponseEntity<ObjectNode> getDppByUrl(@RequestParam(required = false) String id) {
+        // Use default URL when no id query param is provided
+        if (id == null || id.isBlank()) {
+            id = DEFAULT_DPP_URL;
+        }
+
         // Validate URL format
         if (!id.startsWith("http")) {
             ObjectNode error = mapper.createObjectNode();
@@ -270,25 +278,13 @@ public class DppController {
 
             JsonNode shell = response.bodyToMono(JsonNode.class).block();
 
-            // Build complete response
+            // Build complete response with custom payload
             ObjectNode root = mapper.createObjectNode();
             root.put("statusCode", 200);
             root.put("source", id);
 
-            ObjectNode payload = root.putObject("payload");
-            copyShellFields(shell, payload);
-
-            // Fetch and add submodels
-            ArrayNode submodelsArray = payload.putArray("submodels");
-            JsonNode submodels = shell.get("submodels");
-            if (submodels != null && submodels.isArray()) {
-                for (JsonNode sm : submodels) {
-                    JsonNode keys = sm.get("keys");
-                    if (keys == null || keys.isEmpty()) continue;
-                    String submodelUrl = keys.get(0).get("value").asText();
-                    processSubmodelWebClient(submodelUrl, submodelsArray);
-                }
-            }
+            ObjectNode payload = createCustomPayload(shell);
+            root.set("payload", payload);
 
             return ResponseEntity.ok(root);
 
@@ -350,6 +346,74 @@ public class DppController {
             if (source.has(field)) {
                 target.set(field, source.get(field));
             }
+        }
+    }
+
+    /**
+     * Creates custom payload object for /api/v1/dpp
+     */
+    private ObjectNode createCustomPayload(JsonNode shell) {
+        ObjectNode payload = mapper.createObjectNode();
+        ObjectNode administration = payload.putObject("administration");
+
+        ObjectNode creator = administration.putObject("creator");
+        ArrayNode creatorKeys = creator.putArray("keys");
+        ObjectNode creatorKey = creatorKeys.addObject();
+        creatorKey.put("type", "GlobalReference");
+        creatorKey.put("value", "sebastian.eicke@harting.com");
+
+        ObjectNode assetInformation = administration.putObject("assetInformation");
+        if (shell.has("assetInformation")) {
+            assetInformation.setAll((ObjectNode) shell.get("assetInformation"));
+        } else {
+            assetInformation.put("note", "Placeholder: assetInformation wurde nicht gefunden");
+            assetInformation.put("assetKind", "Type");
+            assetInformation.put("defaultThumbnail", "Placeholder");
+            assetInformation.put("globalAssetId", "https://pk.harting.com/?.20P=ZSN1");
+        }
+
+        administration.put("version", "1.0.1");
+        administration.put("id", shell.path("id").asText("https://dpp40.harting.com/shells/ZSN1"));
+
+        if (shell.has("description")) {
+            administration.set("description", shell.get("description"));
+        } else {
+            ArrayNode desc = administration.putArray("description");
+            ObjectNode descItem = desc.addObject();
+            descItem.put("language", "en");
+            descItem.put("text", "Placeholder: description nicht verfügbar");
+        }
+
+        if (shell.has("displayName")) {
+            administration.set("displayName", shell.get("displayName"));
+        } else {
+            ArrayNode disp = administration.putArray("displayName");
+            ObjectNode displayItem = disp.addObject();
+            displayItem.put("language", "en");
+            displayItem.put("text", "Placeholder: displayName nicht verfügbar");
+        }
+
+        administration.put("idShort", shell.path("idShort").asText("HARTING_AAS_ZSN1"));
+
+        // Submodels werden hier vorerst nicht geladen - Platzhalter einfügen.
+        ArrayNode submodels = payload.putArray("submodels");
+        ObjectNode placeholderSubmodel = mapper.createObjectNode();
+        placeholderSubmodel.put("note", "Placeholder: Submodel-Logik kommt später als eigene Funktion");
+        submodels.add(placeholderSubmodel);
+
+        return payload;
+    }
+
+    private JsonNode fetchSubmodelPayload(String submodelUrl) {
+        try {
+            return webClient.get()
+                    .uri(submodelUrl)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
+        } catch (Exception e) {
+            logger.warn("Failed to fetch submodel payload for {}: {}", submodelUrl, e.getMessage());
+            return null;
         }
     }
 
