@@ -649,7 +649,13 @@ public class DppController {
 
     private JsonNode fetchSubmodelPayload(String submodelUrl) {
         try {
-            String valueUrl = submodelUrl.endsWith("/") ? submodelUrl + "$value" : submodelUrl + "/$value";
+            // I dont know what this $value and $metadata stuff is so I'll let it stay for now
+            //String valueUrl = submodelUrl.endsWith("/") ? submodelUrl + "$value" : submodelUrl + "/$value";
+
+            // we will feed https://repo::8081/submodels/{submodel}
+            // with the url encoded submodelUrl
+            // WARNING: this is hardcoded for now
+            String valueUrl = "https://dpp40.harting.com:8081/submodels/" + encode(submodelUrl);
             logger.info("Fetching submodel payload from: {}", valueUrl);
 
             try {
