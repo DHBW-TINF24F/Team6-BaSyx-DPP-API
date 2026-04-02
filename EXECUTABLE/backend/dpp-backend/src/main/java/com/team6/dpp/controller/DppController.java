@@ -560,6 +560,9 @@ public class DppController {
                 keyItem.put("type", "Submodel");
                 keyItem.put("value", submodelUrl);
 
+                // I will leave this here just in case
+                // but we dont really need it
+                /* 
                 // Hole $metadata für reference
                 JsonNode metadata = fetchSubmodelMetadata(submodelUrl);
                 String reference = metadata != null ? metadata.path("reference").asText(null) : null;
@@ -568,6 +571,7 @@ public class DppController {
                 } else {
                     keyItem.put("reference", "Placeholder: $metadata nicht verfügbar");
                 }
+                    */
 
                 // Hole $value für payload
                 JsonNode payloadData = fetchSubmodelPayload(submodelUrl);
