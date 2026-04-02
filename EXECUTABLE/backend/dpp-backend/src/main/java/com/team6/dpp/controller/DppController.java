@@ -320,7 +320,58 @@ public class DppController {
             return createErrorResponse(500, "Fehler beim Abrufen des Submodels");
         }
     }
+    @GetMapping("/dpp/{productId}")
+    public ResponseEntity<ObjectNode> getDppByProductId(@PathVariable String productId) {
+        String dppUrl = findDppUrlForProductId(productId);
+        if (dppUrl == null) {
+            return createErrorResponse(404, "DPP für ProduktId nicht gefunden: " + productId);
+        }
+        return getDppByUrl(dppUrl);
+    }
 
+    private String findDppUrlForProductId(String productId) {
+        if (productId == null || productId.isBlank()) {
+            return null;
+        }
+
+        for (Map.Entry<String, String> entry : REGISTRIES.entrySet()) {
+            String registry = entry.getValue();
+            JsonNode shells = fetchShells(registry);
+            if (shells == null || !shells.isArray()) continue;
+
+            for (JsonNode shell : shells) {
+                String idShort = shell.path("idShort").asText(null);
+                String shellId = shell.path("id").asText(null);
+
+                if (idShort != null && idShort.equalsIgnoreCase(productId)) {
+                    return registry + "/shells/" + encode(shellId != null ? shellId : productId);
+                }
+
+                if (shellId != null) {
+                    if (shellId.equalsIgnoreCase(productId)
+                            || shellId.equalsIgnoreCase(registry + "/shells/" + productId)
+                            || shellId.endsWith("/" + productId)
+                            || shellId.contains("/" + productId + "/")) {
+                        return registry + "/shells/" + encode(shellId);
+                    }
+                }
+
+                // fallback: direct match if shell id is exactly productId or encoded value
+                if (productId.equalsIgnoreCase(shellId) || productId.equalsIgnoreCase(idShort)) {
+                    return registry + "/shells/" + encode(shellId != null ? shellId : productId);
+                }
+            }
+        }
+
+        // Wenn nichts gefunden, versuche direkt mit hartcodiertem Markt-Schema
+        String hartingRegistry = REGISTRIES.get("harting");
+        if (hartingRegistry != null) {
+            String candidateShellUrl = "https://dpp40.harting.com/shells/" + productId;
+            return hartingRegistry + "/shells/" + encode(candidateShellUrl);
+        }
+
+        return null;
+    }
     /**
      * Fetches submodel data via WebClient and adds to target array
      */
