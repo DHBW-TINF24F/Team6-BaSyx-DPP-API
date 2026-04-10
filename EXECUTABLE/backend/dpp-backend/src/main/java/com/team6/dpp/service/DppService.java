@@ -99,10 +99,11 @@ public class DppService {
             if (!assetInformation.has("globalAssetId")) {
                 assetInformation.put("globalAssetId", "https://pk.harting.com/?.20P=ZSN1");
             }
+            // Keep existing defaultThumbnail if present, otherwise add a meaningful placeholder
             if (!assetInformation.has("defaultThumbnail")) {
                 ObjectNode thumbnail = assetInformation.putObject("defaultThumbnail");
                 thumbnail.put("contentType", "image/png");
-                thumbnail.put("path", "b24b11da.png");
+                thumbnail.put("path", "https://via.placeholder.com/300?text=No+Image");
             }
         } else {
             assetInformation.put("note", "Placeholder: assetInformation wurde nicht gefunden");
@@ -110,7 +111,7 @@ public class DppService {
 
             ObjectNode thumbnail = assetInformation.putObject("defaultThumbnail");
             thumbnail.put("contentType", "image/png");
-            thumbnail.put("path", "b24b11da.png");
+            thumbnail.put("path", "https://via.placeholder.com/300?text=No+Image");
 
             assetInformation.put("globalAssetId", "https://pk.harting.com/?.20P=ZSN1");
         }

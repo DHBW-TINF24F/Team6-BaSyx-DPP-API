@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  dpp-backend:
+    build:
+      context: ./EXECUTABLE/backend/dpp-backend
+      dockerfile: Dockerfile
+    image: team6/dpp-backend:latest
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
+    environment:
+      - JAVA_OPTS=-Xms256m -Xmx512m

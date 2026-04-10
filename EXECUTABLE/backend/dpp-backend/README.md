@@ -1,124 +1,82 @@
-# DPP Controller README
-
-## Overview
-DPP Controller is a Spring Boot REST API for managing Digital Product Passports (DPPs) based on Asset Administration Shell (AAS) standards. It provides discovery from registries (HARTING and local), CRUD operations, and direct DPP fetching with submodels.
-
-
-### Build & Run
+# DPP Controller
+## Build & Run
 ```bash
 mvn clean install
 java -jar target/dpp-backend-0.0.1-SNAPSHOT.jar
 ```
-
-
-## Endpoints
-
-### Health Check
-GET /api/v1/dpp/health
-
-text
-Returns service status and configured registry count.
-
-**Response:**
-```json
-{
-  "status": "UP",
-  "registries": 2
-}
+The server runs on [http://localhost:8080](http://localhost:8080) by default.
+---
+## API Status Checklist
+✅ **POST /dpps** – Create a new DPP (works, creates shell in registry).  
+✅ **GET /dpps/{dppId}** – Retrieve a DPP (parses dppId, searches across registries).  
+❌ **PATCH /dpps/{dppId}** – Update a DPP (implemented, but issue reported: DPP ID not found).  
+✅ **DELETE /dpps/{dppId}** – Delete a DPP (removes shell from registry).  
+✅ **GET /dppsByProductId/{productId}** – Retrieve DPP by Product ID (resolves URL via service).  
+❌ **GET /dppsByProductIdAndDate/{productId}?date=...** – Retrieve DPP by Product ID and date (not yet functional, AAX file upload planned).  
+⏳ **POST /dppsByProductIds** – Get DPP IDs for a list of Product IDs (implemented but needs adaption for multiple DPPs per product).  
+✅ **POST /registerDPP** – Register new DPP in a registry (uses configured DPP Registry API such as HARTING).  
+⏳ **Fine-granular DPP Lifecycle API** – Pending; lifecycle endpoints such as `/dpps/{dppId}/collections/{elementId}` not yet implemented.
+---
+## DPP Lifecycle API Examples
+All calls use the base URL `http://localhost:8080`.  
+DPP IDs are **Base64 encoded** (e.g., `aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvMDIwMTA4MzIxMDE=`).
+### POST /dpps (Create)
+```bash
+curl -X POST "http://localhost:8080/dpps?productId=aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvMDIwMTA4MzIxMDE=" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "https://dpp40.harting.com/shells/02010832101",
+    "idShort": "ZSN11",
+    "description": [{"language": "en", "text": "Harting ZSN1 DPP v2"}]
+  }'
 ```
-
-### Discovery
-GET /api/v1/dpp/list?limit=5
-
-text
-Lists unique DPP shell IDs from registries (local/external), with optional limit (default 10).
-
-**Response structure:**
-```json
-{
-  "statusCode": 200,
-  "payload": {
-    "local": ["id1", "id2"],
-    "external": [{"name": "harting", "registry": "https://dpp40.harting.com:8081", "dppIds": ["id3"]}],
-    "total": 3
-  }
-}
+Creates a shell in the local or external registry and generates a versioned `dppId`.
+### GET /dpps/{dppId} (Read)
+```bash
+curl -X GET "http://localhost:8080/dpps/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvMDIwMTA4MzIxMDE=#2026-04-10T08:26:35.306622886Z"
 ```
-
-### DPP by URL
-GET /api/v1/dpp?id=https://dpp40.harting.com/shells/02095002010200
-
-text
-Fetches complete DPP (shell + submodels) from URL. Validates URL and JSON, handles redirects, extracts submodels.
-
-**Response:**
-```json
-{
-  "statusCode": 200,
-  "source": "https://dpp40.harting.com/shells/02095002010200",
-  "payload": {
-    "id": "...",
-    "idShort": "...",
-    "submodels": [{"id": "...", "data": {...}}]
-  }
-}
+Fetches the shell and its payload through the registry service.
+### PATCH /dpps/{dppId} (Update)
+```bash
+curl -X PATCH "http://localhost:8080/dpps/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvMDIwMTA4MzIxMDE=#2026-04-10T08:26:35.306622886Z" \
+  -H "Content-Type: application/json" \
+  -d '{"idShort": "ZSN11-updated"}'
 ```
-
-### CRUD Operations
-
-#### Create DPP
-POST /dpps
-
-text
-Creates DPP. Body: JSON with `dppId`.
-
+Updates the shell (**Issue**: ID recognition fails — check `parseDppId` logic).
+### DELETE /dpps/{dppId} (Delete)
+```bash
+curl -X DELETE "http://localhost:8080/dpps/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ=="
+```
+Deletes the shell from the registry.
+### GET /dppsByProductId/{productId}
+```bash
+curl -X GET "http://localhost:8080/dppsByProductId/aHR0cHM6Ly90ZWNoYnJldy5jb20vc2hlbGxzLzEyMzQ1Njc4OQ=="
+```
+Retrieves the current DPP using the Product ID service.
+### GET /dppsByProductIdAndDate/{productId}
+```bash
+curl -X GET "http://localhost:8080/dppsByProductIdAndDate/aHR0cHM6Ly90ZWNoYnJldy5jb20vc2hlbGxzLzEyMzQ1Njc4OQ==?date=2026-04-10"
+```
+Retrieves the version by date (not final yet, **AAX upload** planned).
+### POST /dppsByProductIds
+```bash
+curl -X POST "http://localhost:8080/dppsByProductIds?limit=10" \
+  -H "Content-Type: application/json" \
+  -d '{"productIds": ["prod1-b64", "prod2-b64"]}'
+```
+Lists DPP IDs for a set of Product IDs (needs extension for **multiple DPPs per product**).
+---
+## DPP Registry API
+**POST /registerDPP** registers a new DPP in a central registry (e.g., HARTING, based on configuration).  
+It creates a DPP shell and returns its unique identifier.
 **Example:**
 ```bash
-curl -X POST http://localhost:8080/dpps \
+curl -X POST "http://localhost:8080/registerDPP" \
   -H "Content-Type: application/json" \
-  -d '{"dppId": "test-dpp-123"}'
+  -d '{"id": "https://example.com/shells/test", "idShort": "TestDPP"}'
 ```
-
-#### Read/Update/Delete
-GET /dpps/{dppId}
-PATCH /dpps/{dppId}
-DELETE /dpps/{dppId}
-
-text
-
-#### Product-based Queries
-GET /dppsByProductId/{productId}
-GET /dppsByProductIdAndDate/{productId}?date=2026-03-31
-POST /dppsByProductIds?limit=10&cursor=abc
-
-text
-
-#### Registry
-POST /registerDPP
-
-text
-
-## Testing with curl
-Replace `http://localhost:8080` with your server URL.
-
-```bash
-# Health
-curl http://localhost:8080/api/v1/dpp/health
-
-# List DPPs (limit 3)
-curl "http://localhost:8080/api/v1/dpp/list?limit=3"
-
-# Fetch HARTING DPP example
-curl "http://localhost:8080/api/v1/dpp?id=https://dpp40.harting.com/shells/02095002010200"
-
-# Create DPP
-curl -X POST http://localhost:8080/dpps \
-  -H "Content-Type: application/json" \
-  -d '{"dppId": "test-123", "productId": "prod-456"}'
-
-# Read DPP
-curl http://localhost:8080/dpps/test-123
-
-# Product-based
-curl http://localhost:8080/dppsByProductId/prod-456
-```
+---
+## Additional Endpoints
+- **GET /api/v1/dpp/health** – Returns server health and registry count.  
+- **GET /api/v1/dpp/list?limit=5** – Lists DPP IDs from connected registries.  
+- **GET /api/v1/dpp?id=URL** – Fetches a full DPP from the given URL.

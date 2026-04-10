@@ -133,4 +133,23 @@ public class RegistryService {
             return false;
         }
     }
+
+    /**
+     * Creates a new submodel in the registry
+     */
+    public JsonNode createSubmodel(String registry, JsonNode submodelData) {
+        String url = registry + "/submodels";
+        try {
+            logger.info("Creating submodel at: {}", url);
+            return restClient.post()
+                    .uri(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(submodelData)
+                    .retrieve()
+                    .body(JsonNode.class);
+        } catch (Exception e) {
+            logger.error("Failed to create submodel at {}: {}", registry, e.getMessage());
+            return null;
+        }
+    }
 }

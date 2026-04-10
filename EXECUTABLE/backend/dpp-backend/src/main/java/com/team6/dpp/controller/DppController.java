@@ -124,8 +124,37 @@ public class DppController {
     @PostMapping("/dpps")
     public ResponseEntity<JsonNode> createDpp(@RequestBody JsonNode dpp, @RequestParam String productId) {
         try {
-            // Assume the first registry for creation
-            String registry = DppConfig.REGISTRIES.values().iterator().next();
+            // Prefer local registry for creation
+            String registry = DppConfig.REGISTRIES.get("local");
+            if (registry == null) {
+                registry = DppConfig.REGISTRIES.values().iterator().next();
+            }
+
+            // Create submodels first if they exist in the request
+            if (dpp.has("submodels") && dpp.get("submodels").isArray()) {
+                for (JsonNode submodelRef : dpp.get("submodels")) {
+                    try {
+                        // Create a basic submodel structure
+                        JsonNode keys = submodelRef.path("keys");
+                        if (!keys.isEmpty() && keys.isArray()) {
+                            String submodelUrl = keys.get(0).path("value").asText("");
+                            if (!submodelUrl.isBlank()) {
+                                ObjectNode submodel = mapper.createObjectNode();
+                                submodel.put("modelType", "Submodel");
+                                submodel.put("id", submodelUrl);
+                                submodel.put("idShort", submodelUrl.substring(submodelUrl.lastIndexOf("/") + 1));
+                                
+                                registryService.createSubmodel(registry, submodel);
+                                logger.info("Submodel created: {}", submodelUrl);
+                            }
+                        }
+                    } catch (Exception e) {
+                        logger.warn("Failed to create submodel: {}", e.getMessage());
+                    }
+                }
+            }
+
+            // Create the shell
             JsonNode createdShell = registryService.createShell(registry, dpp);
             if (createdShell == null) {
                 return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to create DPP"));
@@ -145,6 +174,80 @@ public class DppController {
         }
     }
 
+    @PostMapping("/dpps/import")
+    public ResponseEntity<JsonNode> importDppFromUrl(@RequestParam String sourceUrl) {
+        try {
+            // Fetch shell from external source
+            logger.info("Importing DPP from: {}", sourceUrl);
+            
+            WebClient client = WebClient.builder()
+                    .defaultHeader("Accept", "application/json")
+                    .build();
+
+            JsonNode sourceShell = client.get()
+                    .uri(sourceUrl)
+                    .retrieve()
+                    .bodyToMono(JsonNode.class)
+                    .block();
+
+            if (sourceShell == null) {
+                return ResponseEntity.status(404).body(mapper.createObjectNode().put("error", "Shell not found at source URL"));
+            }
+
+            String localRegistry = DppConfig.REGISTRIES.get("local");
+            if (localRegistry == null) {
+                localRegistry = DppConfig.REGISTRIES.values().iterator().next();
+            }
+
+            // Import submodels first if they exist
+            if (sourceShell.has("submodels") && sourceShell.get("submodels").isArray()) {
+                for (JsonNode submodelRef : sourceShell.get("submodels")) {
+                    try {
+                        JsonNode keys = submodelRef.path("keys");
+                        if (!keys.isEmpty() && keys.isArray()) {
+                            String submodelUrl = keys.get(0).path("value").asText("");
+                            if (!submodelUrl.isBlank()) {
+                                // Fetch submodel from source
+                                JsonNode submodelData = client.get()
+                                        .uri(submodelUrl)
+                                        .retrieve()
+                                        .bodyToMono(JsonNode.class)
+                                        .block();
+
+                                if (submodelData != null) {
+                                    registryService.createSubmodel(localRegistry, submodelData);
+                                    logger.info("Submodel imported: {}", submodelUrl);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        logger.warn("Failed to import submodel: {}", e.getMessage());
+                    }
+                }
+            }
+
+            // Create the shell locally
+            JsonNode createdShell = registryService.createShell(localRegistry, sourceShell);
+            if (createdShell == null) {
+                return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to import DPP"));
+            }
+
+            String shellId = registryService.extractShellId(createdShell);
+            String productId = DppUtils.encodeIdentifier(shellId);
+            String dppId = dppVersionService.generateDppIdFromShell(productId, createdShell);
+
+            ObjectNode response = mapper.createObjectNode();
+            response.put("dppId", dppId);
+            response.put("productId", productId);
+            response.put("sourceUrl", sourceUrl);
+            response.put("message", "DPP imported successfully to local registry");
+            return ResponseEntity.status(201).body(response);
+        } catch (Exception e) {
+            logger.error("Failed to import DPP from {}: {}", sourceUrl, e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
+    }
+
     @GetMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> readDppById(@PathVariable String dppId) {
         try {
@@ -159,8 +262,24 @@ public class DppController {
                 aasId = productId; // Assume it's already the AAS ID
             }
 
-            // Find registry and fetch shell
+            // Try local registry first
+            String localRegistry = DppConfig.REGISTRIES.get("local");
+            if (localRegistry != null) {
+                JsonNode shell = registryService.fetchShell(localRegistry, aasId);
+                if (shell != null) {
+                    ObjectNode dpp = mapper.createObjectNode();
+                    dpp.put("dppId", dppId);
+                    dpp.put("productId", productId);
+                    dpp.put("versionValue", versionValue);
+                    dpp.set("shell", shell);
+                    dpp.set("payload", dppService.createCustomPayload(shell));
+                    return ResponseEntity.ok(dpp);
+                }
+            }
+
+            // Fallback to other registries
             for (String registry : DppConfig.REGISTRIES.values()) {
+                if (registry.equals(localRegistry)) continue; // Skip local, already tried
                 JsonNode shell = registryService.fetchShell(registry, aasId);
                 if (shell != null) {
                     ObjectNode dpp = mapper.createObjectNode();
@@ -193,8 +312,26 @@ public class DppController {
                 aasId = productId;
             }
 
-            // Find registry and update shell
+            // Try local registry first
+            String localRegistry = DppConfig.REGISTRIES.get("local");
+            if (localRegistry != null) {
+                JsonNode existingShell = registryService.fetchShell(localRegistry, aasId);
+                if (existingShell != null) {
+                    JsonNode updatedShell = registryService.updateShell(localRegistry, aasId, patch);
+                    if (updatedShell != null) {
+                        ObjectNode dpp = mapper.createObjectNode();
+                        dpp.put("dppId", dppId);
+                        dpp.put("productId", productId);
+                        dpp.put("versionValue", versionValue);
+                        dpp.set("shell", updatedShell);
+                        return ResponseEntity.ok(dpp);
+                    }
+                }
+            }
+
+            // Fallback to other registries
             for (String registry : DppConfig.REGISTRIES.values()) {
+                if (registry.equals(localRegistry)) continue; // Skip local, already tried
                 JsonNode existingShell = registryService.fetchShell(registry, aasId);
                 if (existingShell != null) {
                     JsonNode updatedShell = registryService.updateShell(registry, aasId, patch);
@@ -228,8 +365,17 @@ public class DppController {
                 aasId = productId;
             }
 
-            // Find registry and delete shell
+            // Try local registry first
+            String localRegistry = DppConfig.REGISTRIES.get("local");
+            if (localRegistry != null) {
+                if (registryService.deleteShell(localRegistry, aasId)) {
+                    return ResponseEntity.noContent().build();
+                }
+            }
+
+            // Fallback to other registries
             for (String registry : DppConfig.REGISTRIES.values()) {
+                if (registry.equals(localRegistry)) continue; // Skip local, already tried
                 if (registryService.deleteShell(registry, aasId)) {
                     return ResponseEntity.noContent().build();
                 }
@@ -322,8 +468,11 @@ public class DppController {
     @PostMapping("/registerDPP")
     public ResponseEntity<JsonNode> postNewDppToRegistry(@RequestBody JsonNode body) {
         try {
-            // Assume the body contains the shell data
-            String registry = DppConfig.REGISTRIES.values().iterator().next(); // Use first registry
+            // Prefer local registry for registration
+            String registry = DppConfig.REGISTRIES.get("local");
+            if (registry == null) {
+                registry = DppConfig.REGISTRIES.values().iterator().next();
+            }
             JsonNode createdShell = registryService.createShell(registry, body);
             if (createdShell == null) {
                 return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to register DPP"));

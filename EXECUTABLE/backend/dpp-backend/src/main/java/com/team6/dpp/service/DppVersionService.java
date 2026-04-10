@@ -97,7 +97,7 @@ public class DppVersionService {
      * @return formatierte dppID
      */
     public String formatDppId(String productId, String versionValue) {
-        return productId + "#" + versionValue;
+        return productId + "@" + versionValue;
     }
 
     /**
@@ -111,15 +111,15 @@ public class DppVersionService {
             throw new IllegalArgumentException("dppId darf nicht null oder leer sein");
         }
 
-        int lastHash = dppId.lastIndexOf('#');
-        if (lastHash == -1 || lastHash == dppId.length() - 1) {
+        int lastAt = dppId.lastIndexOf('@');
+        if (lastAt == -1 || lastAt == dppId.length() - 1) {
             // Fallback: dppId ist eine productId ohne Versionswert
             logger.warn("dppId {} has no version value, treating as version 'unknown'", dppId);
             return new DppIdParts(dppId, "unknown");
         }
 
-        String productId = dppId.substring(0, lastHash);
-        String versionValue = dppId.substring(lastHash + 1);
+        String productId = dppId.substring(0, lastAt);
+        String versionValue = dppId.substring(lastAt + 1);
         return new DppIdParts(productId, versionValue);
     }
 
