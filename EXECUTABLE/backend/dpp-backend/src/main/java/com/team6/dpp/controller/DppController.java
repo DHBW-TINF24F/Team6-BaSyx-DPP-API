@@ -131,13 +131,13 @@ public class DppController {
                 return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to create DPP"));
             }
 
-            // Generate next dppID with automatic versioning
-            String dppId = dppVersionService.getNextDppId(productId);
+            // Generate dppID based on shell version
+            String dppId = dppVersionService.generateDppIdFromShell(productId, createdShell);
 
             ObjectNode response = mapper.createObjectNode();
             response.put("dppId", dppId);
             response.put("productId", productId);
-            response.put("versionNumber", dppVersionService.extractVersionNumber(dppId));
+            response.put("versionValue", dppVersionService.extractVersionValue(dppId));
             return ResponseEntity.status(201).body(response);
         } catch (Exception e) {
             logger.error("Failed to create DPP: {}", e.getMessage());
@@ -148,10 +148,10 @@ public class DppController {
     @GetMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> readDppById(@PathVariable String dppId) {
         try {
-            // Parse dppID to extract productID and versionNumber
+            // Parse dppID to extract productID and versionValue
             DppVersionService.DppIdParts parts = dppVersionService.parseDppId(dppId);
             String productId = parts.productId;
-            int versionNumber = parts.versionNumber;
+            String versionValue = parts.versionValue;
 
             // Decode productId to get AAS identifier
             String aasId = DppUtils.decodeIdentifier(productId);
@@ -166,7 +166,7 @@ public class DppController {
                     ObjectNode dpp = mapper.createObjectNode();
                     dpp.put("dppId", dppId);
                     dpp.put("productId", productId);
-                    dpp.put("versionNumber", versionNumber);
+                    dpp.put("versionValue", versionValue);
                     dpp.set("shell", shell);
                     dpp.set("payload", dppService.createCustomPayload(shell));
                     return ResponseEntity.ok(dpp);
@@ -182,10 +182,10 @@ public class DppController {
     @PatchMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> updateDppById(@PathVariable String dppId, @RequestBody JsonNode patch) {
         try {
-            // Parse dppID to extract productID and versionNumber
+            // Parse dppID to extract productID and versionValue
             DppVersionService.DppIdParts parts = dppVersionService.parseDppId(dppId);
             String productId = parts.productId;
-            int versionNumber = parts.versionNumber;
+            String versionValue = parts.versionValue;
 
             // Decode productId to get AAS identifier
             String aasId = DppUtils.decodeIdentifier(productId);
@@ -202,7 +202,7 @@ public class DppController {
                         ObjectNode dpp = mapper.createObjectNode();
                         dpp.put("dppId", dppId);
                         dpp.put("productId", productId);
-                        dpp.put("versionNumber", versionNumber);
+                        dpp.put("versionValue", versionValue);
                         dpp.set("shell", updatedShell);
                         return ResponseEntity.ok(dpp);
                     }
@@ -295,8 +295,9 @@ public class DppController {
                     String productId = productIdNode.asText();
                     String dppUrl = dppService.findDppUrlForProductId(productId);
                     if (dppUrl != null) {
-                        // Generate DPP IDs with versioning (use version 1 as default)
-                        String dppId = dppVersionService.formatDppId(productId, 1);
+                        // Generate DPP IDs with version from shell
+                        // Use a generic version value for list operations
+                        String dppId = dppVersionService.formatDppId(productId, "latest");
                         dppIds.add(dppId);
                         count++;
                     }

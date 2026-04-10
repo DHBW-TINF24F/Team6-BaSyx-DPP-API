@@ -1,61 +1,110 @@
 package com.team6.dpp.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.time.Instant;
 
 /**
- * Service für die Verwaltung von DPP-Versionsnummern.
- * dppID = productID + "#" + versionNumber
+ * Service für die Verwaltung von DPP-Versionen basierend auf Shell-Werten.
+ * dppID = productID + "#" + versionValue
+ * Der versionValue wird aus der Shell extrahiert (z.B. version, timestamp).
  */
 @Service
 public class DppVersionService {
 
     private static final Logger logger = LoggerFactory.getLogger(DppVersionService.class);
 
-    // In-Memory Counter für jede productID
-    private final Map<String, AtomicInteger> versionCounters = new ConcurrentHashMap<>();
-
     /**
-     * Generiert die nächste dppID für eine productID
-     * Format: productID#versionNumber
+     * Extrahiert die Versionsnummer aus einer Shell und generiert die dppID
+     * Versucht folgende Quellen (in dieser Reihenfolge):
+     * 1. shell.administration.version
+     * 2. shell.version
+     * 3. shell.modifiedDate
+     * 4. Aktueller Timestamp
      *
      * @param productId base64-encoded AAS Identifier
-     * @return generierte dppID mit Versionsnummer
+     * @param shell die AAS Shell
+     * @return generierte dppID mit Version
      */
-    public String getNextDppId(String productId) {
+    public String generateDppIdFromShell(String productId, JsonNode shell) {
         if (productId == null || productId.isBlank()) {
             throw new IllegalArgumentException("productId darf nicht null oder leer sein");
         }
+        if (shell == null) {
+            throw new IllegalArgumentException("shell darf nicht null sein");
+        }
 
-        AtomicInteger counter = versionCounters.computeIfAbsent(productId, k -> new AtomicInteger(0));
-        int nextVersion = counter.incrementAndGet();
-        String dppId = formatDppId(productId, nextVersion);
+        String versionValue = extractVersionValue(shell);
+        String dppId = formatDppId(productId, versionValue);
 
-        logger.info("Generated DPP ID {} for product {}, version {}", dppId, productId, nextVersion);
+        logger.info("Generated DPP ID {} from shell version: {}", dppId, versionValue);
         return dppId;
     }
 
     /**
-     * Formatiert produktID + Versionsnummer zu dppID
+     * Extrahiert den Versionswert aus der Shell
+     * Versucht mehrere Quellen in dieser Reihenfolge:
+     * - shell.administration.version
+     * - shell.version
+     * - shell.modifiedDate
+     * - Aktueller ISO-Timestamp als Fallback
      *
-     * @param productId base64-encoded AAS Identifier
-     * @param versionNumber Versionsnummer (1, 2, 3, ...)
-     * @return formatierte dppID
+     * @param shell die AAS Shell
+     * @return Versionswert als String
      */
-    public String formatDppId(String productId, int versionNumber) {
-        return productId + "#" + versionNumber;
+    public String extractVersionValue(JsonNode shell) {
+        // 1. Versuche shell.administration.version
+        if (shell.has("administration")) {
+            JsonNode admin = shell.get("administration");
+            if (admin.has("version")) {
+                String version = admin.get("version").asText(null);
+                if (version != null && !version.isBlank()) {
+                    return version;
+                }
+            }
+        }
+
+        // 2. Versuche shell.version
+        if (shell.has("version")) {
+            String version = shell.get("version").asText(null);
+            if (version != null && !version.isBlank()) {
+                return version;
+            }
+        }
+
+        // 3. Versuche shell.modifiedDate
+        if (shell.has("modifiedDate")) {
+            String modifiedDate = shell.get("modifiedDate").asText(null);
+            if (modifiedDate != null && !modifiedDate.isBlank()) {
+                return modifiedDate;
+            }
+        }
+
+        // 4. Fallback: Aktueller Timestamp
+        String timestamp = Instant.now().toString();
+        logger.warn("No version found in shell, using timestamp as version: {}", timestamp);
+        return timestamp;
     }
 
     /**
-     * Parsed dppID in Komponenten (productId + versionNumber)
+     * Formatiert productID + Versionswert zu dppID
+     *
+     * @param productId base64-encoded AAS Identifier
+     * @param versionValue Versionswert (z.B. "1.0.1", timestamp)
+     * @return formatierte dppID
+     */
+    public String formatDppId(String productId, String versionValue) {
+        return productId + "#" + versionValue;
+    }
+
+    /**
+     * Parsed dppID in Komponenten (productId + versionValue)
      *
      * @param dppId dppID zum Parsen
-     * @return DppIdParts mit productId und versionNumber
+     * @return DppIdParts mit productId und versionValue
      */
     public DppIdParts parseDppId(String dppId) {
         if (dppId == null || dppId.isBlank()) {
@@ -64,19 +113,14 @@ public class DppVersionService {
 
         int lastHash = dppId.lastIndexOf('#');
         if (lastHash == -1 || lastHash == dppId.length() - 1) {
-            // Fallback: dppId ist eine productId ohne Versionsnummer
-            logger.warn("dppId {} has no version number, treating as version 1", dppId);
-            return new DppIdParts(dppId, 1);
+            // Fallback: dppId ist eine productId ohne Versionswert
+            logger.warn("dppId {} has no version value, treating as version 'unknown'", dppId);
+            return new DppIdParts(dppId, "unknown");
         }
 
-        try {
-            String productId = dppId.substring(0, lastHash);
-            int versionNumber = Integer.parseInt(dppId.substring(lastHash + 1));
-            return new DppIdParts(productId, versionNumber);
-        } catch (NumberFormatException e) {
-            logger.error("Invalid dppId format: {}", dppId);
-            throw new IllegalArgumentException("Ungültige dppID Format: " + dppId, e);
-        }
+        String productId = dppId.substring(0, lastHash);
+        String versionValue = dppId.substring(lastHash + 1);
+        return new DppIdParts(productId, versionValue);
     }
 
     /**
@@ -90,13 +134,13 @@ public class DppVersionService {
     }
 
     /**
-     * Extrahiert nur die Versionsnummer aus einer dppID
+     * Extrahiert nur den Versionswert aus einer dppID
      *
      * @param dppId dppID
-     * @return Versionsnummer
+     * @return Versionswert
      */
-    public int extractVersionNumber(String dppId) {
-        return parseDppId(dppId).versionNumber;
+    public String extractVersionValue(String dppId) {
+        return parseDppId(dppId).versionValue;
     }
 
     /**
@@ -104,18 +148,18 @@ public class DppVersionService {
      */
     public static class DppIdParts {
         public final String productId;
-        public final int versionNumber;
+        public final String versionValue;
 
-        public DppIdParts(String productId, int versionNumber) {
+        public DppIdParts(String productId, String versionValue) {
             this.productId = productId;
-            this.versionNumber = versionNumber;
+            this.versionValue = versionValue;
         }
 
         @Override
         public String toString() {
             return "DppIdParts{" +
                     "productId='" + productId + '\'' +
-                    ", versionNumber=" + versionNumber +
+                    ", versionValue='" + versionValue + '\'' +
                     '}';
         }
     }
