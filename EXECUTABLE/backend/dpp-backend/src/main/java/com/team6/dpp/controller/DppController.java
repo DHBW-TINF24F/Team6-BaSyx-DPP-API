@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
 import com.team6.dpp.config.DppConfig;
 import com.team6.dpp.service.DppService;
+import com.team6.dpp.service.DppVersionService;
 import com.team6.dpp.service.RegistryService;
 import com.team6.dpp.service.SubmodelService;
 import com.team6.dpp.util.DppUtils;
@@ -28,12 +29,14 @@ public class DppController {
     private final DppService dppService;
     private final RegistryService registryService;
     private final SubmodelService submodelService;
+    private final DppVersionService dppVersionService;
 
-    public DppController(ObjectMapper mapper, DppService dppService, RegistryService registryService, SubmodelService submodelService) {
+    public DppController(ObjectMapper mapper, DppService dppService, RegistryService registryService, SubmodelService submodelService, DppVersionService dppVersionService) {
         this.mapper = mapper;
         this.dppService = dppService;
         this.registryService = registryService;
         this.submodelService = submodelService;
+        this.dppVersionService = dppVersionService;
     }
 
     // ================================================================================
@@ -119,7 +122,7 @@ public class DppController {
     // ================================================================================
 
     @PostMapping("/dpps")
-    public ResponseEntity<JsonNode> createDpp(@RequestBody JsonNode dpp) {
+    public ResponseEntity<JsonNode> createDpp(@RequestBody JsonNode dpp, @RequestParam String productId) {
         try {
             // Assume the first registry for creation
             String registry = DppConfig.REGISTRIES.values().iterator().next();
@@ -127,8 +130,14 @@ public class DppController {
             if (createdShell == null) {
                 return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to create DPP"));
             }
+
+            // Generate next dppID with automatic versioning
+            String dppId = dppVersionService.getNextDppId(productId);
+
             ObjectNode response = mapper.createObjectNode();
-            response.put("dppId", registryService.extractShellId(createdShell));
+            response.put("dppId", dppId);
+            response.put("productId", productId);
+            response.put("versionNumber", dppVersionService.extractVersionNumber(dppId));
             return ResponseEntity.status(201).body(response);
         } catch (Exception e) {
             logger.error("Failed to create DPP: {}", e.getMessage());
@@ -139,10 +148,15 @@ public class DppController {
     @GetMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> readDppById(@PathVariable String dppId) {
         try {
-            // Decode dppId if it's base64 encoded AAS identifier
-            String aasId = DppUtils.decodeIdentifier(dppId);
+            // Parse dppID to extract productID and versionNumber
+            DppVersionService.DppIdParts parts = dppVersionService.parseDppId(dppId);
+            String productId = parts.productId;
+            int versionNumber = parts.versionNumber;
+
+            // Decode productId to get AAS identifier
+            String aasId = DppUtils.decodeIdentifier(productId);
             if (aasId == null) {
-                aasId = dppId; // Assume it's already the AAS ID
+                aasId = productId; // Assume it's already the AAS ID
             }
 
             // Find registry and fetch shell
@@ -151,6 +165,8 @@ public class DppController {
                 if (shell != null) {
                     ObjectNode dpp = mapper.createObjectNode();
                     dpp.put("dppId", dppId);
+                    dpp.put("productId", productId);
+                    dpp.put("versionNumber", versionNumber);
                     dpp.set("shell", shell);
                     dpp.set("payload", dppService.createCustomPayload(shell));
                     return ResponseEntity.ok(dpp);
@@ -166,10 +182,15 @@ public class DppController {
     @PatchMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> updateDppById(@PathVariable String dppId, @RequestBody JsonNode patch) {
         try {
-            // Decode dppId if it's base64 encoded AAS identifier
-            String aasId = DppUtils.decodeIdentifier(dppId);
+            // Parse dppID to extract productID and versionNumber
+            DppVersionService.DppIdParts parts = dppVersionService.parseDppId(dppId);
+            String productId = parts.productId;
+            int versionNumber = parts.versionNumber;
+
+            // Decode productId to get AAS identifier
+            String aasId = DppUtils.decodeIdentifier(productId);
             if (aasId == null) {
-                aasId = dppId;
+                aasId = productId;
             }
 
             // Find registry and update shell
@@ -180,6 +201,8 @@ public class DppController {
                     if (updatedShell != null) {
                         ObjectNode dpp = mapper.createObjectNode();
                         dpp.put("dppId", dppId);
+                        dpp.put("productId", productId);
+                        dpp.put("versionNumber", versionNumber);
                         dpp.set("shell", updatedShell);
                         return ResponseEntity.ok(dpp);
                     }
@@ -195,10 +218,14 @@ public class DppController {
     @DeleteMapping("/dpps/{dppId}")
     public ResponseEntity<Void> deleteDppById(@PathVariable String dppId) {
         try {
-            // Decode dppId if it's base64 encoded AAS identifier
-            String aasId = DppUtils.decodeIdentifier(dppId);
+            // Parse dppID to extract productID
+            DppVersionService.DppIdParts parts = dppVersionService.parseDppId(dppId);
+            String productId = parts.productId;
+
+            // Decode productId to get AAS identifier
+            String aasId = DppUtils.decodeIdentifier(productId);
             if (aasId == null) {
-                aasId = dppId;
+                aasId = productId;
             }
 
             // Find registry and delete shell
@@ -268,8 +295,8 @@ public class DppController {
                     String productId = productIdNode.asText();
                     String dppUrl = dppService.findDppUrlForProductId(productId);
                     if (dppUrl != null) {
-                        // Extract DPP ID from URL or use encoded productId
-                        String dppId = DppUtils.encodeIdentifier(dppUrl);
+                        // Generate DPP IDs with versioning (use version 1 as default)
+                        String dppId = dppVersionService.formatDppId(productId, 1);
                         dppIds.add(dppId);
                         count++;
                     }
