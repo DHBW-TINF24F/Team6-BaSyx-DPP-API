@@ -38,3 +38,14 @@ The startup process of the Vite Dev Setup should start.
 The backend runs via the integrated Maven Server, directly ran through the IDE (IntelliJ).
 
 `Currently, I (Noah) have not that much insights into the development procedure with Maven in IntelliJ, as i did not had time to look in it closely at this moment.`
+
+<br>
+
+## CI system tests (real backend + fallback)
+
+The workflow [.github/workflows/systemtest-issue-tracker.yml](.github/workflows/systemtest-issue-tracker.yml) now runs integration tests in two modes automatically:
+
+1. **Real mode**: If `EXECUTABLE/backend/dpp-backend` exists in the current branch, CI builds and starts the backend, waits for `/api/v1/dpp/health`, and runs `test:integration:real`.
+2. **Fallback mode**: If the backend is missing in the branch, does not build, or does not become healthy in time, CI automatically falls back to the previous integration test run (`test:integration`).
+
+This keeps all branches testable while still validating real backend behavior whenever the backend is available.

@@ -30,6 +30,25 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: 'SOURCE/frontend/aas-web-ui/yarn.lock'
 
+      - name: Detect DPP backend in branch
+        id: detect-backend
+        run: |
+          if [ -d "EXECUTABLE/backend/dpp-backend" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "Found EXECUTABLE/backend/dpp-backend in current branch."
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "No DPP backend folder in current branch -> fallback to legacy integration tests."
+          fi
+
+      - name: Setup Java for DPP backend
+        if: steps.detect-backend.outputs.available == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
       - name: Enable Corepack
         run: corepack enable
 
@@ -39,16 +58,68 @@ jobs:
 
       - name: Run system tests
         id: run-tests
-        working-directory: SOURCE/frontend/aas-web-ui
         run: |
           set -o pipefail
 
           {
             echo "=== Run frontend test suite with coverage ==="
+            cd SOURCE/frontend/aas-web-ui
             yarn test:coverage
             echo
-            echo "=== Run prepared integration tests from STR ==="
-            yarn test:integration
+
+            TEST_MODE="legacy"
+            BACKEND_PID=""
+
+            cleanup() {
+              if [ -n "$BACKEND_PID" ] && kill -0 "$BACKEND_PID" 2>/dev/null; then
+                echo "Stopping DPP backend (PID: $BACKEND_PID)"
+                kill "$BACKEND_PID" || true
+              fi
+            }
+            trap cleanup EXIT
+
+            if [ "${{ steps.detect-backend.outputs.available }}" = "true" ]; then
+              echo "=== DPP backend found: build and start backend ==="
+              cd "$GITHUB_WORKSPACE/EXECUTABLE/backend/dpp-backend"
+
+              if mvn -B -DskipTests package; then
+                java -jar target/dpp-backend-0.0.1-SNAPSHOT.jar > "$GITHUB_WORKSPACE/dpp-backend.log" 2>&1 &
+                BACKEND_PID=$!
+
+                echo "Waiting for backend health endpoint..."
+                for _ in {1..45}; do
+                  if curl -fsS "http://localhost:8080/api/v1/dpp/health" > /dev/null; then
+                    TEST_MODE="real"
+                    echo "Backend is healthy -> run real integration tests."
+                    break
+                  fi
+                  sleep 2
+                done
+
+                if [ "$TEST_MODE" != "real" ]; then
+                  echo "Backend did not become healthy in time -> fallback to legacy integration tests."
+                fi
+              else
+                echo "Backend build failed -> fallback to legacy integration tests."
+              fi
+            fi
+
+            cd "$GITHUB_WORKSPACE/SOURCE/frontend/aas-web-ui"
+            echo "=== Run STR integration tests (mode: $TEST_MODE) ==="
+
+            if [ "$TEST_MODE" = "real" ]; then
+              yarn test:integration:real
+            else
+              yarn test:integration
+            fi
+
+            echo "test_mode=$TEST_MODE" >> "$GITHUB_OUTPUT"
+
+            if [ "$TEST_MODE" = "real" ] && [ -f "$GITHUB_WORKSPACE/dpp-backend.log" ]; then
+              echo
+              echo "=== DPP backend log tail (last 80 lines) ==="
+              tail -n 80 "$GITHUB_WORKSPACE/dpp-backend.log" || true
+            fi
           } 2>&1 | tee test-results.log
 
           # Keep last 200 lines of output to avoid huge issue bodies
@@ -75,6 +146,7 @@ jobs:
           **Triggered by:** ${{ github.event_name }}
           **Branch:** ${{ github.ref_name }}
           **Commit:** ${{ github.sha }}
+          **Integration Mode:** ${{ steps.run-tests.outputs.test_mode || 'legacy' }}
           **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
           ### Test Output (last 200 lines)

@@ -181,6 +181,7 @@ Die vorbereiteten Integrationstests liegen im Frontend-Projekt unter:
 
 Zur reproduzierbaren Ausführung im Repository wurden außerdem hinterlegt:
 - [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit dem Skript `test:integration`
+- [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit dem Skript `test:integration:real` für Real-Backend-Tests (ohne Mocking, mit `RUN_REAL_BACKEND_TESTS=true` und konfigurierbarer `DPP_BACKEND_BASE_URL`)
 - [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit `engines.node` zur Vorgabe der unterstützten Node.js-Versionen für WSL und CI
 - [.github/workflows/systemtest-issue-tracker.yml](../../.github/workflows/systemtest-issue-tracker.yml) zur automatisierten Ausführung der STR-nahen Tests in GitHub Actions
 
