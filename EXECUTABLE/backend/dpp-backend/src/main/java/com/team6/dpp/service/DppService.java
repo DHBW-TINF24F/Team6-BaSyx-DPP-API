@@ -29,10 +29,17 @@ public class DppService {
     }
 
     /**
-     * Finds DPP URL for a given product ID
+     * Finds DPP URL for a given product ID (base64 encoded AAS identifier)
      */
     public String findDppUrlForProductId(String productId) {
         if (productId == null || productId.isBlank()) {
+            return null;
+        }
+
+        // Decode base64 productId to get AAS identifier
+        String aasIdentifier = DppUtils.decodeIdentifier(productId);
+        if (aasIdentifier == null) {
+            logger.warn("Invalid base64 productId: {}", productId);
             return null;
         }
 
@@ -42,34 +49,18 @@ public class DppService {
             if (shells == null || !shells.isArray()) continue;
 
             for (JsonNode shell : shells) {
-                String idShort = shell.path("idShort").asText(null);
-                String shellId = shell.path("id").asText(null);
+                String shellId = registryService.extractShellId(shell);
 
-                if (idShort != null && idShort.equalsIgnoreCase(productId)) {
-                    return registry + "/shells/" + DppUtils.encode(shellId != null ? shellId : productId);
-                }
-
-                if (shellId != null) {
-                    if (shellId.equalsIgnoreCase(productId)
-                            || shellId.equalsIgnoreCase(registry + "/shells/" + productId)
-                            || shellId.endsWith("/" + productId)
-                            || shellId.contains("/" + productId + "/")) {
-                        return registry + "/shells/" + DppUtils.encode(shellId);
-                    }
-                }
-
-                // fallback: direct match if shell id is exactly productId or encoded value
-                if (productId.equalsIgnoreCase(shellId) || productId.equalsIgnoreCase(idShort)) {
-                    return registry + "/shells/" + DppUtils.encode(shellId != null ? shellId : productId);
+                if (shellId != null && shellId.equals(aasIdentifier)) {
+                    return registry + "/shells/" + DppUtils.encode(shellId);
                 }
             }
         }
 
-        // Wenn nichts gefunden, versuche direkt mit hartcodiertem Markt-Schema
+        // Fallback: try direct URL construction
         String hartingRegistry = DppConfig.REGISTRIES.get("harting");
         if (hartingRegistry != null) {
-            String candidateShellUrl = "https://dpp40.harting.com/shells/" + productId;
-            return hartingRegistry + "/shells/" + DppUtils.encode(candidateShellUrl);
+            return hartingRegistry + "/shells/" + DppUtils.encode(aasIdentifier);
         }
 
         return null;

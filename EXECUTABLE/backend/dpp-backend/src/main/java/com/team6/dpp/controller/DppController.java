@@ -120,30 +120,98 @@ public class DppController {
 
     @PostMapping("/dpps")
     public ResponseEntity<JsonNode> createDpp(@RequestBody JsonNode dpp) {
-        ObjectNode response = mapper.createObjectNode();
-        response.put("dppId", dpp.path("dppId").asText());
-        return ResponseEntity.status(201).body(response);
+        try {
+            // Assume the first registry for creation
+            String registry = DppConfig.REGISTRIES.values().iterator().next();
+            JsonNode createdShell = registryService.createShell(registry, dpp);
+            if (createdShell == null) {
+                return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to create DPP"));
+            }
+            ObjectNode response = mapper.createObjectNode();
+            response.put("dppId", registryService.extractShellId(createdShell));
+            return ResponseEntity.status(201).body(response);
+        } catch (Exception e) {
+            logger.error("Failed to create DPP: {}", e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
     }
 
     @GetMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> readDppById(@PathVariable String dppId) {
-        ObjectNode dpp = mapper.createObjectNode();
-        dpp.put("dppId", dppId);
-        dpp.put("productId", "example-product-id");
-        return ResponseEntity.ok(dpp);
+        try {
+            // Decode dppId if it's base64 encoded AAS identifier
+            String aasId = DppUtils.decodeIdentifier(dppId);
+            if (aasId == null) {
+                aasId = dppId; // Assume it's already the AAS ID
+            }
+
+            // Find registry and fetch shell
+            for (String registry : DppConfig.REGISTRIES.values()) {
+                JsonNode shell = registryService.fetchShell(registry, aasId);
+                if (shell != null) {
+                    ObjectNode dpp = mapper.createObjectNode();
+                    dpp.put("dppId", dppId);
+                    dpp.set("shell", shell);
+                    dpp.set("payload", dppService.createCustomPayload(shell));
+                    return ResponseEntity.ok(dpp);
+                }
+            }
+            return ResponseEntity.status(404).body(mapper.createObjectNode().put("error", "DPP not found"));
+        } catch (Exception e) {
+            logger.error("Failed to read DPP {}: {}", dppId, e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
     }
 
     @PatchMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> updateDppById(@PathVariable String dppId, @RequestBody JsonNode patch) {
-        ObjectNode dpp = mapper.createObjectNode();
-        dpp.put("dppId", dppId);
-        dpp.setAll((ObjectNode) patch);
-        return ResponseEntity.ok(dpp);
+        try {
+            // Decode dppId if it's base64 encoded AAS identifier
+            String aasId = DppUtils.decodeIdentifier(dppId);
+            if (aasId == null) {
+                aasId = dppId;
+            }
+
+            // Find registry and update shell
+            for (String registry : DppConfig.REGISTRIES.values()) {
+                JsonNode existingShell = registryService.fetchShell(registry, aasId);
+                if (existingShell != null) {
+                    JsonNode updatedShell = registryService.updateShell(registry, aasId, patch);
+                    if (updatedShell != null) {
+                        ObjectNode dpp = mapper.createObjectNode();
+                        dpp.put("dppId", dppId);
+                        dpp.set("shell", updatedShell);
+                        return ResponseEntity.ok(dpp);
+                    }
+                }
+            }
+            return ResponseEntity.status(404).body(mapper.createObjectNode().put("error", "DPP not found"));
+        } catch (Exception e) {
+            logger.error("Failed to update DPP {}: {}", dppId, e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
     }
 
     @DeleteMapping("/dpps/{dppId}")
     public ResponseEntity<Void> deleteDppById(@PathVariable String dppId) {
-        return ResponseEntity.noContent().build();
+        try {
+            // Decode dppId if it's base64 encoded AAS identifier
+            String aasId = DppUtils.decodeIdentifier(dppId);
+            if (aasId == null) {
+                aasId = dppId;
+            }
+
+            // Find registry and delete shell
+            for (String registry : DppConfig.REGISTRIES.values()) {
+                if (registryService.deleteShell(registry, aasId)) {
+                    return ResponseEntity.noContent().build();
+                }
+            }
+            return ResponseEntity.status(404).build();
+        } catch (Exception e) {
+            logger.error("Failed to delete DPP {}: {}", dppId, e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // ================================================================================
@@ -152,36 +220,71 @@ public class DppController {
 
     @GetMapping("/dppsByProductId/{productId}")
     public ResponseEntity<JsonNode> readDppByProductId(@PathVariable String productId) {
-        ObjectNode dpp = mapper.createObjectNode();
-        dpp.put("dppId", "example-dpp-id");
-        dpp.put("productId", productId);
-        return ResponseEntity.ok(dpp);
+        try {
+            String dppUrl = dppService.findDppUrlForProductId(productId);
+            if (dppUrl == null) {
+                return ResponseEntity.status(404).body(mapper.createObjectNode().put("error", "DPP für ProduktId nicht gefunden: " + productId));
+            }
+            ResponseEntity<ObjectNode> response = getDppByUrl(dppUrl);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+        } catch (Exception e) {
+            logger.error("Failed to read DPP by productId {}: {}", productId, e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
     }
 
     @GetMapping("/dppsByProductIdAndDate/{productId}")
     public ResponseEntity<JsonNode> readDppVersionByProductIdAndDate(
             @PathVariable String productId,
             @RequestParam String date) {
-        ObjectNode dpp = mapper.createObjectNode();
-        dpp.put("dppId", "example-dpp-id");
-        dpp.put("productId", productId);
-        dpp.put("versionDate", date);
-        return ResponseEntity.ok(dpp);
+        try {
+            // For now, return the current DPP with version info
+            String dppUrl = dppService.findDppUrlForProductId(productId);
+            if (dppUrl == null) {
+                return ResponseEntity.status(404).body(mapper.createObjectNode().put("error", "DPP für ProduktId nicht gefunden: " + productId));
+            }
+            ResponseEntity<ObjectNode> response = getDppByUrl(dppUrl);
+            if (response.getBody() != null) {
+                response.getBody().put("versionDate", date);
+            }
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+        } catch (Exception e) {
+            logger.error("Failed to read DPP version by productId {} and date {}: {}", productId, date, e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
     }
 
     @PostMapping("/dppsByProductIds")
     public ResponseEntity<JsonNode> readDppIdsByProductIds(@RequestBody JsonNode body,
                                                           @RequestParam(required = false) Integer limit,
                                                           @RequestParam(required = false) String cursor) {
-        ArrayNode dppIds = mapper.createArrayNode();
-        if (body.has("productIds")) {
-            for (JsonNode id : body.get("productIds")) {
-                dppIds.add("dpp-for-" + id.asText());
+        try {
+            ArrayNode dppIds = mapper.createArrayNode();
+            if (body.has("productIds") && body.get("productIds").isArray()) {
+                int count = 0;
+                int maxLimit = limit != null ? limit : Integer.MAX_VALUE;
+                for (JsonNode productIdNode : body.get("productIds")) {
+                    if (count >= maxLimit) break;
+                    String productId = productIdNode.asText();
+                    String dppUrl = dppService.findDppUrlForProductId(productId);
+                    if (dppUrl != null) {
+                        // Extract DPP ID from URL or use encoded productId
+                        String dppId = DppUtils.encodeIdentifier(dppUrl);
+                        dppIds.add(dppId);
+                        count++;
+                    }
+                }
             }
+            ObjectNode response = mapper.createObjectNode();
+            response.set("dppIds", dppIds);
+            if (cursor != null) {
+                response.put("cursor", cursor);
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to read DPP IDs by productIds: {}", e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
         }
-        ObjectNode response = mapper.createObjectNode();
-        response.set("dppIds", dppIds);
-        return ResponseEntity.ok(response);
     }
 
     // ================================================================================
@@ -190,9 +293,20 @@ public class DppController {
 
     @PostMapping("/registerDPP")
     public ResponseEntity<JsonNode> postNewDppToRegistry(@RequestBody JsonNode body) {
-        ObjectNode response = mapper.createObjectNode();
-        response.put("registryIdentifier", "registry-" + UUID.randomUUID());
-        return ResponseEntity.status(201).body(response);
+        try {
+            // Assume the body contains the shell data
+            String registry = DppConfig.REGISTRIES.values().iterator().next(); // Use first registry
+            JsonNode createdShell = registryService.createShell(registry, body);
+            if (createdShell == null) {
+                return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Failed to register DPP"));
+            }
+            ObjectNode response = mapper.createObjectNode();
+            response.put("registryIdentifier", registryService.extractShellId(createdShell));
+            return ResponseEntity.status(201).body(response);
+        } catch (Exception e) {
+            logger.error("Failed to register DPP: {}", e.getMessage());
+            return ResponseEntity.status(500).body(mapper.createObjectNode().put("error", "Internal server error"));
+        }
     }
 
     // ================================================================================
