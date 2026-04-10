@@ -15,8 +15,8 @@ public class RegistryService {
     private final RestClient restClient;
     private final ObjectMapper mapper;
 
-    public RegistryService(RestClient restClient, ObjectMapper mapper) {
-        this.restClient = restClient;
+    public RegistryService(ObjectMapper mapper) {
+        this.restClient = RestClient.create();
         this.mapper = mapper;
     }
 

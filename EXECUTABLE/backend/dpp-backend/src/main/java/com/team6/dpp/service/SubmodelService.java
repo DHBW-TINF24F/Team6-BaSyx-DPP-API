@@ -18,9 +18,9 @@ public class SubmodelService {
     private final WebClient webClient;
     private final ObjectMapper mapper;
 
-    public SubmodelService(RestClient restClient, WebClient webClient, ObjectMapper mapper) {
-        this.restClient = restClient;
-        this.webClient = webClient;
+    public SubmodelService(ObjectMapper mapper) {
+        this.restClient = RestClient.create();
+        this.webClient = WebClient.builder().build();
         this.mapper = mapper;
     }
 

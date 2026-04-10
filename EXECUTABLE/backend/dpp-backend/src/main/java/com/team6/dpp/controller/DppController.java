@@ -23,17 +23,14 @@ public class DppController {
     private static final Logger logger = LoggerFactory.getLogger(DppController.class);
 
     private final ObjectMapper mapper;
-    private final RestClient restClient;
-    private final WebClient webClient;
+    private final RestClient restClient = RestClient.create();
+    private final WebClient webClient = WebClient.builder().build();
     private final DppService dppService;
     private final RegistryService registryService;
     private final SubmodelService submodelService;
 
-    public DppController(ObjectMapper mapper, RestClient restClient, WebClient webClient,
-                         DppService dppService, RegistryService registryService, SubmodelService submodelService) {
+    public DppController(ObjectMapper mapper, DppService dppService, RegistryService registryService, SubmodelService submodelService) {
         this.mapper = mapper;
-        this.restClient = restClient;
-        this.webClient = webClient;
         this.dppService = dppService;
         this.registryService = registryService;
         this.submodelService = submodelService;
