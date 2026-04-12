@@ -18,7 +18,7 @@
 <br>
 <br>
 
-This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) standard, integrated into the Eclipse BaSyx framework.  
+This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) draft standard, integrated into the Eclipse BaSyx framework.  
 
 
 Our main task is to define an API according to the DIN standard and provide it through a backend service. As a potential release, we plan to offer a new DPP “BaSyx” Docker container. The core idea is to call existing BaSyx APIs-particularly the “Asset Administration Shell Repository API” and map their responses to the required DIN compliant output format.
