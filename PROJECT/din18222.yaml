@@ -2,16 +2,13 @@ openapi: 3.0.3
 info:
   title: "Digitaler Produktpass (DPP) API"
   description: |
-    OpenAPI-Spezifikation basierend auf dem Entwurf der Norm DIN EN 18222:2025.
+    OpenAPI-Spezifikation basierend auf dem Entwurf der Norm DIN EN 18222:2025 (https://www.dinmedia.de/de/norm-entwurf/din-en-18222/393321021).
     Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die Durchsuchbarkeit von Digitalen Produktpässen (DPP) im Einklang mit der European Sustainability Product Regulation (ESPR).
     Sie umfasst drei Hauptbereiche:
     1.  **Life Cycle API**: Hauptmethoden zum Erstellen, Lesen, Aktualisieren und Löschen von DPPs.
     2.  **Registry API**: Eine Methode zur Registrierung eines neuen DPP im zentralen Register der EU-Kommission.
     3.  **Fine-Granular API**: Optionale Methoden für den detaillierten Lese- und Schreibzugriff auf einzelne Datenelemente innerhalb eines DPP.
   version: "1.0.0"
-  contact:
-    name: "DIN/DKE Gemeinschaftsgremium Digitaler Produktpass"
-    email: "samarkhel-khan.yahya@din.de"
 
 servers:
   - url: https://srv01.noah-becker.de/uni/swe/api/
