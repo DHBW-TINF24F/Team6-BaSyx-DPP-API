@@ -1,8 +1,8 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
-
-
 ## Table of Contents
+- [Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration](#bigMeeting)
+- [Meeting 02.04.2026 - Quick Check](#quickCheck)
 - [Meeting 27.03.2026 - DPP Structure &Repo Integration](#dppIntegration)
 - [Meeting 20.03.2026 - "Back, but not end" - Backend Strategy](#backendStrategy)
 - [Meeting 13.03.2026 - New start](#newStart) 
@@ -18,6 +18,143 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+
+<a id="bigMeeting">
+
+## Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Definition of DPP and AAS IDs | Noah Becker | 15 min|
+| 2 |  Backend Status | Backend Team | 20 min |
+| 3 | Frontend -> Favorites | Nataliia Chubak | 5 min |
+| 4 | Editor | Frontend Team | 10 min |
+| 5 | Testing Plan | Manuel Lutz | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 02.04.2026  
+**Time:** 10:00 – 11:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Alignment of DPP and AAS identifiers (Product ID).
+2. Assessment of backend readiness and transition to the containerization phase.
+3. Coordination of frontend interaction with backend models to create the editor.
+
+### II. Implementation Status
+The structure of DPP IDs and Product IDs has been defined. AAS identifiers were discussed separately—it was decided to use Base64 decoding (instead of encoding) for proper processing.
+
+Successfully implemented packaging of AAS models and their invocation via API for local modules.
+
+Current status: the backend is running stably. The project is in its final stage; only the last steps remain before full completion.
+
+The need to create a Docker container for the backend was discussed.
+
+Frontend and UI:
+- The “Favorites” feature (Heart icons) has been implemented.
+
+The team discussed the details of the web page. Clarified the requirements for the editor’s visualization and determined exactly where the models will be processed.
+
+Currently, the frontend is awaiting the finished models from the backend for further integration into the editor.
+
+### III. To-Dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| “Favorites” feature (Heart icons/Favorites)| Nataliia Chubak | 10.04.2026 | 
+| Begin testing the backend and DPP calls | Manuel Lutz | 17.04.2026 |
+| Schedule a meeting with Mr. Rentschler| Nataliia Chubak | 17.04.2026 |
+| Integrate models into the editor (after receiving data from the backend) | Frontend Team | 17.04.2026 |
+||||
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 17.04.2026
+
+---
+
+<a id="quickCheck">
+
+## Meeting 02.04.2026 - Quick Check
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Health-Endpoint Verification| Backend Team  | 10 min|
+| 2 |  Listing Logic for AAS | Backend Team | 5 min |
+| 3 | DIN-Norm Prototyping (/dpp) | Backend Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 02.04.2026  
+**Time:** 12:45 – 13:10
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz
+
+---
+
+### I. Objectives
+Defining and testing the initial API structure to ensure that the backend is accessible to the frontend.
+
+### II. Implementation Status
+The backend team presented the current status of the REST API. The following endpoints are registered in the system:
+
+- /api/v1/health * Status: Functional.
+
+Purpose: Serves as a health check to ensure that the API is active and can accept requests (“liveness probe”).
+
+- /api/v1/dpp/list * Status: Under review.
+
+Purpose: This endpoint returns a list of currently registered Asset Administration Shells (AAS). It is still being verified whether the filtering of the shells has been fully optimized on the server side.
+
+- /dpp/{productId} * Status: Prototype / Shell.
+
+Purpose: This is the central entry point in accordance with the DIN standard.
+
+Details: The basic structure is already in place but is not yet 100% complete. The logic for aggregating data from the submodel elements is currently being refined.
+
+### III. To-Dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| “Favorites” feature (Heart icons/Favorites)| Nataliia Chubak | 10.04.2026 | 
+| Finalization of the /dpp/{productId} logic (DIN-compliant) | Backend Team | 10.04.2026 |
+| Documentation of endpoints in Swagger/OpenAPI | Backend team | 15.04.2026 |
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 10.04.2026
+
+---
 
 <a id="dppIntegration">
 
