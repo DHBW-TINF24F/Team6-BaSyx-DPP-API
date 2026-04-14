@@ -46,7 +46,7 @@ public class DppController {
     /**
      * Health check endpoint returning service status and registry count
      */
-    @GetMapping("/api/v1/dpp/health")
+    @GetMapping("/health")
     public ResponseEntity<ObjectNode> health() {
         ObjectNode node = mapper.createObjectNode();
         node.put("status", "UP");
@@ -61,7 +61,7 @@ public class DppController {
     /**
      * Lists DPP shell IDs from configured registries with optional limit
      */
-    @GetMapping("/api/v1/dpp/list")
+    @GetMapping("/dpp/list")
     public ResponseEntity<ObjectNode> list(@RequestParam(defaultValue = "10") int limit) {
         ObjectNode response = mapper.createObjectNode();
         response.put("statusCode", 200);
@@ -493,7 +493,7 @@ public class DppController {
     /**
      * Fetches complete DPP (shell + submodels) directly from provided URL
      */
-    @GetMapping("/api/v1/dpp")
+    @GetMapping("/dpp")
     public ResponseEntity<ObjectNode> getDppByUrl(@RequestParam(required = false) String id) {
         // Require id parameter
         if (id == null || id.isBlank()) {
@@ -552,7 +552,7 @@ public class DppController {
     /**
      * Fetches submodel data by identifier
      */
-    @GetMapping("/api/v1/dpp/submodels/{identifier}")
+    @GetMapping("/dpp/submodels/{identifier}")
     public ResponseEntity<ObjectNode> getSubmodelByIdentifier(@PathVariable String identifier) {
         String decodedUrl = DppUtils.decodeIdentifier(identifier);
         if (decodedUrl == null || decodedUrl.isBlank()) {
