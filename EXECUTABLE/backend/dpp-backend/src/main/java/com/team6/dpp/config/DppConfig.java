@@ -7,7 +7,7 @@ public class DppConfig {
     // Configuration: Registry endpoints
     public static final Map<String, String> REGISTRIES = Map.of(
         "harting", "https://dpp40.harting.com:8081",
-        "local", "http://localhost:8081"
+        "local", "http://localhost:8080"
     );
 
     // Default DPP URL for /api/v1/dpp without id
