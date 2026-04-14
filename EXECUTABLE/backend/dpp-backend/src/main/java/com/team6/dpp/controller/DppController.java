@@ -317,7 +317,9 @@ public class DppController {
             if (localRegistry != null) {
                 JsonNode existingShell = registryService.fetchShell(localRegistry, aasId);
                 if (existingShell != null) {
-                    JsonNode updatedShell = registryService.updateShell(localRegistry, aasId, patch);
+                    // Ensure the patch has the correct identification
+                    ObjectNode patchWithId = ensureShellIdentification(patch, aasId);
+                    JsonNode updatedShell = registryService.updateShell(localRegistry, aasId, patchWithId);
                     if (updatedShell != null) {
                         ObjectNode dpp = mapper.createObjectNode();
                         dpp.put("dppId", dppId);
@@ -334,7 +336,9 @@ public class DppController {
                 if (registry.equals(localRegistry)) continue; // Skip local, already tried
                 JsonNode existingShell = registryService.fetchShell(registry, aasId);
                 if (existingShell != null) {
-                    JsonNode updatedShell = registryService.updateShell(registry, aasId, patch);
+                    // Ensure the patch has the correct identification
+                    ObjectNode patchWithId = ensureShellIdentification(patch, aasId);
+                    JsonNode updatedShell = registryService.updateShell(registry, aasId, patchWithId);
                     if (updatedShell != null) {
                         ObjectNode dpp = mapper.createObjectNode();
                         dpp.put("dppId", dppId);
@@ -591,5 +595,23 @@ public class DppController {
         error.put("statusCode", statusCode);
         error.put("error", errorMessage);
         return ResponseEntity.status(statusCode).body(error);
+    }
+
+    /**
+     * Ensures the shell patch has the correct identification
+     */
+    private ObjectNode ensureShellIdentification(JsonNode patch, String aasId) {
+        if (!patch.isObject()) {
+            throw new IllegalArgumentException("Patch must be a JSON object");
+        }
+        ObjectNode patchCopy = (ObjectNode) patch.deepCopy();
+        if (!patchCopy.has("identification")) {
+            ObjectNode identification = patchCopy.putObject("identification");
+            identification.put("id", aasId);
+        } else {
+            ObjectNode identification = (ObjectNode) patchCopy.get("identification");
+            identification.put("id", aasId);
+        }
+        return patchCopy;
     }
 }
