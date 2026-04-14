@@ -65,7 +65,7 @@ public class RegistryService {
      * Fetches a single shell by ID from registry
      */
     public JsonNode fetchShell(String registry, String shellId) {
-        String url = registry + "/shells/" + DppUtils.encode(shellId);
+        String url = registry + "/shells/" + shellId;
         try {
             logger.info("Fetching shell from: {}", url);
             return restClient.get()
@@ -101,7 +101,7 @@ public class RegistryService {
      * Updates an existing shell in the registry
      */
     public JsonNode updateShell(String registry, String shellId, JsonNode shellData) {
-        String url = registry + "/shells/" + DppUtils.encode(shellId);
+        String url = registry + "/shells/" + shellId;
         try {
             logger.info("Updating shell at: {}", url);
             return restClient.put()

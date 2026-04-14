@@ -298,6 +298,8 @@ public class DppController {
         }
     }
 
+    
+
     @PatchMapping("/dpps/{dppId}")
     public ResponseEntity<JsonNode> updateDppById(@PathVariable String dppId, @RequestBody JsonNode patch) {
         try {
@@ -315,9 +317,9 @@ public class DppController {
             // Try local registry first
             String localRegistry = DppConfig.REGISTRIES.get("local");
             if (localRegistry != null) {
-                JsonNode existingShell = registryService.fetchShell(localRegistry, aasId);
+                JsonNode existingShell = registryService.fetchShell(localRegistry, productId);
                 if (existingShell != null) {
-                    JsonNode updatedShell = registryService.updateShell(localRegistry, aasId, patch);
+                    JsonNode updatedShell = registryService.updateShell(localRegistry, productId, patch);
                     if (updatedShell != null) {
                         ObjectNode dpp = mapper.createObjectNode();
                         dpp.put("dppId", dppId);
