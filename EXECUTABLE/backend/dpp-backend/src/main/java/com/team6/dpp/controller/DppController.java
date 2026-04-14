@@ -495,9 +495,12 @@ public class DppController {
      */
     @GetMapping("/api/v1/dpp")
     public ResponseEntity<ObjectNode> getDppByUrl(@RequestParam(required = false) String id) {
-        // Use default URL when no id query param is provided
+        // Require id parameter
         if (id == null || id.isBlank()) {
-            id = DppConfig.DEFAULT_DPP_URL;
+            ObjectNode error = mapper.createObjectNode();
+            error.put("statusCode", 400);
+            error.put("error", "Parameter 'id' ist erforderlich und muss eine vollständige URL sein");
+            return ResponseEntity.badRequest().body(error);
         }
 
         // Validate URL format

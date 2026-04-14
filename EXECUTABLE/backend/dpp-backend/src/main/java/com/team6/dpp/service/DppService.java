@@ -58,9 +58,9 @@ public class DppService {
         }
 
         // Fallback: try direct URL construction
-        String hartingRegistry = DppConfig.REGISTRIES.get("harting");
-        if (hartingRegistry != null) {
-            return hartingRegistry + "/shells/" + DppUtils.encode(aasIdentifier);
+        if (!DppConfig.REGISTRIES.isEmpty()) {
+            String localRegistry = DppConfig.REGISTRIES.values().iterator().next();
+            return localRegistry + "/shells/" + DppUtils.encode(aasIdentifier);
         }
 
         return null;
