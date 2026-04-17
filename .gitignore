@@ -1,3 +1,47 @@
-./SOURCE/node_modules/
-.DS_Store
+# Maven / Java Build Artefakte (NICHT committen!)
+target/
+*.jar
+*.war
+*.class
+*.class-shaded
+*.log
+
+# Maven Wrapper (optional, wenn .mvn/ da ist)
+.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# Node.js (aus SOURCE/node_modules/)
+**/node_modules/
+**/npm-debug.log*
+
+# Environment & Secrets
 .env
+*.env
+application-local*.yml
+application-local*.properties
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS-spezifisch
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporär
+tmp/
+temp/
+*.tmp
+*.bak
+*~
+
+# Git
+.gitignore
