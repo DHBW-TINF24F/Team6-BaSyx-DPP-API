@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "dpp-repo") // Maps this class to the 'users' collection
+@Document(collection = "dpp-repo")
 public class MongoDppInit {
     @Id
     private String dppID;
