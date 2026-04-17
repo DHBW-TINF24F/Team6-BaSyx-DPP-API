@@ -3,13 +3,16 @@
 
 ## Quick Start
 
+1. start.sh ausführen um basyx environment zu starten
+1. local Development instructions
+
 ### Local Development
 ```bash
 mvn clean package
 java -jar target/dpp-backend-0.0.1-SNAPSHOT.jar
 ```
 
-### Docker
+### Docker ?!
 ```bash
 # Build
 docker build -t dpp-backend .
@@ -20,7 +23,7 @@ docker run --rm -p 8081:8080 dpp-backend
 ```
 | Status | ID       | Name                                   | Beschreibung                                      | Akzeptanzkriterium                                   | Curl Befehl | Call |
 |--------|----------|----------------------------------------|--------------------------------------------------|-----------------------------------------------------|-------------|------|
-| ✅ | FR-BE-01 | Erstellung eines DPP                   | Neues DPP validieren und speichern               | DPP-Submodel ist in AAS vorhanden                   | `curl -X POST "http://api.com/dpps" -H "Content-Type: application/json" -d '{ "shell": { "id": "urn:uuid:7e51f712-429a-419a-9e8c-8f43c393850b", "dpps": [ { "productId": "PID", "version": "1.0.0", "submodels": [ { "name": "CarbonFootPrint", "version": "1.2.0", "reference": "urn:submodel:cfp:001" }, { "name": "DigitalNamePlate", "version": "1.0.1", "reference": "urn:submodel:dnp:002" } ] } ] } }'` | `POST /dpps` |
+| ✅ | FR-BE-01 | Erstellung eines DPP                   | Neues DPP validieren und speichern               | DPP-Submodel ist in AAS vorhanden                   | `curl -X POST "http://api.com/dpps" -H "Content-Type: application/json" -d '{ "shell": { "id": "urn:uuid:7e51f712-429a-419a-9e8c-8f43c393850b", "dpps": [ { "productId": "PID", "version": "1.0.0"} }'` | `POST /dpps` |
 | ✅ | FR-BE-02 | Abrufen eines DPP per ID               | DPP anhand dppId abrufen                         | Vollständige Daten liegen vor                       | `curl -X GET "http://api.com/dpps/{dppId}"` | `GET /dpps/{dppId}` |
 | ✅ | FR-BE-03 | Updaten eines DPP per ID               | DPP aktualisieren                                | Daten sind aktualisiert gespeichert                 | `curl -X PUT "http://api.com/dpps/{dppId}" -H "Content-Type: application/json" -d '{ "version": "{input}", "submodels": [ {"name": "{input}", "version": "{input}", "reference": "{input}"}, {"name": "{input}", "version": "{input}", "reference": "{input}"} ] }'` | `PUT /dpps/{dppId}` |
 | ✅ | FR-BE-04 | Löschen eines DPP per ID               | DPP löschen                                      | DPP ist nicht mehr auffindbar                       | `curl -X DELETE http://api.com/dpps/{dppId}` | `DELETE /dpps/{dppId}` |
