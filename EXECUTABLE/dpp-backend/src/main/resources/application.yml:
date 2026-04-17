@@ -4,12 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      host: 127.0.0.1
-      port: 27017
       database: aas-env
-      username: mongoAdmin
-      password: mongoPassword
-      authentication-database: admin
 
 management:
   endpoints:
