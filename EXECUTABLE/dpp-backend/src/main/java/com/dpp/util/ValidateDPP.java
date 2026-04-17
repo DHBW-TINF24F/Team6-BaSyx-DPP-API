@@ -25,23 +25,13 @@ public class ValidateDPP {
 
         // 3. Validate the first dpp entry structure
         JsonNode firstDpp = dppsArray.get(0);
-        String[] requiredDppFields = {"productId", "version", "submodels"};
+        String[] requiredDppFields = {"productId", "version"};
         
         for (String field : requiredDppFields) {
             if (!firstDpp.has(field)) {
                 return false;
             }
         }
-
-        // 4. Validate Submodels (Check for at least one specific submodel or general structure)
-        JsonNode submodels = firstDpp.path("submodels");
-        if (submodels.isArray() && !submodels.isEmpty()) {
-            JsonNode firstSubmodel = submodels.get(0);
-            if (!firstSubmodel.has("name") || !firstSubmodel.has("version")) {
-                return false;
-            }
-        }
-
         // Success logic here
         return true;
     }

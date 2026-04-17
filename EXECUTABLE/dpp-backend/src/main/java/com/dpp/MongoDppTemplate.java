@@ -73,6 +73,11 @@ public class MongoDppTemplate {
         private String name;
 
         public Submodels() {}
+        public Submodels(String path, String name, String version) {
+            this.reference = path;
+            this.version = version;
+            this.name = name;
+        }
 
         public String getReference() { return reference; }
         public void setReference(String reference) { this.reference = reference; }
