@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.dpp.util.ValidateDPP;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.client.result.UpdateResult;
 
 @RestController
 @RequestMapping
@@ -233,6 +235,38 @@ public class APIController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
+    @DeleteMapping("/dpps/{dppId}")
+public ResponseEntity<ObjectNode> deleteDppEntry(@PathVariable String dppId) {
+    ObjectNode response = mapper.createObjectNode();
+
+    try {
+        // 1. Define the query to find the shell containing the specific dppId [cite: 154]
+        // Note: We use "dpps._id" if your dppId is marked with @Id 
+        Query query = new Query(Criteria.where("dpps._id").is(dppId));
+
+        // 2. Define the update logic using $pull to remove the object from the array 
+        Update update = new Update().pull("dpps", new org.bson.Document("_id", dppId));
+
+        // 3. Execute the update [cite: 150]
+        UpdateResult result = mongoTemplate.updateFirst(query, update, "dpp-repo");
+
+        if (result.getModifiedCount() == 0) {
+            response.put("status", "failure");
+            response.put("message", "No entry found to delete");
+            return ResponseEntity.status(404).body(response);
+        }
+
+        response.put("status", "success");
+        response.put("message", "DPP entry deleted successfully");
+        return ResponseEntity.ok(response);
+
+    } catch (Exception e) {
+        response.put("status", "error");
+        response.put("message", e.getMessage());
+        return ResponseEntity.status(500).body(response);
+    }
+}
 
 
 }
