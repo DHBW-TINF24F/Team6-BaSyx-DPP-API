@@ -20,7 +20,7 @@ Server runs on [http://localhost:8080](http://localhost:8080) by default.
 ---
 
 ## API Status Checklist
-[X] **POST /dpps** – Create a new DPP (works, creates shell in registry).  
+- [X] **POST /dpps** – Create a new DPP (works, creates shell in registry).  
 [X] **GET /dpps/{dppId}** – Retrieve a DPP (parses dppId, searches across registries).  
 [X] **PATCH /dpps/{dppId}** – Update a DPP (implemented, but issue reported: DPP ID not found).  
 [X] **DELETE /dpps/{dppId}** – Delete a DPP (removes shell from registry).  
