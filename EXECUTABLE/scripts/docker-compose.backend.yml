@@ -65,6 +65,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongoAdmin
       MONGO_INITDB_ROOT_PASSWORD: mongoPassword
+    ports:
+      - "27017:27017"
     restart: always
     healthcheck:
       test: mongo
