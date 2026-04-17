@@ -1,11 +1,6 @@
 server:
   port: 8080
 
-spring:
-  data:
-    mongodb:
-      database: aas-env
-
 management:
   endpoints:
     web:
