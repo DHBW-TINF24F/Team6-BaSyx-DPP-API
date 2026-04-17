@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "dpp-repo")
 public class MongoDppInit {
     @Id
-    private String dppID;
-    private String productID;
+    private String dppId;
+    private String productId;
     private Instant createdAt;
 
     // 1.0.1
@@ -22,19 +22,19 @@ public class MongoDppInit {
 
        
     public String getDppID() {
-        return dppID;
+        return dppId;
     }
 
     public void setDppID(String dppID) {
-        this.dppID = dppID;
+        this.dppId = dppID;
     }
 
     public String getProductID() {
-        return productID;
+        return productId;
     }
 
     public void setProductID(String productID) {
-        this.productID = productID;
+        this.productId = productID;
     }
 
     public Instant getCreatedAt() {
@@ -62,21 +62,25 @@ public class MongoDppInit {
     }
 
     public static class Submodels {
-        private String aasIdentifier;
+        private String reference;
+        private String version;
         private String name;
 
         // Standard constructors
         public Submodels() {}
 
-        public Submodels(String aasIdentifier, String name) {
-            this.aasIdentifier = aasIdentifier;
+        public Submodels(String aasIdentifier, String name, String version) {
+            this.reference = aasIdentifier;
             this.name = name;
+            this.version = version;
         }
 
         // REQUIRED: Getters and Setters
-        public String getAasIdentifier() { return aasIdentifier; }
-        public void setAasIdentifier(String aasIdentifier) { this.aasIdentifier = aasIdentifier; }
+        public String getReference() { return reference; }
+        public void setReference(String aasIdentifier) { this.reference = aasIdentifier; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
+        public String getVersion() {return this.version;}
+        public void setVersion(String version) {this.version = version;}
     }
 }

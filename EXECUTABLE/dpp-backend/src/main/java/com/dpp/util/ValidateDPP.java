@@ -9,7 +9,7 @@ public class ValidateDPP {
     /*
     maybe return an error message later?
      */
-    public static boolean validate(JsonNode dpp) {
+    public static boolean validateJsonTillFirstEntry(JsonNode dpp) {
 
         // 1. Check top-level 'shell' and 'id'
         if (!dpp.has("shell") || !dpp.get("shell").has("id")) {

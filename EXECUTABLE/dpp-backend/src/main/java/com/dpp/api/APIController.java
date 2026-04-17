@@ -2,16 +2,18 @@ package com.dpp.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.reactive.function.client.WebClient;
 
+import com.dpp.MongoDppInit;
 import com.dpp.util.ValidateDPP;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,11 +26,15 @@ public class APIController {
     private static final Logger logger = LoggerFactory.getLogger(APIController.class);
 
     private final ObjectMapper mapper;
-    private final RestClient restClient = RestClient.create();
-    private final WebClient webClient = WebClient.builder().build();
+    private final MongoTemplate mongoTemplate; // Using MongoTemplate for Upsert logic
 
-    public APIController(ObjectMapper mapper) {
+    /**
+     * Constructor injection for the ObjectMapper and MongoTemplate.
+     * Spring Boot automatically provides these beans.
+     */
+    public APIController(ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.mapper = mapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @GetMapping("/health")
@@ -38,79 +44,53 @@ public class APIController {
         return ResponseEntity.ok(node);
     }
 
-    /*
-     * 
-     * insert the provided dpp in to the mongoDB
-     * 
-     * 1. verify dpp structure
-     * 2. connec to db
-     * 3. insert in to db
-     * 
-     * JSON Format:
-     * 
-     *shell: {
-     *          id : "<global asset id>",
-     *          dpps: [
-     *                  {
-     *                      dppId : "<productId + timestamp>",
-     *                      productId: "<aas Identifier>",
-     *                      createdAt: time-stamp,
-     *                      version : "<x.x.x>",
-     *                      submodels: [
-     *                                  {
-     *                                      name: "CarbonFootPrint",
-     *                                      version: "<x.x.x>"
-     *                                  // can be NULL if not exists
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     * *                                  {
-     *                                      name: "DigitalNamePlate",
-     *                                      version: "<x.x.x>"
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     * *                                  {
-     *                                      name: "TechnicalData",
-     *                                      version: "<x.x.x>"
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     * *                                  {
-     *                                      name: "Condition",
-     *                                      version: "<x.x.x>"
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     * *                                  {
-     *                                      name: "Composition",
-     *                                      version: "<x.x.x>"
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     * *                                  {
-     *                                      name: "Circularity",
-     *                                      version: "<x.x.x>"
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     * *                                  {
-     *                                      name: "HandOverDocumentation",
-     *                                      version: "<x.x.x>"
-     *                                      reference: "<submodel identifier>"
-     *                                  },
-     *                                  ]
-     *                  }
-     *                  ]
-     * }
-     * }
-     * 
+    /**
+     * Processes a DPP request.
+     * 1. Extracts the Shell ID.
+     * 2. Finds the shell in MongoDB or prepares to create it.
+     * 3. Appends the provided DPP entry to the 'dpps' array.
      */
     @PostMapping("/dpps")
     public ResponseEntity<ObjectNode> createDpp(@RequestBody JsonNode dpp) {
         ObjectNode response = mapper.createObjectNode();
-        if (!ValidateDPP.validate(dpp)) {
-            return ResponseEntity.badRequest().body(response.put("error", "invalid Dpp"));
+
+        // Validate the structure using the utility class
+        if (!ValidateDPP.validateJsonTillFirstEntry(dpp)) {
+            logger.error("Validation failed for incoming DPP");
+            return ResponseEntity.badRequest().body(response.put("error", "invalid Dpp structure"));
         }
-        
 
-        response.put("status", "success");
-        response.put("message", "DPP format is valid");
-        return ResponseEntity.status(201).body(response);
+        try {
+            // 1. Extract the Shell ID to use as the Document ID (_id)
+            String shellId = dpp.get("shell").get("id").asText();
+
+            // 2. Extract the first DPP entry from the incoming JSON array
+            JsonNode firstDppEntry = dpp.get("shell").get("dpps").get(0);
+            
+            // Map the JsonNode to our MongoDppInit POJO
+            MongoDppInit dppContent = mapper.treeToValue(firstDppEntry, MongoDppInit.class);
+
+            // 3. Define the query to find the Shell by its ID
+            Query query = new Query(Criteria.where("_id").is(shellId));
+
+            // 4. Define the update logic: 
+            // $push adds the entry to the 'dpps' array.
+            // If the document or the array doesn't exist, MongoDB creates them.
+            Update update = new Update().push("dpps", dppContent);
+
+            // 5. Execute Upsert: Find and Update, or Insert if not found
+            mongoTemplate.upsert(query, update, "dpp-repo");
+
+            logger.info("Successfully updated/created shell ID: {}", shellId);
+            
+            response.put("status", "success");
+            response.put("message", "DPP content appended to shell ID: " + shellId);
+            return ResponseEntity.status(201).body(response);
+
+        } catch (Exception e) {
+            logger.error("Error during MongoDB operation", e);
+            response.put("error", "Internal Server Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
-
 }
