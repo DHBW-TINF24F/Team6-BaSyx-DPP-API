@@ -109,43 +109,86 @@ public class APIController {
     }
 
     @GetMapping("/dpps/{dppId}")
-public ResponseEntity<ObjectNode> readDppById(@PathVariable String dppId) {
-    ObjectNode response = mapper.createObjectNode();
+    public ResponseEntity<ObjectNode> readDppById(@PathVariable String dppId) {
+        ObjectNode response = mapper.createObjectNode();
 
-    try {
-        Aggregation aggregation = Aggregation.newAggregation(
-            // We match against _id because your dppId is marked with @Id 
-            Aggregation.match(Criteria.where("dpps._id").is(dppId)),
-            Aggregation.unwind("dpps"),
-            Aggregation.match(Criteria.where("dpps._id").is(dppId)),
-            Aggregation.replaceRoot("dpps")
-        );
+        try {
+            Aggregation aggregation = Aggregation.newAggregation(
+                    // We match against _id because your dppId is marked with @Id
+                    Aggregation.match(Criteria.where("dpps._id").is(dppId)),
+                    Aggregation.unwind("dpps"),
+                    Aggregation.match(Criteria.where("dpps._id").is(dppId)),
+                    Aggregation.replaceRoot("dpps"));
 
-        List<org.bson.Document> results = mongoTemplate.aggregate(
-            aggregation, "dpp-repo", org.bson.Document.class
-        ).getMappedResults();
+            List<org.bson.Document> results = mongoTemplate.aggregate(
+                    aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
 
-        if (results.isEmpty()) {
-            response.put("status", "failure");
-            response.put("message", "DPP not found");
-            return ResponseEntity.status(404).body(response);
+            if (results.isEmpty()) {
+                response.put("status", "failure");
+                response.put("message", "DPP not found");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Use the converter to transform the BSON Document into your POJO [cite: 136]
+            MongoDppTemplate dpp = mongoTemplate.getConverter().read(
+                    MongoDppTemplate.class,
+                    results.get(0));
+
+            response.put("status", "success");
+            response.putPOJO("dpp", dpp);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error retrieving DPP: {}", e.getMessage());
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
-
-        // Use the converter to transform the BSON Document into your POJO [cite: 136]
-        MongoDppTemplate dpp = mongoTemplate.getConverter().read(
-            MongoDppTemplate.class, 
-            results.get(0)
-        );
-
-        response.put("status", "success");
-        response.putPOJO("dpp", dpp);
-        return ResponseEntity.ok(response);
-
-    } catch (Exception e) {
-        logger.error("Error retrieving DPP: {}", e.getMessage());
-        response.put("status", "error");
-        response.put("message", e.getMessage());
-        return ResponseEntity.status(500).body(response);
     }
-}
+
+
+    /*
+        find all dpps matchin a productId and return the last result.
+        WARNING: assumption is that the latest entry has the newest version
+     */
+      @GetMapping("/dppsByProductId/{productId}")
+    public ResponseEntity<ObjectNode> readDppByProductId(@PathVariable String productId) {
+        ObjectNode response = mapper.createObjectNode();
+
+        try {
+            Aggregation aggregation = Aggregation.newAggregation(
+                    // We match against _id because your dppId is marked with @Id
+                    Aggregation.match(Criteria.where("dpps.productId").is(productId)),
+                    Aggregation.unwind("dpps"),
+                    Aggregation.match(Criteria.where("dpps.productId").is(productId)),
+                    Aggregation.replaceRoot("dpps"));
+
+            List<org.bson.Document> results = mongoTemplate.aggregate(
+                    aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
+
+            if (results.isEmpty()) {
+                response.put("status", "failure");
+                response.put("message", "DPP not found");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Use the converter to transform the BSON Document into your POJO [cite: 136]
+            MongoDppTemplate dpp = mongoTemplate.getConverter().read(
+                    MongoDppTemplate.class,
+                    results.get(results.size()-1));
+
+            response.put("status", "success");
+            response.putPOJO("dpp", dpp);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error retrieving DPP: {}", e.getMessage());
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    
+
 }
