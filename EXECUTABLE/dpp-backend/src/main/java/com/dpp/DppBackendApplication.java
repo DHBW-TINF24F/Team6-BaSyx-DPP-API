@@ -28,13 +28,6 @@ public class DppBackendApplication {
                 System.out.println("Collection dpp-repo created manually.");
             }
 
-            MongoDppInit a = new MongoDppInit();
-            a.setDppID("test1");
-            a.setProductID("prod-123");
-            a.setCreatedAt(Instant.now());
-
-            mongoInterface.insert(a);
-
             System.out.println("Collection exists after: " + mongoTemplate.collectionExists("dpp-repo"));
             System.out.println("Document count: " + mongoInterface.count());
             System.out.println("Successfully saved record to MongoDB!");
