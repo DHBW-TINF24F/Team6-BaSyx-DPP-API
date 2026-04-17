@@ -237,7 +237,7 @@ public class APIController {
     }
 
     @DeleteMapping("/dpps/{dppId}")
-public ResponseEntity<ObjectNode> deleteDppEntry(@PathVariable String dppId) {
+public ResponseEntity<ObjectNode> deleteDpp(@PathVariable String dppId) {
     ObjectNode response = mapper.createObjectNode();
 
     try {
