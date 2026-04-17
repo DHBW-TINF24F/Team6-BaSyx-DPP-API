@@ -1,47 +1,53 @@
 package com.dpp;
 
-
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Document(collection = "dpp-repo")
-public class MongoDppInit {
+public class MongoDppTemplate {
     @Id
+    @Field("dppId")
+    @JsonProperty("dppId")
     private String dppId;
-    private String productId;
-    private Instant createdAt;
 
-    // 1.0.1
+    @JsonProperty("productId")
+    private String productId;
+
+    @JsonProperty("createdAt")
+    private String createdAt;
+
+    @JsonProperty("version")
     private String version;
 
+    @JsonProperty("submodels")
     private List<Submodels> submodels = new ArrayList<>();
 
-       
-    public String getDppID() {
+    // Corrected Getters and Setters to match field name "dppId" [cite: 211, 212]
+    public String getDppId() {
         return dppId;
     }
 
-    public void setDppID(String dppID) {
-        this.dppId = dppID;
+    public void setDppId(String dppId) {
+        this.dppId = dppId;
     }
 
-    public String getProductID() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductID(String productID) {
-        this.productId = productID;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
-    public Instant getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -66,21 +72,13 @@ public class MongoDppInit {
         private String version;
         private String name;
 
-        // Standard constructors
         public Submodels() {}
 
-        public Submodels(String aasIdentifier, String name, String version) {
-            this.reference = aasIdentifier;
-            this.name = name;
-            this.version = version;
-        }
-
-        // REQUIRED: Getters and Setters
         public String getReference() { return reference; }
-        public void setReference(String aasIdentifier) { this.reference = aasIdentifier; }
+        public void setReference(String reference) { this.reference = reference; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
-        public String getVersion() {return this.version;}
-        public void setVersion(String version) {this.version = version;}
+        public String getVersion() { return version; }
+        public void setVersion(String version) { this.version = version; }
     }
 }

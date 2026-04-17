@@ -25,7 +25,7 @@ public class ValidateDPP {
 
         // 3. Validate the first dpp entry structure
         JsonNode firstDpp = dppsArray.get(0);
-        String[] requiredDppFields = {"dppId", "productId", "createdAt", "version", "submodels"};
+        String[] requiredDppFields = {"productId", "version", "submodels"};
         
         for (String field : requiredDppFields) {
             if (!firstDpp.has(field)) {
