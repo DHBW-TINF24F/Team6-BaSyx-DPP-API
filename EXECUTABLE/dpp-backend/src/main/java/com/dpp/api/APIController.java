@@ -74,7 +74,7 @@ public class APIController {
             JsonNode dppEntry = dpp.get("shell").get("dpps").get(0);
 
             // get The current time construct the dppId
-            String timeStamp = Instant.now().toString();
+            String timeStamp = String.valueOf(Instant.now().toEpochMilli());
             String dppId = dppEntry.get("productId").asText() + timeStamp.toString();
 
             // Map the JsonNode to our MongoDppInit POJO
@@ -189,6 +189,50 @@ public class APIController {
         }
     }
 
+ 
     
+    @GetMapping("/dppsByProductIdAndDate/{productId}")
+    public ResponseEntity<ObjectNode> readDppByProductIdAndDate(
+        @PathVariable String productId,
+        @RequestParam String timeStamp
+    ) {
+        ObjectNode response = mapper.createObjectNode();
+
+        try {
+            Aggregation aggregation = Aggregation.newAggregation(
+                    // We match against _id because your dppId is marked with @Id
+                    Aggregation.match(Criteria.where("dpps.productId").is(productId)
+                                        .and("dpps.createdAt").is(timeStamp)),
+                    Aggregation.unwind("dpps"),
+                    Aggregation.match(Criteria.where("dpps.productId").is(productId)
+                                        .and("dpps.createdAt").is(timeStamp)),
+                    Aggregation.replaceRoot("dpps"));
+
+            List<org.bson.Document> results = mongoTemplate.aggregate(
+                    aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
+
+            if (results.isEmpty()) {
+                response.put("status", "failure");
+                response.put("message", "DPP not found");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Use the converter to transform the BSON Document into your POJO [cite: 136]
+            MongoDppTemplate dpp = mongoTemplate.getConverter().read(
+                    MongoDppTemplate.class,
+                    results.get(0));
+
+            response.put("status", "success");
+            response.putPOJO("dpp", dpp);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error retrieving DPP: {}", e.getMessage());
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
 
 }
