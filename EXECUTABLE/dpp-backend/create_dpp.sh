@@ -1,7 +1,3 @@
-printf "-----------------------------------\n"
-printf " Create a DPP\n"
-printf "-----------------------------------\n"
-
 curl -X POST http://localhost:8080/dpps \
 -H "Content-Type: application/json" \
 -d '{
