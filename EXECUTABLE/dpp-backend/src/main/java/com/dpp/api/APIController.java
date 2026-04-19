@@ -301,6 +301,29 @@ public class APIController {
         return ResponseEntity.status(200).body(response);
     }
 
+
+    @GetMapping("/dpps/{dppId}/elements/{elementPath}")
+    public ResponseEntity<ObjectNode> readElement(
+            @PathVariable String dppId,
+            @PathVariable String elementPath) {
+        ObjectNode response = mapper.createObjectNode();
+
+        response.put("status", "git es noch ned!!!");
+        return ResponseEntity.status(501).body(response);
+    }
+
+    @PatchMapping("/dpps/{dppId}/collections/{elementId}")
+    public ResponseEntity<ObjectNode> updateElement(
+            @PathVariable String dppId,
+            @PathVariable String elementId,
+            @RequestBody JsonNode body) {
+        ObjectNode response = mapper.createObjectNode();
+
+        response.put("status", "git es noch ned!!!");
+        return ResponseEntity.status(501).body(response);
+            }
+
+
     @GetMapping("/dppsByProductId/{productId}")
     public ResponseEntity<ObjectNode> readDppByProductId(@PathVariable String productId) {
         ObjectNode response = mapper.createObjectNode();
