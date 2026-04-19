@@ -13,9 +13,11 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -96,19 +98,19 @@ public class APIController {
             List<MongoDppTemplate.Submodels> filteredSubmodels = new ArrayList<>();
             try {
                 String externalUrl = "http://localhost:8081/shells/" + aasIdentifier + "/submodel-refs";
-                
+
                 // Using RestClient (Blocking/Synchronous)
                 JsonNode externalPayload = restClient.get()
-                    .uri(externalUrl)
-                    .retrieve()
-                    .body(JsonNode.class);
-                
+                        .uri(externalUrl)
+                        .retrieve()
+                        .body(JsonNode.class);
+
                 logger.info("External API call successful for AAS: {}", aasIdentifier);
-                
+
                 if (externalPayload != null && externalPayload.has("result")) {
                     filteredSubmodels = APIUtilsDPP.extractAndFilterSubmodels(externalPayload.get("result"));
                 }
-                
+
             } catch (Exception apiEx) {
                 logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
             }
@@ -146,7 +148,6 @@ public class APIController {
         }
     }
 
-
     @GetMapping("/dpps/{dppId}")
     public ResponseEntity<ObjectNode> readDppById(@PathVariable String dppId) {
         ObjectNode response = mapper.createObjectNode();
@@ -157,8 +158,6 @@ public class APIController {
                     Aggregation.unwind("dpps"),
                     Aggregation.match(Criteria.where("dpps._id").is(dppId)),
                     Aggregation.replaceRoot("dpps"));
-
-
 
             List<org.bson.Document> results = mongoTemplate.aggregate(
                     aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
@@ -173,9 +172,7 @@ public class APIController {
                     MongoDppTemplate.class,
                     results.get(0));
 
-
             ObjectNode collctedSubmodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
-                
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
@@ -188,6 +185,120 @@ public class APIController {
             response.put("message", e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
+    }
+
+    /*
+     * ellementId -> submodelId
+     * 
+     * 1. get submodels from dpp
+     * 2. search every submodel for the ellementId
+     * 3. return all value of submodel
+     */
+
+    @GetMapping("/dpps/{dppId}/collections/{elementId}")
+    public ResponseEntity<ObjectNode> readElementCollection(
+            @PathVariable String dppId,
+            @PathVariable String elementId) {
+        ObjectNode response = mapper.createObjectNode();
+
+        elementId = Base64DPP.ensureEncoding(elementId);
+
+        try {
+
+            MongoDppTemplate dpp = APIUtilsDPP.getDppByAggregatoin(Aggregation.newAggregation(
+                    Aggregation.match(Criteria.where("dpps._id").is(dppId)),
+                    Aggregation.unwind("dpps"),
+                    Aggregation.match(Criteria.where("dpps._id").is(dppId)),
+                    Aggregation.replaceRoot("dpps")), mongoTemplate);
+
+            for (Submodels submodel : dpp.getSubmodels()) {
+                String submodelBase64 = Base64DPP.ensureEncoding(submodel.getReference());
+
+                if (submodelBase64.equals(elementId)) {
+
+                    try {
+                        String externalUrl = "http://localhost:8081/submodels/" + submodelBase64 + "/submodel-elements";
+
+                        // Using RestClient (Blocking/Synchronous)
+                        JsonNode externalPayload = restClient.get()
+                                .uri(externalUrl)
+                                .retrieve()
+                                .body(JsonNode.class);
+
+                        logger.info("External API call successful for submodel: {}", submodel);
+
+                        if (externalPayload != null && externalPayload.has("result")) {
+                            response.put("status", "success");
+                            response.putPOJO("payload", externalPayload.get("result"));
+                            return ResponseEntity.ok(response);
+                        }
+
+                    } catch (Exception apiEx) {
+                        logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
+                        response.put("status", "failure");
+                        return ResponseEntity.status(500).body(response);
+                    }
+
+                }
+            }
+            response.put("status", "failure");
+            return ResponseEntity.status(500).body(response);
+
+        } catch (Exception e) {
+            logger.error("Error retrieving DPP: {}", e.getMessage());
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    @PatchMapping("/dpps/{dppId}/collections/{elementId}")
+    public ResponseEntity<ObjectNode> updateDataElementCollection(
+            @PathVariable String dppId,
+            @PathVariable String elementId,
+            @RequestBody JsonNode body) {
+        ObjectNode response = mapper.createObjectNode();
+        elementId = Base64DPP.ensureEncoding(elementId);
+
+        try {
+            MongoDppTemplate dpp = APIUtilsDPP.getDppById(dppId, mongoTemplate);
+
+            for (Submodels submodel : dpp.getSubmodels()) {
+                String submodelBase64 = Base64DPP.ensureEncoding(submodel.getReference());
+                if (submodelBase64.equals(elementId)) {
+
+                    try {
+                        String externalUrl = "http://localhost:8081/submodels/" + submodelBase64 + "/$value";
+
+                        JsonNode externalPayload = restClient.patch()
+                                .uri(externalUrl)
+                                .contentType(MediaType.APPLICATION_JSON) // Specify JSON content type
+                                .body(body) // Pass the 'body' variable here
+                                .retrieve()
+                                .body(JsonNode.class);
+
+                        logger.info("External API call successful for submodel: {}", submodel);
+
+                        if (externalPayload != null && externalPayload.has("result")) {
+                            response.put("status", "success");
+                            return ResponseEntity.ok(response);
+                        }
+
+                    } catch (Exception apiEx) {
+                        logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
+                        response.put("status", "failure");
+                        return ResponseEntity.status(500).body(response);
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            response.put("status", "failure");
+            return ResponseEntity.status(500).body(response);
+        }
+        response.put("status", "success");
+        return ResponseEntity.status(200).body(response);
     }
 
     @GetMapping("/dppsByProductId/{productId}")
@@ -212,8 +323,8 @@ public class APIController {
 
             MongoDppTemplate dpp = mongoTemplate.getConverter().read(
                     MongoDppTemplate.class,
-                    results.get(results.size()-1));
-            
+                    results.get(results.size() - 1));
+
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
 
             response.put("status", "success");
@@ -228,21 +339,20 @@ public class APIController {
             return ResponseEntity.status(500).body(response);
         }
     }
-    
+
     @GetMapping("/dppsByProductIdAndDate/{productId}")
     public ResponseEntity<ObjectNode> readDppByProductIdAndDate(
-        @PathVariable String productId,
-        @RequestParam String timeStamp
-    ) {
+            @PathVariable String productId,
+            @RequestParam String timeStamp) {
         ObjectNode response = mapper.createObjectNode();
 
         try {
             Aggregation aggregation = Aggregation.newAggregation(
                     Aggregation.match(Criteria.where("dpps.productId").is(productId)
-                                        .and("dpps.createdAt").is(timeStamp)),
+                            .and("dpps.createdAt").is(timeStamp)),
                     Aggregation.unwind("dpps"),
                     Aggregation.match(Criteria.where("dpps.productId").is(productId)
-                                        .and("dpps.createdAt").is(timeStamp)),
+                            .and("dpps.createdAt").is(timeStamp)),
                     Aggregation.replaceRoot("dpps"));
 
             List<org.bson.Document> results = mongoTemplate.aggregate(
@@ -302,17 +412,16 @@ public class APIController {
 
         try {
             Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("dpps.productId").in(productIds)),
-                Aggregation.unwind("dpps"),
-                Aggregation.match(Criteria.where("dpps.productId").in(productIds)),
-                Aggregation.project()
-                    .and("dpps.productId").as("productId")
-                    .and("dpps._id").as("dppId")
-            );
+                    Aggregation.match(Criteria.where("dpps.productId").in(productIds)),
+                    Aggregation.unwind("dpps"),
+                    Aggregation.match(Criteria.where("dpps.productId").in(productIds)),
+                    Aggregation.project()
+                            .and("dpps.productId").as("productId")
+                            .and("dpps._id").as("dppId"));
 
             List<org.bson.Document> results = mongoTemplate
-                .aggregate(aggregation, "dpp-repo", org.bson.Document.class)
-                .getMappedResults();
+                    .aggregate(aggregation, "dpp-repo", org.bson.Document.class)
+                    .getMappedResults();
 
             Map<String, List<ObjectNode>> grouped = new HashMap<>();
             for (org.bson.Document doc : results) {
@@ -338,22 +447,20 @@ public class APIController {
 
     @PutMapping("/dpps/{dppId}")
     public ResponseEntity<ObjectNode> updateDpp(
-        @PathVariable String dppId,
-        @RequestBody JsonNode updateData
-    ) {
+            @PathVariable String dppId,
+            @RequestBody JsonNode updateData) {
         ObjectNode response = mapper.createObjectNode();
 
         try {
             Aggregation agg = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("dpps._id").is(dppId)),
-                Aggregation.unwind("dpps"),
-                Aggregation.match(Criteria.where("dpps._id").is(dppId)),
-                Aggregation.replaceRoot("dpps")
-            );
+                    Aggregation.match(Criteria.where("dpps._id").is(dppId)),
+                    Aggregation.unwind("dpps"),
+                    Aggregation.match(Criteria.where("dpps._id").is(dppId)),
+                    Aggregation.replaceRoot("dpps"));
 
             List<org.bson.Document> oldDppDoc = mongoTemplate
-                .aggregate(agg, "dpp-repo", org.bson.Document.class)
-                .getMappedResults();
+                    .aggregate(agg, "dpp-repo", org.bson.Document.class)
+                    .getMappedResults();
 
             if (oldDppDoc.isEmpty()) {
                 response.put("status", "failure");
@@ -366,10 +473,9 @@ public class APIController {
 
             Query shellQuery = new Query(Criteria.where("dpps._id").is(dppId));
             org.bson.Document shellDoc = mongoTemplate.findOne(
-                shellQuery,
-                org.bson.Document.class,
-                "dpp-repo"
-            );
+                    shellQuery,
+                    org.bson.Document.class,
+                    "dpp-repo");
 
             if (shellDoc == null) {
                 response.put("status", "failure");
@@ -395,9 +501,9 @@ public class APIController {
 
             if (updateData.has("submodels")) {
                 List<MongoDppTemplate.Submodels> submodels = mapper.convertValue(
-                    updateData.get("submodels"),
-                    new TypeReference<List<MongoDppTemplate.Submodels>>() {}
-                );
+                        updateData.get("submodels"),
+                        new TypeReference<List<MongoDppTemplate.Submodels>>() {
+                        });
                 newDpp.setSubmodels(submodels);
             } else {
                 newDpp.setSubmodels(null);
@@ -405,10 +511,9 @@ public class APIController {
 
             Update deleteUpdate = new Update().pull("dpps", new org.bson.Document("_id", dppId));
             UpdateResult deleteResult = mongoTemplate.updateFirst(
-                shellQuery,
-                deleteUpdate,
-                "dpp-repo"
-            );
+                    shellQuery,
+                    deleteUpdate,
+                    "dpp-repo");
 
             if (deleteResult.getModifiedCount() == 0) {
                 response.put("status", "warning");
@@ -418,10 +523,9 @@ public class APIController {
             Query insertQuery = new Query(Criteria.where("_id").is(shellId));
             Update insertUpdate = new Update().push("dpps", newDpp);
             UpdateResult insertResult = mongoTemplate.updateFirst(
-                insertQuery,
-                insertUpdate,
-                "dpp-repo"
-            );
+                    insertQuery,
+                    insertUpdate,
+                    "dpp-repo");
 
             if (insertResult.getModifiedCount() == 0) {
                 response.put("status", "failure");
@@ -441,4 +545,5 @@ public class APIController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
 }
