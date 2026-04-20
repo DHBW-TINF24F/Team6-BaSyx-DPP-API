@@ -301,6 +301,11 @@ public class APIController {
         return ResponseEntity.status(200).body(response);
     }
 
+    /*
+
+    submodel.data1.data2.Entry
+
+    get("alles bis .").get(alles bis .).
 
     @GetMapping("/dpps/{dppId}/elements/{elementPath}")
     public ResponseEntity<ObjectNode> readElement(
@@ -323,6 +328,7 @@ public class APIController {
         return ResponseEntity.status(501).body(response);
             }
 
+            */
 
     @GetMapping("/dppsByProductId/{productId}")
     public ResponseEntity<ObjectNode> readDppByProductId(@PathVariable String productId) {
