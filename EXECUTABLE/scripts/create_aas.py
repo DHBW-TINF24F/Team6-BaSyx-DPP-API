@@ -69,7 +69,7 @@ def main():
     # =========================================================================
     # SM 2: Handover Documentation
     # =========================================================================
-    sm2 = model.Submodel(id_=model.Identifier('https://team6.dpp/sm/handover_docs'), id_short="HandoverDocumentation")
+    sm2 = model.Submodel(id_=model.Identifier('https://team6.dpp/sm/handover_documentation'), id_short="HandoverDocumentation")
     
     sm2.submodel_element.add(model.Property(id_short="Manufacturer", value_type=model.datatypes.String, value="Team 6 Energy Corp."))
     sm2.submodel_element.add(model.Property(id_short="Customer", value_type=model.datatypes.String, value="Global Logistics SE"))
