@@ -20,6 +20,7 @@ services:
         condition: service_healthy
       mongo:
         condition: service_healthy
+  
   basyx-aas-registry:
     image: eclipsebasyx/aas-registry-log-mongodb:2.0.0-SNAPSHOT
     container_name: basyx-aas-registry
@@ -33,6 +34,7 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+  
   basyx-sm-registry:
     image: eclipsebasyx/submodel-registry-log-mongodb:2.0.0-SNAPSHOT
     container_name: basyx-sm-registry
@@ -46,6 +48,7 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+  
   basyx-aas-discovery:
     image: eclipsebasyx/aas-discovery:2.0.0-SNAPSHOT
     container_name: basyx-aas-discovery
@@ -59,15 +62,37 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+  
   mongo:
     image: mongo:5.0.10
     container_name: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongoAdmin
       MONGO_INITDB_ROOT_PASSWORD: mongoPassword
+    ports:
+      - "27017:27017"
     restart: always
     healthcheck:
       test: mongo
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # --- NEW BACKEND SERVICE ---
+  dpp-backend:
+    build: 
+      context: ../dpp-backend # Adjust this path to where your backend source folder is
+      dockerfile: Dockerfile
+    container_name: dpp-backend
+    ports:
+      - "8080:8080" # Maps container port 8080 to host port 8080
+    environment:
+      # Pass the correct Docker network URLs via environment variables
+      - SPRING_DATA_MONGODB_URI=mongodb://mongoAdmin:mongoPassword@mongo:27017/aas-env?authSource=admin
+      - EXTERNAL_AAS_API_URL=http://basyx-aas-env:8081
+    restart: on-failure
+    depends_on:
+      mongo:
+        condition: service_healthy
+      basyx-aas-env:
+        condition: service_started
