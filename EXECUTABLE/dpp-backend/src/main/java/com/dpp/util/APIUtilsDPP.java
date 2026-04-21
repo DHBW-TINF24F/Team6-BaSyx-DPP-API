@@ -62,7 +62,12 @@ public class APIUtilsDPP {
         for (Submodels submodel : dpp.getSubmodels()) {
 
             try {
-                String externalUrl = "http://localhost:8081/submodels/"
+                String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+if (externalApiBase == null || externalApiBase.isEmpty()) {
+    externalApiBase = "http://localhost:8081";
+}
+
+                String externalUrl = externalApiBase
                         + Base64DPP.encodeIdentifier(submodel.getReference()) + "/submodel-elements";
 
                 // Using RestClient (Blocking/Synchronous)

@@ -97,7 +97,12 @@ public class APIController {
 
             List<MongoDppTemplate.Submodels> filteredSubmodels = new ArrayList<>();
             try {
-                String externalUrl = "http://localhost:8081/shells/" + aasIdentifier + "/submodel-refs";
+                String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+if (externalApiBase == null || externalApiBase.isEmpty()) {
+    externalApiBase = "http://localhost:8081";
+}
+
+String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-refs";
 
                 // Using RestClient (Blocking/Synchronous)
                 JsonNode externalPayload = restClient.get()
@@ -217,7 +222,12 @@ public class APIController {
                 if (submodelBase64.equals(elementId)) {
 
                     try {
-                        String externalUrl = "http://localhost:8081/submodels/" + submodelBase64 + "/submodel-elements";
+                        String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+if (externalApiBase == null || externalApiBase.isEmpty()) {
+    externalApiBase = "http://localhost:8081";
+}
+
+String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
 
                         // Using RestClient (Blocking/Synchronous)
                         JsonNode externalPayload = restClient.get()
@@ -268,7 +278,12 @@ public class APIController {
                 if (submodelBase64.equals(elementId)) {
 
                     try {
-                        String externalUrl = "http://localhost:8081/submodels/" + submodelBase64 + "/$value";
+                        String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+if (externalApiBase == null || externalApiBase.isEmpty()) {
+    externalApiBase = "http://localhost:8081";
+}
+
+String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
 
                         JsonNode externalPayload = restClient.patch()
                                 .uri(externalUrl)

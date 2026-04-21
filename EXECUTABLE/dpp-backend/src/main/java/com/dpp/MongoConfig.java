@@ -17,13 +17,15 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        ConnectionString connectionString =
-                new ConnectionString("mongodb://mongoAdmin:mongoPassword@127.0.0.1:27017/aas-env?authSource=admin");
+        String mongoUri = System.getenv("SPRING_DATA_MONGODB_URI");
+        if (mongoUri == null || mongoUri.isEmpty()) {
+            mongoUri = "mongodb://mongoAdmin:mongoPassword@127.0.0.1:27017/aas-env?authSource=admin";
+        }
 
+        ConnectionString connectionString = new ConnectionString(mongoUri);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
-
         return MongoClients.create(settings);
     }
 }
