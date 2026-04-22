@@ -36,15 +36,10 @@
 name: Build and Deploy Backend
  
 on:
+  workflow_dispatch:
   push:
     branches:
       - feat/server-deploy      # ← temporary; change to main before going to production
-  workflow_dispatch:
-    inputs:
-      reason:
-        description: "Reason for manual deployment"
-        required: false
-        default: "Manual trigger"
  
 env:
   REGISTRY: ghcr.io
