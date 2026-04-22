@@ -34,7 +34,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 name: Build and Deploy Backend
-
+ 
 on:
   push:
     branches:
@@ -45,11 +45,11 @@ on:
         description: "Reason for manual deployment"
         required: false
         default: "Manual trigger"
-
+ 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
+ 
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB 1 — Build the Docker image and push it to GHCR
 # ─────────────────────────────────────────────────────────────────────────────
@@ -57,23 +57,23 @@ jobs:
   build:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
-
+ 
     # GITHUB_TOKEN needs packages:write to push to GHCR.
     # This is the automatic per-run token — no PAT required.
     permissions:
       contents: read
       packages: write
-
+ 
     outputs:
       image-digest: ${{ steps.build.outputs.digest }}
-
+ 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+ 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
-
+ 
       # Uses the automatic GITHUB_TOKEN — no manual credentials needed for pushing.
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
@@ -81,7 +81,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+ 
       # Three tags per build:
       #   :latest      → newest image (only on default branch)
       #   :<branch>    → e.g. feat-server-deploy
@@ -95,7 +95,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
             type=sha,prefix=sha-,format=short
-
+ 
       # Registry-based layer cache stored in GHCR under :buildcache.
       # The Dockerfile's split pom.xml/src copy layers mean source-only
       # changes skip the full mvn dependency:go-offline (~3-5 min saved).
@@ -111,7 +111,7 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
           provenance: false
-
+ 
       - name: Write build summary
         run: |
           echo "## Docker Image Built" >> $GITHUB_STEP_SUMMARY
@@ -121,7 +121,7 @@ jobs:
           echo "| **Image** | \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Digest** | \`${{ steps.build.outputs.digest }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
-
+ 
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB 2 — Deploy to production server
 # ─────────────────────────────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build             # only runs after a successful build job
     environment: production  # create in Settings → Environments for approval gates
-
+ 
     steps:
       # GHCR_USERNAME and GHCR_TOKEN are injected as environment variables into
       # the SSH session. /opt/dpp/deploy.sh reads them to authenticate with GHCR
@@ -150,17 +150,17 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
-            /home/deploy/basyx/deploy.sh
-
+            /opt/dpp/deploy.sh
+ 
       # Spring Actuator's /actuator/health returns {"status":"UP"} once the
       # application is fully started. We allow 25s for the JVM to boot, then
       # retry up to 10 times with 10-second gaps (max ~125s total).
       - name: Wait for JVM startup
         run: sleep 25
-
+ 
       - name: Health check via Spring Actuator
         run: |
-          echo "Polling ${{ secrets.DPP_API_URL }}/actuator/health ..."
+          echo "Polling ${{ secrets.APP_HOST_URL }}/actuator/health ..."
           curl \
             --fail \
             --silent \
@@ -168,7 +168,7 @@ jobs:
             --retry 10 \
             --retry-delay 10 \
             --retry-connrefused \
-            "${{ secrets.DPP_API_URL }}/actuator/health" | tee /tmp/health.json
+            "${{ secrets.APP_HOST_URL }}/actuator/health" | tee /tmp/health.json
           echo ""
           STATUS=$(python3 -c "import sys,json; print(json.load(open('/tmp/health.json')).get('status','UNKNOWN'))")
           echo "Application status: $STATUS"
@@ -177,7 +177,7 @@ jobs:
             exit 1
           fi
           echo "Deployment verified successfully."
-
+ 
       - name: Write deployment summary
         if: always()
         run: |
