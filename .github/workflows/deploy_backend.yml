@@ -158,7 +158,7 @@ jobs:
  
       - name: Health check via Spring Actuator
         run: |
-          echo "Polling ${{ secrets.APP_HOST_URL }}/health ..."
+          echo "Polling ${{ secrets.DPP_API_URL }}/health ..."
           curl \
             --fail \
             --silent \
@@ -166,7 +166,7 @@ jobs:
             --retry 10 \
             --retry-delay 10 \
             --retry-connrefused \
-            "${{ secrets.APP_HOST_URL }}/health" | tee /tmp/health.json
+            "${{ secrets.DPP_API_URL }}/health" | tee /tmp/health.json
           echo ""
           STATUS=$(python3 -c "import sys,json; print(json.load(open('/tmp/health.json')).get('status','UNKNOWN'))")
           echo "Application status: $STATUS"
