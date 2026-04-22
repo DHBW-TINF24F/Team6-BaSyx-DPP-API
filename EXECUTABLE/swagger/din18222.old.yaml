@@ -2,22 +2,20 @@ openapi: 3.0.3
 info:
   title: "Digitaler Produktpass (DPP) API"
   description: |
-    OpenAPI-Spezifikation basierend auf dem aktuellen Implementierungsstand der DPP-API.
-
-    Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die Durchsuchbarkeit von Digitalen Produktpässen (DPP).
-
-    Status:
-    - Ein Teil der Endpunkte ist bereits implementiert und anhand realer curl-Aufrufe dokumentiert.
-    - Weitere Endpunkte sind fachlich vorgesehen, aber aktuell noch nicht umgesetzt.
+    OpenAPI-Spezifikation basierend auf dem Entwurf der Norm DIN EN 18222:2025 (https://www.dinmedia.de/de/norm-entwurf/din-en-18222/393321021).
+    Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die Durchsuchbarkeit von Digitalen Produktpässen (DPP) im Einklang mit der European Sustainability Product Regulation (ESPR).
+    Sie umfasst drei Hauptbereiche:
+    1.  **Life Cycle API**: Hauptmethoden zum Erstellen, Lesen, Aktualisieren und Löschen von DPPs.
+    2.  **Registry API**: Eine Methode zur Registrierung eines neuen DPP im zentralen Register der EU-Kommission.
+    3.  **Fine-Granular API**: Optionale Methoden für den detaillierten Lese- und Schreibzugriff auf einzelne Datenelemente innerhalb eines DPP.
   version: "1.0.0"
 
+
 servers:
-  - url: http://localhost:8080
-    description: "Lokale Entwicklungsumgebung"
-  - url: https://srv01.noah-becker.de/uni/swe/api/dpp/
+  - url: http://srv01.noah-becker.de/api
     description: "Produktiv-Server"
-  - url: https://srv01.noah-becker.de/uni/swe/api/dpp/swagger
-    description: "Swagger"
+  - url: http://localhost:3000/api
+    description: "Lokale Entwicklungsumgebung"
 
 tags:
   - name: "DPP Life Cycle API"
@@ -33,7 +31,7 @@ paths:
       tags:
         - "DPP Life Cycle API"
       summary: "Neuen DPP erstellen (CreateDPP)"
-      description: "Erstellt einen neuen Digitalen Produktpass."
+      description: "Erstellt einen neuen Digitalen Produktpass. Zugriffsregeln steuern, ob die Erstellung erlaubt ist."
       operationId: "createDPP"
       requestBody:
         required: true
@@ -42,22 +40,16 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/DPP"
-            example:
-              shell:
-                id: "https://team6.dpp/asset/battery-proto-001"
-                dpps:
-                  - productId: "https://team6.dpp/batterypass/proto-001"
-                    version: "1.0.0"
       responses:
-        "200":
-          description: "DPP erfolgreich erstellt."
+        "201":
+          description: "DPP erfolgreich erstellt. Gibt die ID des neuen DPP zurück."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateDPPResponse"
-              example:
-                status: "success"
-                dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
+                type: object
+                properties:
+                  dppId:
+                    $ref: "#/components/schemas/Identifier"
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -78,53 +70,24 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPReadResponse"
-              example:
-                status: "success"
-                dpp:
-                  dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                  productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                  createdAt: "1776845156948"
-                  version: "1.0.0"
-                  submodels:
-                    - reference: "https://team6.dpp/sm/nameplate"
-                      version: "1.0"
-                      name: "NamePlate"
-                    - reference: "https://team6.dpp/sm/material_composition"
-                      version: "1.0"
-                      name: "MaterialComposition"
-                submodels_values:
-                  NamePlate:
-                    - modelType: "Property"
-                      value: "Team 6 Energy Corp."
-                      valueType: "xs:string"
-                      idShort: "ManufacturerName"
+                $ref: "#/components/schemas/DPP"
         "404":
           $ref: "#/components/responses/NotFound"
-
-    put:
+    patch:
       tags:
         - "DPP Life Cycle API"
-      summary: "DPP aktualisieren (UpdateDPPById)"
-      description: |
-        Aktualisiert den Inhalt eines DPPs anhand seiner ID.
-
-        Dieser Endpunkt ist implementiert. Die aktuelle Implementierung verwendet PUT statt PATCH.
+      summary: "DPP teilweise aktualisieren (UpdateDPPById)"
+      description: "Aktualisiert den Inhalt eines DPPs partiell (Patch). Der eingereichte DPP enthält nur die Daten, die aktualisiert oder hinzugefügt werden sollen. Die Aktualisierung ist atomar: Wenn ein Teil fehlschlägt, wird die gesamte Operation zurückgerollt."
       operationId: "updateDPPById"
       parameters:
         - $ref: "#/components/parameters/dppId"
       requestBody:
         required: true
-        description: "Ein DPP-Objekt mit den zu aktualisierenden Daten."
+        description: "Ein partielles DPP-Objekt, das die zu aktualisierenden Felder enthält. Implementierungen können RFC 7396 (JSON Merge Patch) berücksichtigen."
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/PartialDPP"
-            example:
-              version: "2.0"
-              submodels:
-                - reference: "http://example.com/submodel1"
-                  semanticId: "http://example.com/semantic1"
       responses:
         "200":
           description: "DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück."
@@ -132,25 +95,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DPP"
-              example:
-                dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                version: "2.0"
-                submodels:
-                  - reference: "http://example.com/submodel1"
-                    semanticId: "http://example.com/semantic1"
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-
     delete:
       tags:
         - "DPP Life Cycle API"
       summary: "DPP löschen (DeleteDPPById)"
-      description: "Entfernt einen DPP anhand seiner ID, z. B. am Ende seines Lebenszyklus."
+      description: "Entfernt einen DPP anhand seiner ID, z.B. am Ende seines Lebenszyklus. Zugriffsregeln steuern, ob die Löschung erlaubt ist."
       operationId: "deleteDPPById"
       parameters:
         - $ref: "#/components/parameters/dppId"
@@ -177,27 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPPReadResponse"
-              example:
-                status: "success"
-                dpp:
-                  dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                  productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                  createdAt: "1776845156948"
-                  version: "1.0.0"
-                  submodels:
-                    - reference: "https://team6.dpp/sm/nameplate"
-                      version: "1.0"
-                      name: "NamePlate"
-                    - reference: "https://team6.dpp/sm/material_composition"
-                      version: "1.0"
-                      name: "MaterialComposition"
-                submodels_values:
-                  NamePlate:
-                    - modelType: "Property"
-                      value: "Team 6 Energy Corp."
-                      valueType: "xs:string"
-                      idShort: "ManufacturerName"
+                $ref: "#/components/schemas/DPP"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -206,18 +141,17 @@ paths:
       tags:
         - "DPP Life Cycle API"
       summary: "DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate)"
-      description: "Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Zeitstempel."
+      description: "Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Datum."
       operationId: "readDPPVersionByProductIdAndDate"
       parameters:
         - $ref: "#/components/parameters/productId"
-        - name: timeStamp
+        - name: date
           in: query
           required: true
-          description: "Unix-Zeitstempel in Millisekunden, für den die DPP-Version angefordert wird."
+          description: "Der Zeitstempel (UTC-basiert), für den die DPP-Version angefordert wird."
           schema:
-            type: integer
-            format: int64
-          example: 1776840257913
+            type: string
+            format: date-time
       responses:
         "200":
           description: "Erfolgreiche Antwort mit der angeforderten DPP-Version."
@@ -225,61 +159,60 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DPP"
-              example:
-                dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                createdAt: "1776845156948"
-                version: "1.0.0"
-                submodels:
-                  - reference: "https://team6.dpp/sm/nameplate"
-                    version: "1.0"
-                    name: "NamePlate"
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /dppIdsByProductIds:
+  /dppsByProductIds:
     post:
       tags:
         - "DPP Life Cycle API"
       summary: "DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)"
-      description: "Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen."
+      description: "Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen. Paginierung wird über 'limit' und 'cursor' unterstützt."
       operationId: "readDPPIdsByProductIds"
+      parameters:
+        - name: limit
+          in: query
+          description: "Maximale Anzahl der zurückgegebenen Ergebnisse."
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: cursor
+          in: query
+          description: "Position, von der aus die Ergebnisliste fortgesetzt werden soll (für Paginierung)."
+          schema:
+            type: string
       requestBody:
         required: true
         description: "Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen."
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/Identifier"
-            example:
-              - "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDA"
-              - "PID"
+              type: object
+              properties:
+                productIds:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Identifier"
       responses:
         "200":
           description: "Eine Liste der passenden DPP-Kennungen."
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Identifier"
-              example:
-                - "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0MDI1NzkxMw"
-                - "ZHBwLWlkLTI="
-        "400":
-          $ref: "#/components/responses/BadRequest"
+                type: object
+                properties:
+                  dppIds:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Identifier"
 
   /registerDPP:
     post:
       tags:
         - "DPP Registry API"
       summary: "Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry)"
-      description: |
-        Registriert einen neuen DPP im zentralen Register der EU-Kommission.
-
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+      description: "Registriert einen neuen DPP im zentralen Register der EU-Kommission. Gibt eine eindeutige Registrierungs-ID zurück."
       operationId: "postNewDPPToRegistry"
       requestBody:
         required: true
@@ -295,10 +228,6 @@ paths:
                   $ref: "#/components/schemas/Identifier"
                 backupOperatorId:
                   $ref: "#/components/schemas/Identifier"
-            example:
-              productId: "https://team6.dpp/batterypass/proto-001"
-              operatorId: "operator-001"
-              backupOperatorId: "backup-001"
       responses:
         "201":
           description: "DPP erfolgreich registriert. Gibt die neue Registrierungs-ID zurück."
@@ -309,10 +238,6 @@ paths:
                 properties:
                   registryIdentifier:
                     $ref: "#/components/schemas/Identifier"
-              example:
-                registryIdentifier: "registry-identifier-001"
-        "501":
-          description: "Noch nicht implementiert."
 
   /dpps/{dppId}/collections/{elementId}:
     get:
@@ -331,21 +256,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataElementCollection"
-              example:
-                name: "Battery Prototype 001"
-                manufacturerName: "Team 6"
-                model: "proto-001"
         "404":
           $ref: "#/components/responses/NotFound"
-
     patch:
       tags:
         - "DPP Fine-Granular Life Cycle API"
       summary: "Eine Daten-Sammlung in einem DPP aktualisieren (UpdateDataElementCollection)"
-      description: |
-        Aktualisiert den Inhalt einer 'DataElementCollection' in einem bestimmten DPP.
-
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+      description: "Aktualisiert den Inhalt einer 'DataElementCollection' in einem bestimmten DPP."
       operationId: "updateDataElementCollection"
       parameters:
         - $ref: "#/components/parameters/dppId"
@@ -357,8 +274,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PartialDataElementCollection"
-            example:
-              model: "proto-002"
       responses:
         "200":
           description: "Erfolgreich aktualisiert. Gibt optional die aktualisierte Collection zurück."
@@ -372,18 +287,13 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-        "501":
-          description: "Noch nicht implementiert."
 
   /dpps/{dppId}/elements/{elementPath}:
     get:
       tags:
         - "DPP Fine-Granular Life Cycle API"
       summary: "Ein einzelnes Datenelement aus einem DPP lesen (ReadDataElement)"
-      description: |
-        Ermöglicht das Lesen eines spezifischen Datenelements mittels seines eindeutigen Pfades innerhalb eines DPPs.
-
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+      description: "Ermöglicht das Lesen eines spezifischen Datenelements mittels seines eindeutigen Pfades innerhalb eines DPPs."
       operationId: "readDataElement"
       parameters:
         - $ref: "#/components/parameters/dppId"
@@ -395,20 +305,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DataElement"
-              example: 42
         "404":
           $ref: "#/components/responses/NotFound"
-        "501":
-          description: "Noch nicht implementiert."
-
     patch:
       tags:
         - "DPP Fine-Granular Life Cycle API"
       summary: "Ein einzelnes Datenelement in einem DPP aktualisieren (UpdateDataElement)"
-      description: |
-        Aktualisiert ein spezifisches Datenelement innerhalb eines DPPs. Ermöglicht auch das Hinzufügen oder Entfernen von Informationen.
-
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+      description: "Aktualisiert ein spezifisches Datenelement innerhalb eines DPPs. Ermöglicht auch das Hinzufügen oder Entfernen von Informationen."
       operationId: "updateDataElement"
       parameters:
         - $ref: "#/components/parameters/dppId"
@@ -420,7 +323,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/DataElement"
-            example: "new value"
       responses:
         "200":
           description: "Erfolgreich aktualisiert. Gibt das geänderte Datenelement zurück."
@@ -434,179 +336,38 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-        "501":
-          description: "Noch nicht implementiert."
 
 components:
   schemas:
     DPP:
       type: object
-      description: |
-        Repräsentiert den Digitalen Produktpass.
-
-        Die aktuell implementierte Struktur ist teilweise generisch und wird hier mit Beispielen beschrieben.
+      description: "Repräsentiert den Digitalen Produktpass. Die genaue logische Struktur ist in 'Modul 4: Systeminteroperabilität' der Normungsreihe definiert und wird hier als generisches Objekt dargestellt."
       properties:
         dppId:
           $ref: "#/components/schemas/Identifier"
         productId:
           $ref: "#/components/schemas/Identifier"
-        createdAt:
-          type: string
-          description: "Erstellungszeitpunkt als Unix-Zeitstempel in Millisekunden."
-          example: "1776845156948"
-        version:
-          type: string
-          example: "1.0.0"
-        shell:
-          type: object
-          properties:
-            id:
-              type: string
-              example: "https://team6.dpp/asset/battery-proto-001"
-            dpps:
-              type: array
-              items:
-                type: object
-                properties:
-                  productId:
-                    type: string
-                    example: "https://team6.dpp/batterypass/proto-001"
-                  version:
-                    type: string
-                    example: "1.0.0"
-        submodels:
-          type: array
-          items:
-            $ref: "#/components/schemas/SubmodelReference"
       additionalProperties: true
-      example:
-        dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-        productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-        createdAt: "1776845156948"
-        version: "1.0.0"
-        submodels:
-          - reference: "https://team6.dpp/sm/nameplate"
-            version: "1.0"
-            name: "NamePlate"
-
     PartialDPP:
       type: object
-      description: "Eine partielle Repräsentation des DPP für Update-Operationen."
+      description: "Eine partielle Repräsentation des DPP für PATCH-Operationen."
       additionalProperties: true
-      example:
-        version: "2.0"
-        submodels:
-          - reference: "http://example.com/submodel1"
-            semanticId: "http://example.com/semantic1"
-
-    SubmodelReference:
-      type: object
-      properties:
-        reference:
-          type: string
-          example: "https://team6.dpp/sm/nameplate"
-        version:
-          type: string
-          example: "1.0"
-        name:
-          type: string
-          example: "NamePlate"
-        semanticId:
-          type: string
-          example: "http://example.com/semantic1"
-      additionalProperties: true
-
-    CreateDPPResponse:
-      type: object
-      required:
-        - status
-        - dppId
-      properties:
-        status:
-          type: string
-          example: "success"
-        dppId:
-          $ref: "#/components/schemas/Identifier"
-
-    DPPReadResponse:
-      type: object
-      required:
-        - status
-        - dpp
-        - submodels_values
-      properties:
-        status:
-          type: string
-          example: "success"
-        dpp:
-          $ref: "#/components/schemas/DPP"
-        submodels_values:
-          type: object
-          description: "Enthält die Werte der Submodelle, gruppiert nach Submodell-Name."
-          additionalProperties:
-            type: array
-            items:
-              $ref: "#/components/schemas/SubmodelElement"
-          example:
-            NamePlate:
-              - modelType: "Property"
-                value: "Team 6 Energy Corp."
-                valueType: "xs:string"
-                idShort: "ManufacturerName"
-
-    SubmodelElement:
-      type: object
-      description: "Generisches Element innerhalb eines Submodells."
-      properties:
-        modelType:
-          type: string
-          example: "Property"
-        idShort:
-          type: string
-          example: "ManufacturerName"
-        valueType:
-          type: string
-          example: "xs:string"
-        value:
-          description: "Wert des Elements; kann je nach Typ String, Zahl, Objekt oder Liste sein."
-        contentType:
-          type: string
-          example: "application/pdf"
-        orderRelevant:
-          type: boolean
-          example: true
-        typeValueListElement:
-          type: string
-          example: "SubmodelElementCollection"
-      additionalProperties: true
-
     DataElement:
       description: "Ein einzelnes Datenelement innerhalb eines DPP. Kann ein beliebiger Typ sein."
-      example: 42
-
     DataElementCollection:
       type: object
       description: "Eine Sammlung von Datenelementen innerhalb eines DPPs."
       additionalProperties:
         $ref: "#/components/schemas/DataElement"
-      example:
-        name: "Battery Prototype 001"
-        manufacturerName: "Team 6"
-        model: "proto-001"
-
     PartialDataElementCollection:
       type: object
       description: "Eine partielle Sammlung von Datenelementen für PATCH-Operationen."
       additionalProperties:
         $ref: "#/components/schemas/DataElement"
-      example:
-        model: "proto-002"
-
     Identifier:
       type: string
       description: "Eine eindeutige Kennung."
-      example: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-
+      example: "urn:uuid:6c84fb90-12c4-11e1-840d-7b25c5ee775a"
     ErrorResult:
       type: object
       description: "Das Standard-Antwortobjekt im Fehlerfall."
@@ -615,7 +376,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Message"
-
     Message:
       type: object
       properties:
@@ -634,7 +394,6 @@ components:
           type: string
           format: date-time
           description: "Zeitstempel der Nachricht."
-
     MessageTypeEnum:
       type: string
       enum:
@@ -651,7 +410,6 @@ components:
       description: "Eindeutige Kennung des DPP."
       schema:
         $ref: "#/components/schemas/Identifier"
-
     productId:
       name: productId
       in: path
@@ -659,7 +417,6 @@ components:
       description: "Eindeutige Kennung des Produkts."
       schema:
         $ref: "#/components/schemas/Identifier"
-
     elementId:
       name: elementId
       in: path
@@ -667,7 +424,6 @@ components:
       description: "Kennung der DataElementCollection innerhalb des DPP."
       schema:
         $ref: "#/components/schemas/Identifier"
-
     elementPath:
       name: elementPath
       in: path
@@ -679,19 +435,17 @@ components:
 
   responses:
     BadRequest:
-      description: "Fehlerhafte Anfrage (z. B. falsche Syntax oder ungültige Parameter)."
+      description: "Fehlerhafte Anfrage (z.B. falsche Syntax oder ungültige Parameter)."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResult"
-
     Forbidden:
       description: "Zugriff verweigert. Der Client hat nicht die erforderlichen Berechtigungen für die Ressource."
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResult"
-
     NotFound:
       description: "Die angeforderte Ressource wurde nicht gefunden."
       content:
