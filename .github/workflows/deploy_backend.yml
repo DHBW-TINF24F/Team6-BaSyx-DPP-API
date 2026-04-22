@@ -150,7 +150,7 @@ jobs:
           script: |
             /home/deploy/basyx/deploy.sh
  
-      # Spring Actuator's /actuator/health returns {"status":"UP"} once the
+      # Spring Actuator's /health returns {"status":"UP"} once the
       # application is fully started. We allow 25s for the JVM to boot, then
       # retry up to 10 times with 10-second gaps (max ~125s total).
       - name: Wait for JVM startup
@@ -158,7 +158,7 @@ jobs:
  
       - name: Health check via Spring Actuator
         run: |
-          echo "Polling ${{ secrets.APP_HOST_URL }}/actuator/health ..."
+          echo "Polling ${{ secrets.APP_HOST_URL }}/health ..."
           curl \
             --fail \
             --silent \
@@ -166,7 +166,7 @@ jobs:
             --retry 10 \
             --retry-delay 10 \
             --retry-connrefused \
-            "${{ secrets.APP_HOST_URL }}/actuator/health" | tee /tmp/health.json
+            "${{ secrets.APP_HOST_URL }}/health" | tee /tmp/health.json
           echo ""
           STATUS=$(python3 -c "import sys,json; print(json.load(open('/tmp/health.json')).get('status','UNKNOWN'))")
           echo "Application status: $STATUS"
