@@ -2,7 +2,7 @@
 # DPP Backend — Build, Push & Deploy
 #
 # Triggers:
-#   - Push to feat/server-deploy branch (temporary — change to main for production)
+#   - Push to main branch (for production)
 #   - Manual "Run workflow" button (workflow_dispatch)
 #
 # Jobs:
@@ -39,7 +39,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - feat/server-deploy      # ← temporary; change to main before going to production
+      - main
  
 env:
   REGISTRY: ghcr.io
