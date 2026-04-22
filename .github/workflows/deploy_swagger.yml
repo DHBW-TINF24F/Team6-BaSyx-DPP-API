@@ -26,6 +26,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "EXECUTABLE/swagger/din18222.yaml"
           target: "/srv/uni/swe-basyx/swagger-spec/"
+          strip_components: 2
 
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
