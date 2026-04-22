@@ -25,7 +25,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "EXECUTABLE/swagger/din18222.yaml"
-          target: "/srv/swe-basyx/swagger-spec/"
+          target: "/srv/uni/swe-basyx/swagger-spec/"
 
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -39,4 +39,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
-            /srv/swe-basyx/load_swagger.sh
+            /srv/uni/swe-basyx/load_swagger.sh
