@@ -8,7 +8,7 @@
 # Jobs:
 #   1. build  — compiles the Docker image via the multi-stage Dockerfile and
 #               pushes it to GHCR using the automatic GITHUB_TOKEN.
-#   2. deploy — SSHes into the production server and calls /opt/dpp/deploy.sh,
+#   2. deploy — SSHes into the production server and calls /home/deploy/basyx/deploy-backend.sh,
 #               which logs into GHCR, pulls the new image, and restarts the
 #               container. Finishes with a Spring Actuator health check.
 #
@@ -162,7 +162,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
-            /home/deploy/basyx/deploy.sh
+            /home/deploy/basyx/deploy-backend.sh
  
       # Spring Actuator's /health returns {"status":"UP"} once the
       # application is fully started. We allow 25s for the JVM to boot, then
