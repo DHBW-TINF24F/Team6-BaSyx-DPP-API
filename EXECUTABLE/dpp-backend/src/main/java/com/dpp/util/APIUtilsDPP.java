@@ -67,7 +67,7 @@ if (externalApiBase == null || externalApiBase.isEmpty()) {
     externalApiBase = "http://localhost:8081";
 }
 
-                String externalUrl = externalApiBase
+                String externalUrl = externalApiBase + "/submodels" 
                         + Base64DPP.encodeIdentifier(submodel.getReference()) + "/submodel-elements";
 
                 // Using RestClient (Blocking/Synchronous)
