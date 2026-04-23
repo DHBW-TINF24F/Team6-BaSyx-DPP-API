@@ -37,7 +37,8 @@ name: Build and Deploy Backend
  
 on:
   workflow_dispatch:
-  push:
+  pull_request_target:
+    types: [closed]
     branches:
       - main
  
@@ -49,7 +50,20 @@ env:
 # JOB 1 — Build the Docker image and push it to GHCR
 # ─────────────────────────────────────────────────────────────────────────────
 jobs:
+  check:
+    name: Check PR Labels
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.pull_request.merged == true &&
+        contains(github.event.pull_request.labels.*.name, 'Deploy – Swagger')
+      )
+    steps:
+      - run: echo "Condition passed"
+
   build:
+    needs: check
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
  
