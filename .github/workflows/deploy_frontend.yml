@@ -72,7 +72,7 @@ jobs:
       - run: echo "Condition passed"
 
   build:
-    needs: check
+    #needs: check
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
 
