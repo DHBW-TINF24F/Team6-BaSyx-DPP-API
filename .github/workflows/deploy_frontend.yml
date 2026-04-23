@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# DPP Backend — Build, Push & Deploy
+# DPP Frontend — Build, Push & Deploy
 #
 # Triggers:
 #   - Merged pull request to main branch (for production)
@@ -8,21 +8,22 @@
 # Jobs:
 #   1. build  — compiles the Docker image via the multi-stage Dockerfile and
 #               pushes it to GHCR using the automatic GITHUB_TOKEN.
-#   2. deploy — SSHes into the production server and calls /home/deploy/basyx/deploy-backend.sh,
+#   2. deploy — SSHes into the production server and calls /home/deploy/basyx/deploy-frontend.sh,
 #               which logs into GHCR, pulls the new image, and restarts the
-#               container. Finishes with a Spring Actuator health check.
+#               container. Finishes with an HTTP health check against the nginx
+#               endpoint (nginx listens on port 3000 inside the container).
 #
 # Secrets used (all must exist in the org/repo — see table below):
 #
 #   Secret              | Source
-#   ──────────────────────────────────────────────────────────────────
-#   SSH_HOST            | shared org secret (same as Swagger deploy)
+#   ──────────────────────────────────────────────────────────────────────────
+#   SSH_HOST            | shared org secret (same as backend deploy)
 #   SSH_PORT            | shared org secret
 #   SSH_PRIVATE_KEY     | shared org secret
 #   GHCR_USERNAME       | shared org secret
 #   GHCR_TOKEN          | shared org secret (read:packages scope)
-#   DPP_API_URL         | base URL of the running DPP API for health check
-#                       | e.g. http://YOUR_SERVER_IP:8080
+#   FRONTEND_URL        | base URL of the running frontend for health check
+#                       | e.g. http://YOUR_SERVER_IP:3000 (or https://your.domain)
 #
 # Action versions (verified April 2026):
 #   actions/checkout            v4
@@ -33,19 +34,23 @@
 #   appleboy/ssh-action         v1.2.5
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: Build and Deploy Backend
- 
+name: Build and Deploy Frontend
+
 on:
   workflow_dispatch:
   pull_request_target:
     types: [closed]
     branches:
       - main
- 
+
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-backend
- 
+  # Append -frontend to avoid colliding with the backend image in the same repo.
+  # Both workflows share github.repository — without the suffix they would
+  # overwrite each other's :latest tag in GHCR.
+  IMAGE_NAME: ${{ github.repository }}-frontend
+  FRONTEND_DIR: SOURCE/frontend/aas-web-ui
+
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB 1 — Build the Docker image and push it to GHCR
 # ─────────────────────────────────────────────────────────────────────────────
@@ -57,7 +62,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (
         github.event.pull_request.merged == true &&
-        contains(github.event.pull_request.labels.*.name, 'Deploy – Backend')
+        contains(github.event.pull_request.labels.*.name, 'Deploy – Frontend')
       )
     steps:
       - run: echo "Condition passed"
@@ -66,26 +71,59 @@ jobs:
     needs: check
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
- 
+
     # GITHUB_TOKEN needs packages:write to push to GHCR.
     # This is the automatic per-run token — no PAT required.
     permissions:
       contents: read
       packages: write
- 
+
     outputs:
       image-digest: ${{ steps.build.outputs.digest }}
- 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # SOURCE/frontend is a Git submodule — without this flag the build
+          # context (./SOURCE/frontend/aas-web-ui) would be an empty directory
+          # and the Docker build would fail.
+          submodules: recursive
 
+      # ── Pre-Docker lint fix ───────────────────────────────────────────────
+      # Mirrors the approach in BaSyx's build-aas-web-ui.yml: run the full
+      # prebuild (lint + auto-fix here) on the runner before handing the build
+      # context to Docker.
+      #
+      # Why this is necessary:
+      #   The Dockerfile's `RUN yarn build` triggers the `prebuild` lifecycle
+      #   hook, which runs `cross-env NODE_ENV=production yarn lint:check`.
+      #   In production mode several rules are elevated to errors (no-console,
+      #   simple-import-sort, prettier/prettier). Running `lint:fix` here
+      #   corrects all auto-fixable violations in-place so that when Docker
+      #   copies the files via `COPY . .` it sees already-clean source.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+          cache-dependency-path: ${{ env.FRONTEND_DIR }}/yarn.lock
+
+      - name: Install frontend dependencies
+        run: yarn install --frozen-lockfile --non-interactive --network-timeout 600000
+        working-directory: ${{ env.FRONTEND_DIR }}
+
+      - name: Lint & auto-fix (pre-Docker)
+        run: yarn lint:fix
+        working-directory: ${{ env.FRONTEND_DIR }}
+
+      # ── Docker build ──────────────────────────────────────────────────────
       - name: Lowercase image name
         run: echo "IMAGE_NAME=$(echo '${{ env.IMAGE_NAME }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
- 
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
- 
+
       # Uses the automatic GITHUB_TOKEN — no manual credentials needed for pushing.
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
@@ -93,7 +131,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
- 
+
       # Three tags per build:
       #   :latest      → newest image (only on default branch)
       #   :<branch>    → e.g. feat-server-deploy
@@ -107,23 +145,31 @@ jobs:
             type=raw,value=latest
             type=ref,event=branch
             type=sha,prefix=sha-,format=short
- 
+
       # Registry-based layer cache stored in GHCR under :buildcache.
-      # The Dockerfile's split pom.xml/src copy layers mean source-only
-      # changes skip the full mvn dependency:go-offline (~3-5 min saved).
+      # The yarn install / node_modules layer is expensive (~2-4 min); the cache
+      # skips it when only src/* files changed.
+      #
+      # VITE_APP_* build args surface version/commit/date in the running app.
+      # VITE_APP_BUILD_DATE uses github.run_started_at (ISO 8601 timestamp),
+      # matching the format used by the official BaSyx release pipeline.
       - name: Build and push Docker image
         id: build
         uses: docker/build-push-action@v7
         with:
-          context: ./EXECUTABLE/dpp-backend
-          file: ./EXECUTABLE/dpp-backend/Dockerfile
+          context: ./${{ env.FRONTEND_DIR }}
+          file: ./${{ env.FRONTEND_DIR }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_APP_VERSION=${{ github.ref_name }}
+            VITE_APP_COMMIT_SHA=${{ github.sha }}
+            VITE_APP_BUILD_DATE=${{ github.run_started_at }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
           provenance: false
- 
+
       - name: Write build summary
         run: |
           echo "## Docker Image Built" >> $GITHUB_STEP_SUMMARY
@@ -133,7 +179,7 @@ jobs:
           echo "| **Image** | \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Digest** | \`${{ steps.build.outputs.digest }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
- 
+
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB 2 — Deploy to production server
 # ─────────────────────────────────────────────────────────────────────────────
@@ -142,11 +188,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build             # only runs after a successful build job
     environment: production  # create in Settings → Environments for approval gates
- 
+
     steps:
       # GHCR_USERNAME and GHCR_TOKEN are injected as environment variables into
-      # the SSH session. /opt/dpp/deploy.sh reads them to authenticate with GHCR
-      # before pulling the updated image.
+      # the SSH session. /home/deploy/basyx/deploy-frontend.sh reads them to
+      # authenticate with GHCR before pulling the updated image.
       #
       # The script block only contains the server-side script call — nothing
       # sensitive is embedded here, making this safe for a public repository.
@@ -162,17 +208,20 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: GHCR_USERNAME,GHCR_TOKEN
           script: |
-            /home/deploy/basyx/deploy-backend.sh
- 
-      # Spring Actuator's /health returns {"status":"UP"} once the
-      # application is fully started. We allow 25s for the JVM to boot, then
-      # retry up to 10 times with 10-second gaps (max ~125s total).
-      - name: Wait for JVM startup
-        run: sleep 25
- 
-      - name: Health check via Spring Actuator
+            /home/deploy/basyx/deploy-frontend.sh
+
+      # nginx starts in a few seconds, but we give the container a moment to
+      # fully initialise before hitting it. Then we retry up to 10 times with
+      # 10-second gaps (max ~110 s total).
+      #
+      # This is a plain HTTP check — no JSON parsing needed for a static SPA.
+      # A 200 response from the root path confirms nginx is serving correctly.
+      - name: Wait for nginx startup
+        run: sleep 10
+
+      - name: Health check — nginx HTTP 200
         run: |
-          echo "Polling ${{ secrets.DPP_API_URL }}/health ..."
+          echo "Polling ${{ secrets.FRONTEND_URL }} ..."
           curl \
             --fail \
             --silent \
@@ -180,16 +229,12 @@ jobs:
             --retry 10 \
             --retry-delay 10 \
             --retry-connrefused \
-            "${{ secrets.DPP_API_URL }}/health" | tee /tmp/health.json
-          echo ""
-          STATUS=$(python3 -c "import sys,json; print(json.load(open('/tmp/health.json')).get('status','UNKNOWN'))")
-          echo "Application status: $STATUS"
-          if [ "$STATUS" \!= "UP" ]; then
-            echo "::error::Health check failed — application status: $STATUS"
-            exit 1
-          fi
-          echo "Deployment verified successfully."
- 
+            --max-time 10 \
+            -o /dev/null \
+            -w "HTTP status: %{http_code}\n" \
+            "${{ secrets.FRONTEND_URL }}/"
+          echo "Health check passed — frontend is up."
+
       - name: Write deployment summary
         if: always()
         run: |
