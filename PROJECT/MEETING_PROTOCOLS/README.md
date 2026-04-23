@@ -1,6 +1,9 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
+- [Meeting 25.04.2026 - Keep it up](#status3)
+- [Meeting 21.04.2026 - Quick Update](#quickUpdate)
+- [Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild](#backendRebuild)
 - [Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration](#bigMeeting)
 - [Meeting 02.04.2026 - Quick Check](#quickCheck)
 - [Meeting 27.03.2026 - DPP Structure &Repo Integration](#dppIntegration)
@@ -19,6 +22,137 @@
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
 
+<a id="status3">
+
+## Meeting 25.04.2026 - Keep it up
+
+
+---
+<a id="quickUpdate">
+
+## Meeting 21.04.2026 - Quick Update
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Missing Backend Methods | BackendTeam | 10 min|
+| 2 | API Registry & Parameter Error Handling | BackendTeam | 10 min |
+| 3 | Frontend | FrontendTeam | 7 min |
+| 4 | Stakeholder Meeting Prep | Nataliia Chubak | 3 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 21.04.2026  
+**Time:** 10:00 – 11:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Progress on the backend branch was discussed. The following components are still missing and are currently in development:
+2. AAS Registration: The method for official registration with the AAS is still missing.
+3. Path Access: Retrieving and updating elements via elementPath.
+4. Error Handling: Correct error messages for invalid parameters (see the backend README for details).
+5. API Clarification: Specific consultation regarding the PostNewDppToRegistery method.
+
+### II. Frontend & Organization
+Frontend Adjustment: After further discussion, it was decided to remove the Favorites (heart icon) feature to focus on the core functions of the DPP Editor.
+Rentschler Meeting: Preparation of the to-do list for the upcoming meeting with Mr. Rentschler.
+
+### To-dos
+### III. To-dos 
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Implementation of Element-Update via elementPath | BackendTeam | 30.04.2026 | 
+| Document error handling in the backend code | BackendTeam | 27.04.2026 |
+||||
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 25.04.2026
+---
+
+<a id="backendRebuild">
+
+## Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Architecture Reset | Luca Schmoll | 20 min|
+| 2 | Spring Boot& MongoDB Integration | Fabian Steiß | 10 min |
+| 3 | API Method Implementation | Magnus Lörcher | 40 min |
+| 4 | Open Tasks & Dynamic Calls| Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Discord
+**Date:** 17.04.2026  
+**Time:** 20:30 – 22:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Ad-hoc-Meeting: based on the feedback from Mr. Rentschler
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß
+
+---
+### I. Objectives
+1. Complete rebuild of the backend based on feedback from Mr. Rentschler
+2. Implementation of the database connection and basic CRUD operations
+
+### II. Discussion Points & Progress
+1. Restructuring: The backend has been completely rebuilt. A new branch was created for this purpose to ensure a clean codebase. 
+2. Database: A connection to MongoDB has been established and successfully tested.
+3. Implemented API Methods:
+  - POST /dpps: Creates new records in MongoDB.
+  - GET /dpps/{dppid}: Returns a complete DPP via DPP ID.
+  - GET /dppsByProductId/{productId}: Returns the latest DPP version for a product ID.
+  - GET /dppsByProductIdAndDate/{productID}: Retrieves a DPP for a specific date.
+  - DELETE /dpps/{id}: Deletes a DPP via ID.
+  - POST /dppIdsByProductIds: Batch query for a set of Product IDs.
+  - PUT /dpps/{dppId}: Updates or inserts DPP data.
+
+### III. To-dos 
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Dynamics: createDPP – Dynamically call SubmodelIdentifier | BackendTeam | 27.04.2026 | 
+| payload: Customize getDPP methods (resolve references & retrieve submodel data for the frontend)| BackendTeam | 27.04.2026 |
+| Path Logic: Implementing elementPath & elementID (idShort) | BackendTeam| 27.04.2026 |
+| Backend online hosten | Noah Becker| 23.04.2026 |
+||||
+
+---
+### Notes
+Due to the urgency of Mr. Rentschler’s request for feedback, this meeting was held on short notice and outside the regular schedule.
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 21.04.2026
+
+---
 <a id="bigMeeting">
 
 ## Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration
