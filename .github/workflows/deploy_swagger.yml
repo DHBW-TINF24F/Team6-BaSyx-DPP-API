@@ -8,8 +8,21 @@ on:
       - main
 
 jobs:
+  check:
+    name: Check PR Labels
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.pull_request.merged == true &&
+        contains(github.event.pull_request.labels.*.name, 'Deploy – Swagger')
+      )
+    steps:
+      - run: echo "Condition passed"
+
   deploy-swagger:
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'Deploy – Swagger'))
+    needs: check
+    name: Deploy Swagger Specification
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
