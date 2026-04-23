@@ -35,6 +35,7 @@ paths:
       summary: "Neuen DPP erstellen (CreateDPP)"
       description: "Erstellt einen neuen Digitalen Produktpass."
       operationId: "createDPP"
+      x-semanticId: "https://jtc24/dpp/API/CreateDPP/1/0"
       requestBody:
         required: true
         description: "Das vollständige DPP-Objekt, das erstellt werden soll."
@@ -70,6 +71,7 @@ paths:
       summary: "DPP anhand seiner ID abrufen (ReadDPPById)"
       description: "Gibt den Digitalen Produktpass für eine bekannte DPP-Kennung zurück."
       operationId: "readDPPById"
+      x-semanticId: "https://jtc24/dpp/API/ReadDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       responses:
@@ -111,6 +113,7 @@ paths:
 
         Dieser Endpunkt ist implementiert. Die aktuelle Implementierung verwendet PUT statt PATCH.
       operationId: "updateDPPById"
+      x-semanticId: "https://jtc24/dpp/API/UpdateDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       requestBody:
@@ -152,6 +155,7 @@ paths:
       summary: "DPP löschen (DeleteDPPById)"
       description: "Entfernt einen DPP anhand seiner ID, z. B. am Ende seines Lebenszyklus."
       operationId: "deleteDPPById"
+      x-semanticId: "https://jtc24/dpp/API/DeleteDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       responses:
@@ -169,6 +173,7 @@ paths:
       summary: "Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId)"
       description: "Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte Produkt-Kennung zurück."
       operationId: "readDPPByProductId"
+      x-semanticId: "https://jtc24/dpp/API/ReadDPPByProductId/1/0"
       parameters:
         - $ref: "#/components/parameters/productId"
       responses:
@@ -208,6 +213,7 @@ paths:
       summary: "DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate)"
       description: "Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Zeitstempel."
       operationId: "readDPPVersionByProductIdAndDate"
+      x-semanticId: "https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0"
       parameters:
         - $ref: "#/components/parameters/productId"
         - name: timeStamp
@@ -244,6 +250,7 @@ paths:
       summary: "DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)"
       description: "Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen."
       operationId: "readDPPIdsByProductIds"
+      x-semanticId: "https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0"
       requestBody:
         required: true
         description: "Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen."
@@ -281,6 +288,7 @@ paths:
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
       operationId: "postNewDPPToRegistry"
+      x-semanticId: "https://jtc24/dpp/API/RegisterDPP/1/0"
       requestBody:
         required: true
         description: "Ein Objekt, das die Kennungen für Produkt, Betreiber und Sicherungsbetreiber enthält (Teilmenge des DPP-Headers)."
@@ -321,6 +329,7 @@ paths:
       summary: "Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection)"
       description: "Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus einem bestimmten DPP zurück."
       operationId: "readDataElementCollection"
+      x-semanticId: "https://jtc24/dpp/API/ReadDataElementCollection/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementId"
@@ -385,6 +394,7 @@ paths:
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
       operationId: "readDataElement"
+      x-semanticId: "https://jtc24/dpp/API/ReadDataElement/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementPath"
@@ -410,6 +420,7 @@ paths:
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
       operationId: "updateDataElement"
+      x-semanticId: "https://jtc24/dpp/API/UpdateDataElement/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementPath"
