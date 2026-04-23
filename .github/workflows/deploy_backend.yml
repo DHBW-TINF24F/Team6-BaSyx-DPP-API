@@ -2,7 +2,7 @@
 # DPP Backend — Build, Push & Deploy
 #
 # Triggers:
-#   - Push to main branch (for production)
+#   - Merged pull request to main branch (for production)
 #   - Manual "Run workflow" button (workflow_dispatch)
 #
 # Jobs:
@@ -57,7 +57,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (
         github.event.pull_request.merged == true &&
-        contains(github.event.pull_request.labels.*.name, 'Deploy – Swagger')
+        contains(github.event.pull_request.labels.*.name, 'Deploy – Backend')
       )
     steps:
       - run: echo "Condition passed"
