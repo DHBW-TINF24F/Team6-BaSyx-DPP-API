@@ -54,6 +54,7 @@ env:
   # Both workflows share github.repository — without the suffix they would
   # overwrite each other's :latest tag in GHCR.
   IMAGE_NAME: ${{ github.repository }}-frontend
+  FRONTEND_DIR: SOURCE/frontend/aas-web-ui
 
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB 1 — Build the Docker image and push it to GHCR
@@ -94,6 +95,34 @@ jobs:
           # and the Docker build would fail.
           submodules: recursive
 
+      # ── Pre-Docker lint fix ───────────────────────────────────────────────
+      # Mirrors the approach in BaSyx's build-aas-web-ui.yml: run the full
+      # prebuild (lint + auto-fix here) on the runner before handing the build
+      # context to Docker.
+      #
+      # Why this is necessary:
+      #   The Dockerfile's `RUN yarn build` triggers the `prebuild` lifecycle
+      #   hook, which runs `cross-env NODE_ENV=production yarn lint:check`.
+      #   In production mode several rules are elevated to errors (no-console,
+      #   simple-import-sort, prettier/prettier). Running `lint:fix` here
+      #   corrects all auto-fixable violations in-place so that when Docker
+      #   copies the files via `COPY . .` it sees already-clean source.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+          cache-dependency-path: ${{ env.FRONTEND_DIR }}/yarn.lock
+
+      - name: Install frontend dependencies
+        run: yarn install --frozen-lockfile --non-interactive --network-timeout 600000
+        working-directory: ${{ env.FRONTEND_DIR }}
+
+      - name: Lint & auto-fix (pre-Docker)
+        run: yarn lint:fix
+        working-directory: ${{ env.FRONTEND_DIR }}
+
+      # ── Docker build ──────────────────────────────────────────────────────
       - name: Lowercase image name
         run: echo "IMAGE_NAME=$(echo '${{ env.IMAGE_NAME }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
@@ -126,21 +155,22 @@ jobs:
       # The yarn install / node_modules layer is expensive (~2-4 min); the cache
       # skips it when only src/* files changed.
       #
-      # VITE_APP_* build args are optional but recommended: they let the running
-      # app surface its own version, commit, and build date in the UI/about page.
+      # VITE_APP_* build args surface version/commit/date in the running app.
+      # VITE_APP_BUILD_DATE uses github.run_started_at (ISO 8601 timestamp),
+      # matching the format used by the official BaSyx release pipeline.
       - name: Build and push Docker image
         id: build
         uses: docker/build-push-action@v7
         with:
-          context: ./SOURCE/frontend/aas-web-ui
-          file: ./SOURCE/frontend/aas-web-ui/Dockerfile
+          context: ./${{ env.FRONTEND_DIR }}
+          file: ./${{ env.FRONTEND_DIR }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VITE_APP_VERSION=${{ github.ref_name }}
             VITE_APP_COMMIT_SHA=${{ github.sha }}
-            VITE_APP_BUILD_DATE=${{ github.run_id }}
+            VITE_APP_BUILD_DATE=${{ github.run_started_at }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
           provenance: false
@@ -162,7 +192,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build             # only runs after a successful build job
-    #environment: production  # create in Settings → Environments for approval gates
+    environment: production  # create in Settings → Environments for approval gates
 
     steps:
       # GHCR_USERNAME and GHCR_TOKEN are injected as environment variables into
