@@ -6,12 +6,10 @@ on:
     types: [closed]
     branches:
       - main
-    tags:
-      - swagger
 
 jobs:
   deploy-swagger:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'Deploy – Swagger'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
