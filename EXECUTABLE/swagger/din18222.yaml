@@ -23,12 +23,10 @@ info:
   version: "1.0.0"
 
 servers:
-  - url: http://localhost:8080
-    description: "Lokale Entwicklungsumgebung"
   - url: https://srv01.noah-becker.de/uni/swe/api/dpp/
-    description: "Produktiv-Server"
-  - url: https://srv01.noah-becker.de/uni/swe/api/dpp/swagger
-    description: "Swagger"
+    description: "PROD"
+  - url: http://localhost:8080
+    description: "DEV (local)"
 
 tags:
   - name: "DPP Life Cycle API"
