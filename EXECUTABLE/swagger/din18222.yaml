@@ -30,11 +30,17 @@ servers:
 
 tags:
   - name: "DPP Life Cycle API"
-    description: "Hauptmethoden zur Verwaltung des DPP-Lebenszyklus."
+    description: |
+      **[DE]** Hauptmethoden zur Verwaltung des DPP-Lebenszyklus.  
+      **[EN]** Main methods for managing the DPP lifecycle.
   - name: "DPP Registry API"
-    description: "Schnittstelle zur Registrierung von DPPs im zentralen Register."
+    description: |
+      **[DE]** Schnittstelle zur Registrierung von DPPs im zentralen Register.  
+      **[EN]** Interface for registering DPPs in the central registry.
   - name: "DPP Fine-Granular Life Cycle API"
-    description: "Optionale Operationen für den feingranularen Zugriff auf DPP-Daten."
+    description: |
+      **[DE]** Optionale Operationen für den feingranularen Zugriff auf DPP-Daten.  
+      **[EN]** Optional operations for fine-grained access to DPP data.
 
 paths:
   /dpps:
