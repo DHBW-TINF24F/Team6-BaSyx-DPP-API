@@ -16,7 +16,7 @@ info:
     OpenAPI specification based on the current implementation status of the DPP API.
 
     This API standardizes the interfaces for lifecycle management and discoverability of Digital Product Passports (DPP).
-    
+
     Status:
     - Some endpoints are already implemented and documented with real curl calls.
     - Additional endpoints are conceptually planned but not yet implemented.
@@ -31,15 +31,15 @@ servers:
 tags:
   - name: "DPP Life Cycle API"
     description: |
-      **[DE]** Hauptmethoden zur Verwaltung des DPP-Lebenszyklus.  
+      **[DE]** Hauptmethoden zur Verwaltung des DPP-Lebenszyklus.
       **[EN]** Main methods for managing the DPP lifecycle.
   - name: "DPP Registry API"
     description: |
-      **[DE]** Schnittstelle zur Registrierung von DPPs im zentralen Register.  
+      **[DE]** Schnittstelle zur Registrierung von DPPs im zentralen Register.
       **[EN]** Interface for registering DPPs in the central registry.
   - name: "DPP Fine-Granular Life Cycle API"
     description: |
-      **[DE]** Optionale Operationen für den feingranularen Zugriff auf DPP-Daten.  
+      **[DE]** Optionale Operationen für den feingranularen Zugriff auf DPP-Daten.
       **[EN]** Optional operations for fine-grained access to DPP data.
 
 paths:
@@ -47,13 +47,21 @@ paths:
     post:
       tags:
         - "DPP Life Cycle API"
-      summary: "Neuen DPP erstellen (CreateDPP)"
-      description: "Erstellt einen neuen Digitalen Produktpass."
+      summary: "[DE] Neuen DPP erstellen (CreateDPP) | [EN] Create new DPP (CreateDPP)"
+      description: |
+        **[DE]** Erstellt einen neuen Digitalen Produktpass.
+
+        ---
+        **[EN]** Creates a new Digital Product Passport.
       operationId: "createDPP"
       x-semanticId: "https://jtc24/dpp/API/CreateDPP/1/0"
       requestBody:
         required: true
-        description: "Das vollständige DPP-Objekt, das erstellt werden soll."
+        description: |
+          **[DE]** Das vollständige DPP-Objekt, das erstellt werden soll.
+
+          ---
+          **[EN]** The complete DPP object to be created.
         content:
           application/json:
             schema:
@@ -66,7 +74,11 @@ paths:
                     version: "1.0.0"
       responses:
         "200":
-          description: "DPP erfolgreich erstellt."
+          description: |
+            **[DE]** DPP erfolgreich erstellt.
+
+            ---
+            **[EN]** DPP successfully created.
           content:
             application/json:
               schema:
@@ -83,15 +95,23 @@ paths:
     get:
       tags:
         - "DPP Life Cycle API"
-      summary: "DPP anhand seiner ID abrufen (ReadDPPById)"
-      description: "Gibt den Digitalen Produktpass für eine bekannte DPP-Kennung zurück."
+      summary: "[DE] DPP anhand seiner ID abrufen (ReadDPPById) | [EN] Read DPP by ID (ReadDPPById)"
+      description: |
+        **[DE]** Gibt den Digitalen Produktpass für eine bekannte DPP-Kennung zurück.
+
+        ---
+        **[EN]** Returns the Digital Product Passport for a known DPP identifier.
       operationId: "readDPPById"
       x-semanticId: "https://jtc24/dpp/API/ReadDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       responses:
         "200":
-          description: "Erfolgreiche Antwort mit dem angeforderten DPP."
+          description: |
+            **[DE]** Erfolgreiche Antwort mit dem angeforderten DPP.
+
+            ---
+            **[EN]** Successful response with the requested DPP.
           content:
             application/json:
               schema:
@@ -122,18 +142,27 @@ paths:
     put:
       tags:
         - "DPP Life Cycle API"
-      summary: "DPP aktualisieren (UpdateDPPById)"
+      summary: "[DE] DPP aktualisieren (UpdateDPPById) | [EN] Update DPP by ID (UpdateDPPById)"
       description: |
-        Aktualisiert den Inhalt eines DPPs anhand seiner ID.
+        **[DE]** Aktualisiert den Inhalt eines DPPs anhand seiner ID.
 
         Dieser Endpunkt ist implementiert. Die aktuelle Implementierung verwendet PUT statt PATCH.
+
+        ---
+        **[EN]** Updates the content of a DPP by its ID.
+
+        This endpoint is implemented. The current implementation uses PUT instead of PATCH.
       operationId: "updateDPPById"
       x-semanticId: "https://jtc24/dpp/API/UpdateDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       requestBody:
         required: true
-        description: "Ein DPP-Objekt mit den zu aktualisierenden Daten."
+        description: |
+          **[DE]** Ein DPP-Objekt mit den zu aktualisierenden Daten.
+
+          ---
+          **[EN]** A DPP object with the data to be updated.
         content:
           application/json:
             schema:
@@ -145,7 +174,11 @@ paths:
                   semanticId: "http://example.com/semantic1"
       responses:
         "200":
-          description: "DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück."
+          description: |
+            **[DE]** DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück.
+
+            ---
+            **[EN]** DPP successfully updated. Returns the complete, updated DPP.
           content:
             application/json:
               schema:
@@ -167,15 +200,23 @@ paths:
     delete:
       tags:
         - "DPP Life Cycle API"
-      summary: "DPP löschen (DeleteDPPById)"
-      description: "Entfernt einen DPP anhand seiner ID, z. B. am Ende seines Lebenszyklus."
+      summary: "[DE] DPP löschen (DeleteDPPById) | [EN] Delete DPP by ID (DeleteDPPById)"
+      description: |
+        **[DE]** Entfernt einen DPP anhand seiner ID, z. B. am Ende seines Lebenszyklus.
+
+        ---
+        **[EN]** Removes a DPP by its ID, e.g. at the end of its lifecycle.
       operationId: "deleteDPPById"
       x-semanticId: "https://jtc24/dpp/API/DeleteDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       responses:
         "204":
-          description: "DPP erfolgreich gelöscht."
+          description: |
+            **[DE]** DPP erfolgreich gelöscht.
+
+            ---
+            **[EN]** DPP successfully deleted.
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
@@ -185,15 +226,23 @@ paths:
     get:
       tags:
         - "DPP Life Cycle API"
-      summary: "Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId)"
-      description: "Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte Produkt-Kennung zurück."
+      summary: "[DE] Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId) | [EN] Read current DPP by Product ID (ReadDPPByProductId)"
+      description: |
+        **[DE]** Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte Produkt-Kennung zurück.
+
+        ---
+        **[EN]** Returns the currently active (latest version) DPP for a known product identifier.
       operationId: "readDPPByProductId"
       x-semanticId: "https://jtc24/dpp/API/ReadDPPByProductId/1/0"
       parameters:
         - $ref: "#/components/parameters/productId"
       responses:
         "200":
-          description: "Erfolgreiche Antwort mit dem angeforderten DPP."
+          description: |
+            **[DE]** Erfolgreiche Antwort mit dem angeforderten DPP.
+
+            ---
+            **[EN]** Successful response with the requested DPP.
           content:
             application/json:
               schema:
@@ -225,8 +274,12 @@ paths:
     get:
       tags:
         - "DPP Life Cycle API"
-      summary: "DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate)"
-      description: "Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Zeitstempel."
+      summary: "[DE] DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate) | [EN] Read DPP version by Product ID and Date (ReadDPPVersionByProductIdAndDate)"
+      description: |
+        **[DE]** Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Zeitstempel.
+
+        ---
+        **[EN]** Returns a specific version of a DPP based on its product ID and a given timestamp.
       operationId: "readDPPVersionByProductIdAndDate"
       x-semanticId: "https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0"
       parameters:
@@ -234,21 +287,29 @@ paths:
         - name: timeStamp
           in: query
           required: true
-          description: "Unix-Zeitstempel in Millisekunden, für den die DPP-Version angefordert wird."
+          description: |
+            **[DE]** Unix-Zeitstempel in Millisekunden, für den die DPP-Version angefordert wird.
+
+            ---
+            **[EN]** Unix timestamp in milliseconds for which the DPP version is requested.
           schema:
             type: integer
             format: int64
           example: 1776840257913
       responses:
         "200":
-          description: "Erfolgreiche Antwort mit der angeforderten DPP-Version."
+          description: |
+            **[DE]** Erfolgreiche Antwort mit der angeforderten DPP-Version.
+
+            ---
+            **[EN]** Successful response with the requested DPP version.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DPP"
               example:
                 dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
+                productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMAAx"
                 createdAt: "1776845156948"
                 version: "1.0.0"
                 submodels:
@@ -262,13 +323,21 @@ paths:
     post:
       tags:
         - "DPP Life Cycle API"
-      summary: "DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds)"
-      description: "Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen."
+      summary: "[DE] DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds) | [EN] Read DPP IDs for a list of Product IDs (ReadDPPIdsByProductIds)"
+      description: |
+        **[DE]** Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen.
+
+        ---
+        **[EN]** Returns a list of DPP identifiers matching a set of product identifiers.
       operationId: "readDPPIdsByProductIds"
       x-semanticId: "https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0"
       requestBody:
         required: true
-        description: "Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen."
+        description: |
+          **[DE]** Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen.
+
+          ---
+          **[EN]** A list of product IDs for which the corresponding DPP IDs should be found.
         content:
           application/json:
             schema:
@@ -280,7 +349,11 @@ paths:
               - "PID"
       responses:
         "200":
-          description: "Eine Liste der passenden DPP-Kennungen."
+          description: |
+            **[DE]** Eine Liste der passenden DPP-Kennungen.
+
+            ---
+            **[EN]** A list of matching DPP identifiers.
           content:
             application/json:
               schema:
@@ -297,16 +370,25 @@ paths:
     post:
       tags:
         - "DPP Registry API"
-      summary: "Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry)"
+      summary: "[DE] Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry) | [EN] Register new DPP in central registry (PostNewDPPToRegistry)"
       description: |
-        Registriert einen neuen DPP im zentralen Register der EU-Kommission.
+        **[DE]** Registriert einen neuen DPP im zentralen Register der EU-Kommission.
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+
+        ---
+        **[EN]** Registers a new DPP in the central registry of the EU Commission.
+
+        This endpoint is conceptually planned but not yet implemented.
       operationId: "postNewDPPToRegistry"
       x-semanticId: "https://jtc24/dpp/API/RegisterDPP/1/0"
       requestBody:
         required: true
-        description: "Ein Objekt, das die Kennungen für Produkt, Betreiber und Sicherungsbetreiber enthält (Teilmenge des DPP-Headers)."
+        description: |
+          **[DE]** Ein Objekt, das die Kennungen für Produkt, Betreiber und Sicherungsbetreiber enthält (Teilmenge des DPP-Headers).
+
+          ---
+          **[EN]** An object containing the identifiers for product, operator, and backup operator (subset of the DPP header).
         content:
           application/json:
             schema:
@@ -324,7 +406,11 @@ paths:
               backupOperatorId: "backup-001"
       responses:
         "201":
-          description: "DPP erfolgreich registriert. Gibt die neue Registrierungs-ID zurück."
+          description: |
+            **[DE]** DPP erfolgreich registriert. Gibt die neue Registrierungs-ID zurück.
+
+            ---
+            **[EN]** DPP successfully registered. Returns the new registry ID.
           content:
             application/json:
               schema:
@@ -335,14 +421,22 @@ paths:
               example:
                 registryIdentifier: "registry-identifier-001"
         "501":
-          description: "Noch nicht implementiert."
+          description: |
+            **[DE]** Noch nicht implementiert.
+
+            ---
+            **[EN]** Not yet implemented.
 
   /dpps/{dppId}/collections/{elementId}:
     get:
       tags:
         - "DPP Fine-Granular Life Cycle API"
-      summary: "Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection)"
-      description: "Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus einem bestimmten DPP zurück."
+      summary: "[DE] Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection) | [EN] Read a data element collection from a DPP (ReadDataElementCollection)"
+      description: |
+        **[DE]** Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus einem bestimmten DPP zurück.
+
+        ---
+        **[EN]** Returns a specific 'DataElementCollection' by its ID from a specific DPP.
       operationId: "readDataElementCollection"
       x-semanticId: "https://jtc24/dpp/API/ReadDataElementCollection/1/0"
       parameters:
@@ -350,7 +444,11 @@ paths:
         - $ref: "#/components/parameters/elementId"
       responses:
         "200":
-          description: "Die angeforderte DataElementCollection."
+          description: |
+            **[DE]** Die angeforderte DataElementCollection.
+
+            ---
+            **[EN]** The requested DataElementCollection.
           content:
             application/json:
               schema:
@@ -365,17 +463,26 @@ paths:
     patch:
       tags:
         - "DPP Fine-Granular Life Cycle API"
-      summary: "Eine Daten-Sammlung in einem DPP aktualisieren (UpdateDataElementCollection)"
+      summary: "[DE] Eine Daten-Sammlung in einem DPP aktualisieren (UpdateDataElementCollection) | [EN] Update a data element collection in a DPP (UpdateDataElementCollection)"
       description: |
-        Aktualisiert den Inhalt einer 'DataElementCollection' in einem bestimmten DPP.
+        **[DE]** Aktualisiert den Inhalt einer 'DataElementCollection' in einem bestimmten DPP.
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+
+        ---
+        **[EN]** Updates the content of a 'DataElementCollection' in a specific DPP.
+
+        This endpoint is conceptually planned but not yet implemented.
       operationId: "updateDataElementCollection"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementId"
       requestBody:
-        description: "Partielle DataElementCollection, die nur die zu aktualisierenden Teile enthält."
+        description: |
+          **[DE]** Partielle DataElementCollection, die nur die zu aktualisierenden Teile enthält.
+
+          ---
+          **[EN]** Partial DataElementCollection containing only the parts to be updated.
         required: true
         content:
           application/json:
@@ -385,7 +492,11 @@ paths:
               model: "proto-002"
       responses:
         "200":
-          description: "Erfolgreich aktualisiert. Gibt optional die aktualisierte Collection zurück."
+          description: |
+            **[DE]** Erfolgreich aktualisiert. Gibt optional die aktualisierte Collection zurück.
+
+            ---
+            **[EN]** Successfully updated. Optionally returns the updated collection.
           content:
             application/json:
               schema:
@@ -397,17 +508,26 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "501":
-          description: "Noch nicht implementiert."
+          description: |
+            **[DE]** Noch nicht implementiert.
+
+            ---
+            **[EN]** Not yet implemented.
 
   /dpps/{dppId}/elements/{elementPath}:
     get:
       tags:
         - "DPP Fine-Granular Life Cycle API"
-      summary: "Ein einzelnes Datenelement aus einem DPP lesen (ReadDataElement)"
+      summary: "[DE] Ein einzelnes Datenelement aus einem DPP lesen (ReadDataElement) | [EN] Read a single data element from a DPP (ReadDataElement)"
       description: |
-        Ermöglicht das Lesen eines spezifischen Datenelements mittels seines eindeutigen Pfades innerhalb eines DPPs.
+        **[DE]** Ermöglicht das Lesen eines spezifischen Datenelements mittels seines eindeutigen Pfades innerhalb eines DPPs.
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+
+        ---
+        **[EN]** Enables reading a specific data element using its unique path within a DPP.
+
+        This endpoint is conceptually planned but not yet implemented.
       operationId: "readDataElement"
       x-semanticId: "https://jtc24/dpp/API/ReadDataElement/1/0"
       parameters:
@@ -415,7 +535,11 @@ paths:
         - $ref: "#/components/parameters/elementPath"
       responses:
         "200":
-          description: "Das angeforderte Datenelement."
+          description: |
+            **[DE]** Das angeforderte Datenelement.
+
+            ---
+            **[EN]** The requested data element.
           content:
             application/json:
               schema:
@@ -424,23 +548,36 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "501":
-          description: "Noch nicht implementiert."
+          description: |
+            **[DE]** Noch nicht implementiert.
+
+            ---
+            **[EN]** Not yet implemented.
 
     patch:
       tags:
         - "DPP Fine-Granular Life Cycle API"
-      summary: "Ein einzelnes Datenelement in einem DPP aktualisieren (UpdateDataElement)"
+      summary: "[DE] Ein einzelnes Datenelement in einem DPP aktualisieren (UpdateDataElement) | [EN] Update a single data element in a DPP (UpdateDataElement)"
       description: |
-        Aktualisiert ein spezifisches Datenelement innerhalb eines DPPs. Ermöglicht auch das Hinzufügen oder Entfernen von Informationen.
+        **[DE]** Aktualisiert ein spezifisches Datenelement innerhalb eines DPPs. Ermöglicht auch das Hinzufügen oder Entfernen von Informationen.
 
         Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+
+        ---
+        **[EN]** Updates a specific data element within a DPP. Also enables adding or removing information.
+
+        This endpoint is conceptually planned but not yet implemented.
       operationId: "updateDataElement"
       x-semanticId: "https://jtc24/dpp/API/UpdateDataElement/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementPath"
       requestBody:
-        description: "Der neue Inhalt des Datenelements."
+        description: |
+          **[DE]** Der neue Inhalt des Datenelements.
+
+          ---
+          **[EN]** The new content of the data element.
         required: true
         content:
           application/json:
@@ -449,7 +586,11 @@ paths:
             example: "new value"
       responses:
         "200":
-          description: "Erfolgreich aktualisiert. Gibt das geänderte Datenelement zurück."
+          description: |
+            **[DE]** Erfolgreich aktualisiert. Gibt das geänderte Datenelement zurück.
+
+            ---
+            **[EN]** Successfully updated. Returns the modified data element.
           content:
             application/json:
               schema:
@@ -461,16 +602,25 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "501":
-          description: "Noch nicht implementiert."
+          description: |
+            **[DE]** Noch nicht implementiert.
+
+            ---
+            **[EN]** Not yet implemented.
 
 components:
   schemas:
     DPP:
       type: object
       description: |
-        Repräsentiert den Digitalen Produktpass.
+        **[DE]** Repräsentiert den Digitalen Produktpass.
 
         Die aktuell implementierte Struktur ist teilweise generisch und wird hier mit Beispielen beschrieben.
+
+        ---
+        **[EN]** Represents the Digital Product Passport.
+
+        The currently implemented structure is partially generic and is described here with examples.
       properties:
         dppId:
           $ref: "#/components/schemas/Identifier"
@@ -478,7 +628,11 @@ components:
           $ref: "#/components/schemas/Identifier"
         createdAt:
           type: string
-          description: "Erstellungszeitpunkt als Unix-Zeitstempel in Millisekunden."
+          description: |
+            **[DE]** Erstellungszeitpunkt als Unix-Zeitstempel in Millisekunden.
+
+            ---
+            **[EN]** Creation timestamp as Unix timestamp in milliseconds.
           example: "1776845156948"
         version:
           type: string
@@ -507,7 +661,7 @@ components:
       additionalProperties: true
       example:
         dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-        productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
+        productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMAAx"
         createdAt: "1776845156948"
         version: "1.0.0"
         submodels:
@@ -517,7 +671,11 @@ components:
 
     PartialDPP:
       type: object
-      description: "Eine partielle Repräsentation des DPP für Update-Operationen."
+      description: |
+        **[DE]** Eine partielle Repräsentation des DPP für Update-Operationen.
+
+        ---
+        **[EN]** A partial representation of the DPP for update operations.
       additionalProperties: true
       example:
         version: "2.0"
@@ -568,7 +726,11 @@ components:
           $ref: "#/components/schemas/DPP"
         submodels_values:
           type: object
-          description: "Enthält die Werte der Submodelle, gruppiert nach Submodell-Name."
+          description: |
+            **[DE]** Enthält die Werte der Submodelle, gruppiert nach Submodell-Name.
+
+            ---
+            **[EN]** Contains the values of the submodels, grouped by submodel name.
           additionalProperties:
             type: array
             items:
@@ -582,7 +744,11 @@ components:
 
     SubmodelElement:
       type: object
-      description: "Generisches Element innerhalb eines Submodells."
+      description: |
+        **[DE]** Generisches Element innerhalb eines Submodells.
+
+        ---
+        **[EN]** Generic element within a submodel.
       properties:
         modelType:
           type: string
@@ -594,7 +760,11 @@ components:
           type: string
           example: "xs:string"
         value:
-          description: "Wert des Elements; kann je nach Typ String, Zahl, Objekt oder Liste sein."
+          description: |
+            **[DE]** Wert des Elements; kann je nach Typ String, Zahl, Objekt oder Liste sein.
+
+            ---
+            **[EN]** Value of the element; can be string, number, object, or list depending on type.
         contentType:
           type: string
           example: "application/pdf"
@@ -607,12 +777,20 @@ components:
       additionalProperties: true
 
     DataElement:
-      description: "Ein einzelnes Datenelement innerhalb eines DPP. Kann ein beliebiger Typ sein."
+      description: |
+        **[DE]** Ein einzelnes Datenelement innerhalb eines DPP. Kann ein beliebiger Typ sein.
+
+        ---
+        **[EN]** A single data element within a DPP. Can be any type.
       example: 42
 
     DataElementCollection:
       type: object
-      description: "Eine Sammlung von Datenelementen innerhalb eines DPPs."
+      description: |
+        **[DE]** Eine Sammlung von Datenelementen innerhalb eines DPPs.
+
+        ---
+        **[EN]** A collection of data elements within a DPP.
       additionalProperties:
         $ref: "#/components/schemas/DataElement"
       example:
@@ -622,7 +800,11 @@ components:
 
     PartialDataElementCollection:
       type: object
-      description: "Eine partielle Sammlung von Datenelementen für PATCH-Operationen."
+      description: |
+        **[DE]** Eine partielle Sammlung von Datenelementen für PATCH-Operationen.
+
+        ---
+        **[EN]** A partial collection of data elements for PATCH operations.
       additionalProperties:
         $ref: "#/components/schemas/DataElement"
       example:
@@ -630,12 +812,20 @@ components:
 
     Identifier:
       type: string
-      description: "Eine eindeutige Kennung."
-      example: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
+      description: |
+        **[DE]** Eine eindeutige Kennung.
+
+        ---
+        **[EN]** A unique identifier.
+      example: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMAAx"
 
     ErrorResult:
       type: object
-      description: "Das Standard-Antwortobjekt im Fehlerfall."
+      description: |
+        **[DE]** Das Standard-Antwortobjekt im Fehlerfall.
+
+        ---
+        **[EN]** The standard response object in case of error.
       properties:
         message:
           type: array
@@ -649,17 +839,33 @@ components:
           $ref: "#/components/schemas/MessageTypeEnum"
         text:
           type: string
-          description: "Nachrichtentext, der den Fehler beschreibt."
+          description: |
+            **[DE]** Nachrichtentext, der den Fehler beschreibt.
+
+            ---
+            **[EN]** Message text describing the error.
         code:
           type: string
-          description: "Ein technologieabhängiger Status- oder Fehlercode."
+          description: |
+            **[DE]** Ein technologieabhängiger Status- oder Fehlercode.
+
+            ---
+            **[EN]** A technology-dependent status or error code.
         correlationId:
           type: string
-          description: "ID zur Verbindung von Nachrichten über mehrere Systeme hinweg."
+          description: |
+            **[DE]** ID zur Verbindung von Nachrichten über mehrere Systeme hinweg.
+
+            ---
+            **[EN]** ID for connecting messages across multiple systems.
         timestamp:
           type: string
           format: date-time
-          description: "Zeitstempel der Nachricht."
+          description: |
+            **[DE]** Zeitstempel der Nachricht.
+
+            ---
+            **[EN]** Timestamp of the message.
 
     MessageTypeEnum:
       type: string
@@ -674,7 +880,11 @@ components:
       name: dppId
       in: path
       required: true
-      description: "Eindeutige Kennung des DPP."
+      description: |
+        **[DE]** Eindeutige Kennung des DPP.
+
+        ---
+        **[EN]** Unique identifier of the DPP.
       schema:
         $ref: "#/components/schemas/Identifier"
 
@@ -682,7 +892,11 @@ components:
       name: productId
       in: path
       required: true
-      description: "Eindeutige Kennung des Produkts."
+      description: |
+        **[DE]** Eindeutige Kennung des Produkts.
+
+        ---
+        **[EN]** Unique identifier of the product.
       schema:
         $ref: "#/components/schemas/Identifier"
 
@@ -690,7 +904,11 @@ components:
       name: elementId
       in: path
       required: true
-      description: "Kennung der DataElementCollection innerhalb des DPP."
+      description: |
+        **[DE]** Kennung der DataElementCollection innerhalb des DPP.
+
+        ---
+        **[EN]** Identifier of the DataElementCollection within the DPP.
       schema:
         $ref: "#/components/schemas/Identifier"
 
@@ -698,28 +916,44 @@ components:
       name: elementPath
       in: path
       required: true
-      description: "Der absolute Pfad zum spezifischen Datenelement innerhalb des DPP."
+      description: |
+        **[DE]** Der absolute Pfad zum spezifischen Datenelement innerhalb des DPP.
+
+        ---
+        **[EN]** The absolute path to the specific data element within the DPP.
       schema:
         type: string
         example: "sustainability.recyclability.recycledContent"
 
   responses:
     BadRequest:
-      description: "Fehlerhafte Anfrage (z. B. falsche Syntax oder ungültige Parameter)."
+      description: |
+        **[DE]** Fehlerhafte Anfrage (z. B. falsche Syntax oder ungültige Parameter).
+
+        ---
+        **[EN]** Bad request (e.g. incorrect syntax or invalid parameters).
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResult"
 
     Forbidden:
-      description: "Zugriff verweigert. Der Client hat nicht die erforderlichen Berechtigungen für die Ressource."
+      description: |
+        **[DE]** Zugriff verweigert. Der Client hat nicht die erforderlichen Berechtigungen für die Ressource.
+
+        ---
+        **[EN]** Access denied. The client does not have the required permissions for the resource.
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResult"
 
     NotFound:
-      description: "Die angeforderte Ressource wurde nicht gefunden."
+      description: |
+        **[DE]** Die angeforderte Ressource wurde nicht gefunden.
+
+        ---
+        **[EN]** The requested resource was not found.
       content:
         application/json:
           schema:
