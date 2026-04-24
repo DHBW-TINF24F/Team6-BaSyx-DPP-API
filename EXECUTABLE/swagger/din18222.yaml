@@ -2,6 +2,7 @@ openapi: 3.0.3
 info:
   title: "Digitaler Produktpass (DPP) API"
   description: |
+    **[DE]** <br>
     OpenAPI-Spezifikation basierend auf dem aktuellen Implementierungsstand der DPP-API.
 
     Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die Durchsuchbarkeit von Digitalen Produktpässen (DPP).
@@ -9,6 +10,16 @@ info:
     Status:
     - Ein Teil der Endpunkte ist bereits implementiert und anhand realer curl-Aufrufe dokumentiert.
     - Weitere Endpunkte sind fachlich vorgesehen, aber aktuell noch nicht umgesetzt.
+
+    ---
+    **[EN]** <br>
+    OpenAPI specification based on the current implementation status of the DPP API.
+
+    This API standardizes the interfaces for lifecycle management and discoverability of Digital Product Passports (DPP).
+    
+    Status:
+    - Some endpoints are already implemented and documented with real curl calls.
+    - Additional endpoints are conceptually planned but not yet implemented.
   version: "1.0.0"
 
 servers:
