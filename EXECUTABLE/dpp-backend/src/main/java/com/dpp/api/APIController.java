@@ -72,6 +72,7 @@ public class APIController {
      * 4. Appends the provided DPP entry to the 'dpps' array.
      */
     @PostMapping("/dpps")
+    // check
     public ResponseEntity<ObjectNode> createDpp(@RequestBody JsonNode dpp) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -154,6 +155,7 @@ String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-r
     }
 
     @GetMapping("/dpps/{dppId}")
+    // check
     public ResponseEntity<ObjectNode> readDppById(@PathVariable String dppId) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -346,6 +348,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
             */
 
     @GetMapping("/dppsByProductId/{productId}")
+    // check
     public ResponseEntity<ObjectNode> readDppByProductId(@PathVariable String productId) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -385,6 +388,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
     }
 
     @GetMapping("/dppsByProductIdAndDate/{productId}")
+    // check
     public ResponseEntity<ObjectNode> readDppByProductIdAndDate(
             @PathVariable String productId,
             @RequestParam String timeStamp) {
@@ -489,7 +493,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
         }
     }
 
-    @PutMapping("/dpps/{dppId}")
+    @PatchMapping("/dpps/{dppId}")
     public ResponseEntity<ObjectNode> updateDpp(
             @PathVariable String dppId,
             @RequestBody JsonNode updateData) {
