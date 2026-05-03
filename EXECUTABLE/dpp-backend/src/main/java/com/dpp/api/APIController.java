@@ -36,6 +36,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.POJONode;
 import com.mongodb.client.result.UpdateResult;
 
 @RestController
@@ -61,6 +62,7 @@ public class APIController {
     public ResponseEntity<ObjectNode> health() {
         ObjectNode node = mapper.createObjectNode();
         node.put("status", "UP");
+
         return ResponseEntity.ok(node);
     }
 
@@ -79,7 +81,7 @@ public class APIController {
         // Validate the structure using the utility class
         if (!ValidateDPP.validateJsonTillFirstEntry(dpp)) {
             logger.error("Validation failed for incoming DPP");
-            return ResponseEntity.badRequest().body(response.put("error", "invalid Dpp structure"));
+            return APIUtilsDPP.create_generic_response(400, "Invalid DPP structure", "ERROR", mapper);
         }
 
         try {
@@ -97,13 +99,14 @@ public class APIController {
             String aasIdentifier = Base64DPP.ensureEncoding(dppEntry.get("productId").asText());
 
             List<MongoDppTemplate.Submodels> filteredSubmodels = new ArrayList<>();
+
             try {
                 String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
-if (externalApiBase == null || externalApiBase.isEmpty()) {
-    externalApiBase = "http://localhost:8081";
-}
+                if (externalApiBase == null || externalApiBase.isEmpty()) {
+                    externalApiBase = "http://localhost:8081";
+                }
 
-String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-refs";
+                String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-refs";
 
                 // Using RestClient (Blocking/Synchronous)
                 JsonNode externalPayload = restClient.get()
@@ -149,8 +152,7 @@ String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-r
 
         } catch (Exception e) {
             logger.error("Error during MongoDB operation", e);
-            response.put("error", "Internal Server Error: " + e.getMessage());
-            return ResponseEntity.internalServerError().body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server Error", "EXCEPTION", mapper);
         }
     }
 
@@ -170,9 +172,7 @@ String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-r
                     aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
 
             if (results.isEmpty()) {
-                response.put("status", "failure");
-                response.put("message", "DPP not found");
-                return ResponseEntity.status(404).body(response);
+                return APIUtilsDPP.create_generic_response(404, "DPP not found", "ERROR", mapper);
             }
 
             MongoDppTemplate dpp = mongoTemplate.getConverter().read(
@@ -181,6 +181,7 @@ String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-r
 
             ObjectNode collctedSubmodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
 
+            // TODO: mach den payload richtig!!!
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
             response.putPOJO("submodels_values", collctedSubmodels);
@@ -188,9 +189,7 @@ String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-r
 
         } catch (Exception e) {
             logger.error("Error retrieving DPP: {}", e.getMessage());
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
 
@@ -225,11 +224,11 @@ String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-r
 
                     try {
                         String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
-if (externalApiBase == null || externalApiBase.isEmpty()) {
-    externalApiBase = "http://localhost:8081";
-}
+                        if (externalApiBase == null || externalApiBase.isEmpty()) {
+                            externalApiBase = "http://localhost:8081";
+                        }
 
-String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
+                        String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
 
                         // Using RestClient (Blocking/Synchronous)
                         JsonNode externalPayload = restClient.get()
@@ -247,21 +246,88 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
 
                     } catch (Exception apiEx) {
                         logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
-                        response.put("status", "failure");
-                        return ResponseEntity.status(500).body(response);
+                        return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
                     }
 
                 }
             }
-            response.put("status", "failure");
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
 
         } catch (Exception e) {
             logger.error("Error retrieving DPP: {}", e.getMessage());
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
+    }
+
+    /*
+     * 1. Submodel <- ElementPath: Erstes Ding vor dem Punkt "." is das submodel
+     * 
+     * 2. dppId -> finde den submodelid für das submodel
+     * 
+     * 3. dann call 8081/submodels/{submodelId}/submodel-elements/{elementPath}
+     */
+
+    @GetMapping("dpps/{dppId}/elements/{elementPath}")
+    public ResponseEntity<ObjectNode> readElement(
+            @PathVariable String dppId,
+            @PathVariable String elementPath) {
+        ObjectNode result = mapper.createObjectNode();
+
+        String submodel_name = elementPath.split("\\.")[0];
+        String submodel_identifyer = "";
+
+        JsonNode responseNode = readDppById(dppId).getBody();
+        if (responseNode == null || !responseNode.has("dpp")) {
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
+        }
+
+        POJONode pojoNode = (POJONode) responseNode.get("dpp");
+
+        MongoDppTemplate dppTemplate = (MongoDppTemplate) pojoNode.getPojo();
+
+
+        List<Submodels> dpp_submodels = dppTemplate.getSubmodels();
+
+        for (Submodels submodel : dpp_submodels) {
+            logger.warn("atempting submodel {}",submodel.getName());
+            logger.warn("Element was {}",submodel_name);
+            if (submodel.getName().toLowerCase().equals(submodel_name.toLowerCase())) {
+                submodel_identifyer = submodel.getReference();
+                logger.warn("SUCCESS");
+                break;
+            }
+        }
+
+        submodel_identifyer = Base64DPP.ensureEncoding(submodel_identifyer);
+
+        try {
+            String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+            if (externalApiBase == null || externalApiBase.isEmpty()) {
+                externalApiBase = "http://localhost:8081";
+            }
+
+            String externalUrl = externalApiBase + "/submodels/" + submodel_identifyer + "/submodel-elements/"
+                    + elementPath;
+
+            // Using RestClient (Blocking/Synchronous)
+            JsonNode externalPayload = restClient.get()
+                    .uri(externalUrl)
+                    .retrieve()
+                    .body(JsonNode.class);
+
+            logger.info("External API call successful for AAS: {}", elementPath);
+
+            if (externalPayload != null) {
+                result.put("status", "success");
+                result.putPOJO("payload", externalPayload);
+                return ResponseEntity.ok(result);
+            }
+
+        } catch (Exception apiEx) {
+            logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
+        }
+        return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
     }
 
     @PatchMapping("/dpps/{dppId}/collections/{elementId}")
@@ -281,11 +347,11 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
 
                     try {
                         String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
-if (externalApiBase == null || externalApiBase.isEmpty()) {
-    externalApiBase = "http://localhost:8081";
-}
+                        if (externalApiBase == null || externalApiBase.isEmpty()) {
+                            externalApiBase = "http://localhost:8081";
+                        }
 
-String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
+                        String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
 
                         JsonNode externalPayload = restClient.patch()
                                 .uri(externalUrl)
@@ -298,54 +364,58 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
 
                         if (externalPayload != null && externalPayload.has("result")) {
                             response.put("status", "success");
+                            response.putPOJO("payload", body);
                             return ResponseEntity.ok(response);
                         }
 
                     } catch (Exception apiEx) {
                         logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
-                        response.put("status", "failure");
-                        return ResponseEntity.status(500).body(response);
+                        return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
                     }
 
                 }
             }
 
         } catch (Exception e) {
-            response.put("status", "failure");
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
         response.put("status", "success");
         return ResponseEntity.status(200).body(response);
     }
 
     /*
-
-    submodel.data1.data2.Entry
-
-    get("alles bis .").get(alles bis .).
-
-    @GetMapping("/dpps/{dppId}/elements/{elementPath}")
-    public ResponseEntity<ObjectNode> readElement(
-            @PathVariable String dppId,
-            @PathVariable String elementPath) {
-        ObjectNode response = mapper.createObjectNode();
-
-        response.put("status", "git es noch ned!!!");
-        return ResponseEntity.status(501).body(response);
-    }
-
-    @PatchMapping("/dpps/{dppId}/collections/{elementId}")
-    public ResponseEntity<ObjectNode> updateElement(
-            @PathVariable String dppId,
-            @PathVariable String elementId,
-            @RequestBody JsonNode body) {
-        ObjectNode response = mapper.createObjectNode();
-
-        response.put("status", "git es noch ned!!!");
-        return ResponseEntity.status(501).body(response);
-            }
-
-            */
+     * 
+     * submodel.data1.data2.Entry
+     * 
+     * get("alles bis .").get(alles bis .).
+     * 
+     * @GetMapping("/dpps/{dppId}/elements/{elementPath}")
+     * public ResponseEntity<ObjectNode> readElement(
+     * 
+     * @PathVariable String dppId,
+     * 
+     * @PathVariable String elementPath) {
+     * ObjectNode response = mapper.createObjectNode();
+     * 
+     * response.put("status", "git es noch ned!!!");
+     * return ResponseEntity.status(501).body(response);
+     * }
+     * 
+     * @PatchMapping("/dpps/{dppId}/collections/{elementId}")
+     * public ResponseEntity<ObjectNode> updateElement(
+     * 
+     * @PathVariable String dppId,
+     * 
+     * @PathVariable String elementId,
+     * 
+     * @RequestBody JsonNode body) {
+     * ObjectNode response = mapper.createObjectNode();
+     * 
+     * response.put("status", "git es noch ned!!!");
+     * return ResponseEntity.status(501).body(response);
+     * }
+     * 
+     */
 
     @GetMapping("/dppsByProductId/{productId}")
     // check
@@ -363,9 +433,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
                     aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
 
             if (results.isEmpty()) {
-                response.put("status", "failure");
-                response.put("message", "DPP not found");
-                return ResponseEntity.status(404).body(response);
+                return APIUtilsDPP.create_generic_response(404, "DPP not found", "ERROR", mapper);
             }
 
             MongoDppTemplate dpp = mongoTemplate.getConverter().read(
@@ -381,9 +449,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
 
         } catch (Exception e) {
             logger.error("Error retrieving DPP: {}", e.getMessage());
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
 
@@ -391,40 +457,39 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
     // check
     public ResponseEntity<ObjectNode> readDppByProductIdAndDate(
             @PathVariable String productId,
-            @RequestParam String timeStamp) {
+            @RequestParam String date) {
         ObjectNode response = mapper.createObjectNode();
 
         try {
             Aggregation aggregation = Aggregation.newAggregation(
                     Aggregation.match(Criteria.where("dpps.productId").is(productId)
-                            .and("dpps.createdAt").is(timeStamp)),
+                            .and("dpps.createdAt").is(date)),
                     Aggregation.unwind("dpps"),
                     Aggregation.match(Criteria.where("dpps.productId").is(productId)
-                            .and("dpps.createdAt").is(timeStamp)),
+                            .and("dpps.createdAt").is(date)),
                     Aggregation.replaceRoot("dpps"));
 
             List<org.bson.Document> results = mongoTemplate.aggregate(
                     aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
 
             if (results.isEmpty()) {
-                response.put("status", "failure");
-                response.put("message", "DPP not found");
-                return ResponseEntity.status(404).body(response);
+                return APIUtilsDPP.create_generic_response(404, "DPP not found", "ERROR", mapper);
             }
 
             MongoDppTemplate dpp = mongoTemplate.getConverter().read(
                     MongoDppTemplate.class,
                     results.get(0));
 
+            ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
+
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("submodels_values", submodels);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             logger.error("Error retrieving DPP: {}", e.getMessage());
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
 
@@ -438,23 +503,18 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
             UpdateResult result = mongoTemplate.updateFirst(query, update, "dpp-repo");
 
             if (result.getModifiedCount() == 0) {
-                response.put("status", "failure");
-                response.put("message", "No entry found to delete");
-                return ResponseEntity.status(404).body(response);
+                return APIUtilsDPP.create_generic_response(404, "No entry found to delete", "ERROR", mapper);
             }
 
             response.put("status", "success");
-            response.put("message", "DPP entry deleted successfully");
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
 
-    @PostMapping("/dppIdsByProductIds")
+    @PostMapping("/dppsByProductIds")
     public ResponseEntity<ObjectNode> getDppIdsByProductIds(@RequestBody List<String> productIds) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -487,9 +547,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
 
         } catch (Exception e) {
             logger.error("Error retrieving DPP IDs: {}", e.getMessage(), e);
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
 
@@ -511,9 +569,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
                     .getMappedResults();
 
             if (oldDppDoc.isEmpty()) {
-                response.put("status", "failure");
-                response.put("message", "DPP not found");
-                return ResponseEntity.status(404).body(response);
+                return APIUtilsDPP.create_generic_response(404, "DPP not found", "ERROR", mapper);
             }
 
             org.bson.Document oldDpp = oldDppDoc.get(0);
@@ -526,9 +582,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
                     "dpp-repo");
 
             if (shellDoc == null) {
-                response.put("status", "failure");
-                response.put("message", "Shell for DPP not found");
-                return ResponseEntity.status(404).body(response);
+                return APIUtilsDPP.create_generic_response(404, "Shell for DPP not found", "ERROR", mapper);
             }
 
             String shellId = shellDoc.getString("_id");
@@ -576,21 +630,16 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
                     "dpp-repo");
 
             if (insertResult.getModifiedCount() == 0) {
-                response.put("status", "failure");
-                response.put("message", "No shell found to insert new DPP");
-                return ResponseEntity.status(500).body(response);
+                return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
             }
 
             response.put("status", "success");
-            response.put("message", "DPP updated (new version created)");
             response.put("newDppId", newDppId);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             logger.error("Update error: {}", e.getMessage(), e);
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
 
