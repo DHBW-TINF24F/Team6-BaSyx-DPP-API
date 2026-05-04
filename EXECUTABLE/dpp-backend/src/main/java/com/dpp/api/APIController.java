@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -316,35 +315,6 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
         return ResponseEntity.status(200).body(response);
     }
 
-    /*
-
-    submodel.data1.data2.Entry
-
-    get("alles bis .").get(alles bis .).
-
-    @GetMapping("/dpps/{dppId}/elements/{elementPath}")
-    public ResponseEntity<ObjectNode> readElement(
-            @PathVariable String dppId,
-            @PathVariable String elementPath) {
-        ObjectNode response = mapper.createObjectNode();
-
-        response.put("status", "git es noch ned!!!");
-        return ResponseEntity.status(501).body(response);
-    }
-
-    @PatchMapping("/dpps/{dppId}/collections/{elementId}")
-    public ResponseEntity<ObjectNode> updateElement(
-            @PathVariable String dppId,
-            @PathVariable String elementId,
-            @RequestBody JsonNode body) {
-        ObjectNode response = mapper.createObjectNode();
-
-        response.put("status", "git es noch ned!!!");
-        return ResponseEntity.status(501).body(response);
-            }
-
-            */
-
     @GetMapping("/dppsByProductId/{productId}")
     public ResponseEntity<ObjectNode> readDppByProductId(@PathVariable String productId) {
         ObjectNode response = mapper.createObjectNode();
@@ -383,7 +353,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
             return ResponseEntity.status(500).body(response);
         }
     }
-
+            
     @GetMapping("/dppsByProductIdAndDate/{productId}")
     public ResponseEntity<ObjectNode> readDppByProductIdAndDate(
             @PathVariable String productId,
@@ -450,7 +420,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
         }
     }
 
-    @PostMapping("/dppIdsByProductIds")
+    @PostMapping("/dppsByProductIds")
     public ResponseEntity<ObjectNode> getDppIdsByProductIds(@RequestBody List<String> productIds) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -489,7 +459,7 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
         }
     }
 
-    @PutMapping("/dpps/{dppId}")
+    @PatchMapping("/dpps/{dppId}")
     public ResponseEntity<ObjectNode> updateDpp(
             @PathVariable String dppId,
             @RequestBody JsonNode updateData) {
@@ -590,4 +560,141 @@ String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-
         }
     }
 
+    // FR-BE-11: ReadElement - Abrufen eines Elements aus dem DPP per ID und elementPath
+    @GetMapping("/dpps/{dppId}/elements/{elementPath}")
+    public ResponseEntity<ObjectNode> readElement(
+            @PathVariable String dppId,
+            @PathVariable String elementPath) {
+        ObjectNode response = mapper.createObjectNode();
+
+        // FR-BE-13: Validierung der Eingabeparameter
+        if (dppId == null || dppId.trim().isEmpty()) {
+            logger.error("Invalid input: dppId is empty or null");
+            response.put("status", "error");
+            response.put("message", "Invalid parameter: dppId cannot be empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (elementPath == null || elementPath.trim().isEmpty()) {
+            logger.error("Invalid input: elementPath is empty or null");
+            response.put("status", "error");
+            response.put("message", "Invalid parameter: elementPath cannot be empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try {
+            // Retrieve the DPP document by dppId
+            MongoDppTemplate dpp = APIUtilsDPP.getDppById(dppId, mongoTemplate);
+
+            if (dpp == null) {
+                logger.warn("DPP not found for dppId: {}", dppId);
+                response.put("status", "failure");
+                response.put("message", "DPP not found for the provided dppId");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Navigate through the DPP structure using the elementPath
+            // elementPath format: "productId" or "submodels.0.name" etc.
+            JsonNode dppJson = mapper.convertValue(dpp, JsonNode.class);
+            JsonNode element = dppJson.at("/" + elementPath.replace(".", "/"));
+
+            if (element == null || element.isMissingNode()) {
+                logger.warn("Element not found at path: {} in dppId: {}", elementPath, dppId);
+                response.put("status", "failure");
+                response.put("message", "Element not found at the specified path: " + elementPath);
+                return ResponseEntity.status(404).body(response);
+            }
+
+            response.put("status", "success");
+            response.putPOJO("element", element);
+            response.put("elementPath", elementPath);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error retrieving element from DPP: {}", e.getMessage(), e);
+            response.put("status", "error");
+            response.put("message", "Error retrieving element: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    // FR-BE-12: UpdateElement - Updaten eines Elements aus dem DPP per ID und elementPath
+    @PatchMapping("/dpps/{dppId}/elements/{elementPath}")
+    public ResponseEntity<ObjectNode> updateElement(
+            @PathVariable String dppId,
+            @PathVariable String elementPath,
+            @RequestBody JsonNode updateValue) {
+        ObjectNode response = mapper.createObjectNode();
+
+        // FR-BE-13: Validierung der Eingabeparameter
+        if (dppId == null || dppId.trim().isEmpty()) {
+            logger.error("Invalid input: dppId is empty or null");
+            response.put("status", "error");
+            response.put("message", "Invalid parameter: dppId cannot be empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (elementPath == null || elementPath.trim().isEmpty()) {
+            logger.error("Invalid input: elementPath is empty or null");
+            response.put("status", "error");
+            response.put("message", "Invalid parameter: elementPath cannot be empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (updateValue == null) {
+            logger.error("Invalid input: updateValue is null");
+            response.put("status", "error");
+            response.put("message", "Invalid parameter: updateValue cannot be empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try {
+            // Retrieve the current DPP document
+            MongoDppTemplate dpp = APIUtilsDPP.getDppById(dppId, mongoTemplate);
+
+            if (dpp == null) {
+                logger.warn("DPP not found for dppId: {}", dppId);
+                response.put("status", "failure");
+                response.put("message", "DPP not found for the provided dppId");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Convert the path notation to MongoDB update notation
+            // e.g., "productId" -> "dpps.0.productId"
+            // e.g., "submodels.0.name" -> "dpps.0.submodels.0.name"
+            String mongoPath = "dpps.0." + elementPath;
+
+            // Build the update query using MongoDB Update
+            Query query = new Query(Criteria.where("dpps._id").is(dppId));
+            Update update = new Update().set(mongoPath, updateValue);
+
+            UpdateResult result = mongoTemplate.updateFirst(query, update, "dpp-repo");
+
+            if (result.getMatchedCount() == 0) {
+                logger.warn("DPP not found for update with dppId: {}", dppId);
+                response.put("status", "failure");
+                response.put("message", "DPP not found for the provided dppId");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            if (result.getModifiedCount() == 0) {
+                logger.warn("Element not updated at path: {} in dppId: {}", elementPath, dppId);
+                response.put("status", "warning");
+                response.put("message", "No changes made - element may not exist at the specified path");
+                return ResponseEntity.ok(response);
+            }
+
+            response.put("status", "success");
+            response.put("message", "Element updated successfully");
+            response.put("elementPath", elementPath);
+            response.put("modifiedCount", result.getModifiedCount());
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error updating element in DPP: {}", e.getMessage(), e);
+            response.put("status", "error");
+            response.put("message", "Error updating element: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 }
