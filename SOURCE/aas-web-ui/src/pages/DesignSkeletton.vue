@@ -1,181 +1,100 @@
 <template>
   <v-container fluid class="pa-4">
-    <!-- Suchleiste -->
-    <v-row class="mb-2" justify="center">
+
+    <!-- Suchfeld für Filterung der AAS -->
+    <v-row class="mb-6" justify="center">
       <v-col cols="12" md="6">
         <v-text-field
+          v-model="search"
           prepend-inner-icon="mdi-magnify"
-          placeholder="Search..."
+          placeholder="AAS search..."
           variant="outlined"
           density="comfortable"
-          hide-details
           clearable
-          class="search-bar"
         />
       </v-col>
     </v-row>
 
-    <!-- Filter-Tabs -->
-    <v-row class="mb-6" justify="center">
-      <v-col cols="12" md="8">
-        <v-tabs
-          v-model="activeFilter"
-          align-tabs="center"
-          color="primary"
-          class="filter-tabs"
-        >
-          <v-tab value="all">All</v-tab>
-          <v-tab value="favorites">Favorites</v-tab>
-        </v-tabs>
-      </v-col>
-    </v-row>
-
-    <!-- Sektionen mit Panels -->
-    <div v-for="section in filteredSections" :key="section.id" class="mb-8">
-      <div class="section-title text-h5 mb-3">
-        {{ section.title }}
-      </div>
-
-      <v-row>
-        <template v-for="n in section.count" :key="`${section.id}-${n}`">
-          <v-col
-            v-if="shouldShow(section.id, n)"
-            cols="12"
-            :sm="section.sm"
-            :md="section.md"
-            :class="{ 'panel-col-5': section.count === 5 }"
-          >
-            <v-card class="panel-card" elevation="2">
-              <v-btn
-                icon
-                variant="text"
-                class="favorite-btn"
-                @click.stop="toggleFavorite(`${section.id}-${n}`)"
-              >
-                <v-icon
-                  :color="isFavorite(`${section.id}-${n}`) ? 'red' : 'grey'"
-                >
-                  {{ isFavorite(`${section.id}-${n}`) ? 'mdi-heart' : 'mdi-heart-outline' }}
-                </v-icon>
-              </v-btn>
-
-              <v-card-title class="panel-header">
-                Panel {{ n }}
-              </v-card-title>
-
-              <v-card-text class="panel-content">
-                <div class="image-placeholder">
-                  <v-icon size="48" color="grey">mdi-image-outline</v-icon>
-                  <div class="text-caption mt-2">Item {{ n }}</div>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </template>
-      </v-row>
+    <!-- Titel der Liste -->
+    <div class="section-title text-h5 mb-3">
+      Available AAS
     </div>
-    
-    <v-row v-if="filteredSections.length === 0" justify="center" class="mt-10">
-      <v-col cols="auto" class="text-center text-grey">
-        <v-icon size="64">mdi-heart-off-outline</v-icon>
-        <div class="mt-2">No favorites marked yet</div>
-      </v-col>
-    </v-row>
+
+    <!-- Liste der AAS -->
+    <v-card elevation="2">
+      <v-list lines="two">
+
+        <!-- Dynamische Liste aller AAS -->
+        <v-list-item
+          v-for="aas in filteredAas"
+          :key="aas.id"
+          :title="aas.name"
+          :subtitle="aas.description"
+          
+          @click="goToAas (aas.id)" class="aas-item">
+        
+          <!-- Icon links -->
+          <template #prepend>
+            <v-icon color="primary">mdi-cube-outline</v-icon>
+          </template>
+
+          <!-- Pfeil rechts -->
+          <template #append>
+            <v-icon>mdi-chevron-right</v-icon>
+          </template>
+
+        </v-list-item>
+
+      </v-list>
+    </v-card>
+
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-const activeFilter = ref<'all' | 'favorites'>('all');
+/* Router für Navigation */
+const router = useRouter()
 
-const sections = [
-  { id: 'section1', title: 'Category 1', count: 3, sm: 4, md: 4 },
-  { id: 'section2', title: 'Category 2', count: 1, sm: 12, md: 12 },
-  { id: 'section3', title: 'Category 3', count: 5, sm: 6, md: 2 },
-];
+/* Suchfeld */
+const search = ref('')
 
-const favorites = reactive<Record<string, boolean>>({});
+/* Beispiel AAS Daten (später API ersetzen) */
+const aasList = ref([
+  { id: 1, name: 'AAS 1', description: 'AAS 1 Description' },
+  { id: 2, name: 'AAS 2', description: 'AAS 2 Description' },
+  { id: 3, name: 'AAS 3', description: 'AAS 3 Description' },
+])
 
-const toggleFavorite = (id: string) => {
-  favorites[id] = !favorites[id];
-};
+/* Filterlogik für Suche */
+const filteredAas = computed(() => {
+  if (!search.value) return aasList.value
 
-const isFavorite = (id: string): boolean => !!favorites[id];
+  return aasList.value.filter(a =>
+    a.name.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
 
-// Prüft, ob ein einzelnes Item angezeigt werden soll
-const shouldShow = (sectionId: string, n: number): boolean => {
-  if (activeFilter.value === 'all') return true;
-  return isFavorite(`${sectionId}-${n}`);
-};
-
-// Filtert ganze Sektionen heraus, wenn sie im Favoriten-Modus leer wären
-const filteredSections = computed(() => {
-  return sections.filter(section => {
-    for (let n = 1; n <= section.count; n++) {
-      if (shouldShow(section.id, n)) return true;
-    }
-    return false;
-  });
-});
+/* Navigation zur AAS Seite */
+function goToAas(id: number) {
+  router.push(`/aas/${id}`)
+}
 </script>
 
 <style scoped>
-.filter-tabs {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
 .section-title {
+  color: rgb(var(--v-theme-titleText));
   border-bottom: 2px solid rgb(var(--v-theme-primary));
   padding-bottom: 8px;
 }
 
-.panel-card {
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  transition: transform 0.2s ease;
+.aas-item {
+  cursor: pointer;
 }
 
-.panel-card:hover {
-  transform: translateY(-4px);
-}
-
-.panel-header {
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.panel-content {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.image-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 150px;
-  border: 2px dashed rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-}
-
-.favorite-btn {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  z-index: 10;
-}
-
-@media (min-width: 960px) {
-  .panel-col-5 {
-    flex: 0 0 20% !important;
-    max-width: 20% !important;
-  }
+.aas-item:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08);
 }
 </style>
