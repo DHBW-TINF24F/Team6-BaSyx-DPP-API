@@ -36,6 +36,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.POJONode;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
 
 @RestController
@@ -47,6 +49,7 @@ public class APIController {
     private final ObjectMapper mapper;
     private final RestClient restClient = RestClient.create();
     private final MongoTemplate mongoTemplate; // Using MongoTemplate for Upsert logic
+    private       MongoTemplate aasRegistryTemplate; // Using MongoTemplate for Upsert logic
 
     /**
      * Constructor injection for the ObjectMapper and MongoTemplate.
@@ -55,6 +58,14 @@ public class APIController {
     public APIController(ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
+
+
+        // Manually create the DB connection for the registry once
+        String mongoUri = System.getenv("SPRING_DATA_MONGODB_URI");
+        
+        MongoClient manualClient = MongoClients.create(mongoUri);
+        this.aasRegistryTemplate = new MongoTemplate(manualClient, "aasregistry");
+
     }
 
     @GetMapping("/health")
@@ -775,4 +786,100 @@ public class APIController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
+
+    @PostMapping("/registerDPP")
+    public ResponseEntity<ObjectNode> registerDpp(@RequestBody JsonNode dpp) {
+        ObjectNode response = mapper.createObjectNode();
+
+        if (!ValidateDPP.validateJsonTillFirstEntry(dpp)) {
+            logger.error("Validation failed for incoming DPP Registration");
+            return ResponseEntity.badRequest().body(response.put("error", "invalid Dpp structure"));
+        }
+
+        try {
+            String shellId = dpp.get("shell").get("id").asText();
+            JsonNode dppEntry = dpp.get("shell").get("dpps").get(0);
+
+            String timeStamp = String.valueOf(Instant.now().toEpochMilli());
+            String dppId = dppEntry.get("productId").asText() + timeStamp;
+            String aasIdentifier = Base64DPP.encodeIdentifier(dppEntry.get("productId").asText());
+
+            List<MongoDppTemplate.Submodels> filteredSubmodels = new ArrayList<>();
+            try {
+                String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+                if (externalApiBase == null || externalApiBase.isEmpty()) {
+                    externalApiBase = "http://localhost:8081";
+                }
+                String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-refs";
+                
+                JsonNode externalPayload = restClient.get()
+                    .uri(externalUrl)
+                    .retrieve()
+                    .body(JsonNode.class);
+                
+                if (externalPayload != null && externalPayload.has("result")) {
+                    filteredSubmodels = extractAndFilterSubmodels(externalPayload.get("result"));
+                }
+                
+            } catch (Exception apiEx) {
+                logger.warn("External API call failed during registration: {}", apiEx.getMessage());
+            }
+
+            MongoDppTemplate dppContent = mapper.treeToValue(dppEntry, MongoDppTemplate.class);
+            dppContent.setCreatedAt(timeStamp);
+            dppContent.setDppId(dppId);
+            dppContent.setSubmodels(filteredSubmodels);
+
+            Query query = new Query(Criteria.where("_id").is(shellId));
+            Update update = new Update().push("dpps", dppContent);
+            
+            // Secondary db
+            aasRegistryTemplate.upsert(query, update, "dpp-repo");
+
+            response.put("status", "success");
+            response.put("dppId", dppId);
+            return ResponseEntity.status(201).body(response);
+
+        } catch (Exception e) {
+            logger.error("Error during Registry MongoDB operation", e);
+            response.put("error", "Internal Server Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    private List<MongoDppTemplate.Submodels> extractAndFilterSubmodels(JsonNode resultsArray) {
+        List<MongoDppTemplate.Submodels> list = new ArrayList<>();
+        
+        Map<String, String> submodelMap = new HashMap<>();
+        submodelMap.put("digitalnameplate", "DigitalNamePlate");
+        submodelMap.put("circularity", "Circularity");
+        submodelMap.put("carbonfootprint", "CarbonFootPrint");
+        submodelMap.put("handoverdocumentation", "HandoverDocumentation");
+        submodelMap.put("technicaldata", "TechnicalData");
+        submodelMap.put("productcondition", "ProductCondition");
+        submodelMap.put("materialcomposition", "MaterialComposition");
+
+        for (JsonNode entry : resultsArray) {
+            JsonNode keys = entry.path("keys");
+            if (keys.isArray() && !keys.isEmpty()) {
+                String fullPath = keys.get(0).path("value").asText();
+                
+                String normalizedPath = fullPath.toLowerCase()
+                        .replace("_", "")
+                        .replace("-", "")
+                        .replace(".", "")
+                        .replace("/", "");
+
+                for (Map.Entry<String, String> target : submodelMap.entrySet()) {
+                    if (normalizedPath.contains(target.getKey())) {
+                        list.add(new MongoDppTemplate.Submodels(fullPath, target.getValue(), "1.0"));
+                        break; 
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
 }
