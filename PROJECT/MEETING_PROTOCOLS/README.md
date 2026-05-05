@@ -1,7 +1,7 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
-- [Meeting 25.04.2026 - Keep it up](#status3)
+- [Meeting 30.04.2026 - UI Logic & AAS-DPP Mapping](#status3)
 - [Meeting 21.04.2026 - Quick Update](#quickUpdate)
 - [Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild](#backendRebuild)
 - [Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration](#bigMeeting)
@@ -24,7 +24,68 @@
 
 <a id="status3">
 
-## Meeting 25.04.2026 - Keep it up
+## Meeting 30.04.2026 - "UI Logic & AAS-DPP Mapping"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Concept: 1-to-1 Mapping (DPP/AAS) | FrontendTeam | 10 min|
+| 2 | Frontend: Overview & Detail View | FrontendTeam | 10 min |
+| 3 | Versioning & Dropdown Logic | FrontendTeam | 7 min |
+| 4 | Task Distribution | FrontendTeam | 3 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 30.04.2026  
+**Time:** 10:45 – 11:15
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+Defining the user interface in the frontend and establishing the logic for creating Digital Product Passports (DPP) from existing Asset Administration Shells (AAS).
+II. Discussion Points
+*Core Concept:*
+- It was decided: One DPP per AAS. This simplifies mapping and structure in the demonstrator.
+- The overview page lists all available AAS.
+*Registration Logic:*
+- If an AAS is selected that does not yet have a registered DPP, a pop-up appears.
+- Via this pop-up, the user can “register” the DPP directly for this AAS.
+*Detail View & Versioning:*
+- By default, the detail view always displays the latest version of the DPP.
+- To view older versions, a drop-down menu is implemented that allows users to access specific versions/history.
+*Design Review:*
+- The team discussed the visual design of the web pages based on feedback from Mr. Renschler to ensure intuitive navigation between the list and the editor.
+
+### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Create a list: Generate an overview of all AAS for the frontend | Nataliia Chubak | 07.05.2026 | 
+| Implementation: Logic transfer (based on Felix's preliminary work) from the AAS list to DPP generation | Felix Schulz | 07.05.2026  |
+| UI Component: Develop a pop-up for DPP registration | Noah Becker | 07.05.2026  |
+| Dropdown Logic: Check the backend connection for retrieving historical versions | Team | 07.05.2026 |
+||||
+
+
+### IV. Future meeting
+The next meeting is planned for 07.05.2026. Focus: Review the implemented list and test the registration pop-up.
+---
+
+
 
 
 ---
@@ -83,7 +144,7 @@ Rentschler Meeting: Preparation of the to-do list for the upcoming meeting with 
 ---
 
 ### IV. Future meeting
-The next meeting is planned for 25.04.2026
+The next meeting is planned for 30.04.2026
 ---
 
 <a id="backendRebuild">
