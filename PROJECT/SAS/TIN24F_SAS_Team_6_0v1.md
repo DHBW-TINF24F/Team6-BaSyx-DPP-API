@@ -1,4 +1,4 @@
-# Software Requirement Specification (SRS)
+# Software Architecture Specification (SAS)
 
 ## Projekt 6: API für den Digitalen Produktpass (DPP) im BaSyx Framework
 
@@ -66,17 +66,18 @@ The following areas are considered out of scope: general BaSyx software architec
 
 ### 1.2. System Overview
 
-The system comprises two primary components: the *DPP Viewer* and the *DPP API*.
+The system comprises two primary components: the *DPP Viewer & Editor* and the *DPP API*.
 
-- ***DPP Viewer*** &mdash; A web viewpoint that presents DPP-related AAS submodels in a clear, responsive UI. It emphasises usability and maintainability and integrates into the BaSyx WebUI.
-- ***DPP API*** &mdash; RESTful API endpoints exposing DPP data and submodel elements to developers and integrators, directly integrated into the BaSyx Environment API. It offers JSON responses, query/filter endpoints, and machine-readable API documentation (OpenAPI/Swagger).
+- ***DPP Viewer & Editor*** &mdash; A web viewpoint that presents DPP-related AAS submodels in a clear, responsive UI. It emphasises usability and maintainability and integrates into the BaSyx WebUI.
+- ***DPP API*** &mdash; RESTful API endpoints exposing DPP data and submodel elements to developers and integrators, working by its own (docker) container service. It offers JSON responses, query/filter endpoints, and machine-readable API documentation (OpenAPI/Swagger).
 
 Key capabilities:
 
 - Visualisation of DPP-related AAS submodels for end users
+- Editable view of DPP instances of an AAS
 - Programmatic access to DPP data via REST endpoints
 - Easy-to-use API documentation through Swagger/OpenAPI
-- Integration into the BaSyx WebUI and the BaSyx Backend Environment API
+- Integration into the BaSyx WebUI
 
 The system follows a microservices (Docker) architecture.  
 Primary technologies include a Vue.js-sided Frontend, Java SpringBoot Backend, and a pipeline server deployment.  
@@ -121,8 +122,8 @@ The system receives requests, processes this data through the exisiting AAS API,
 **Architectural Style**  
 The system integrates into the existing BaSyx infrastructure, working microservice-based:  
 
-- **DPP Viewer *(Frontend)*:** The frontend integrates into the BaSyx WebUI as a web view, based as a module.
-- **DPP API *(Backend)*:** The backend integrates into the BaSyx Environment API, providing new API endpoints.
+- **DPP Viewer & Editor *(Frontend)*:** The frontend integrates into the BaSyx WebUI as a web view, based as a module.
+- **DPP API *(Backend)*:** The backend works by its own independent docker container, providing new API endpoints.
 
 <br>
 
@@ -203,8 +204,8 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 | **Submodule**         | **Responsibility**                                                                 |
 |-----------------------|------------------------------------------------------------------------------------|
-| Frontend              | User interface rendering, interaction handling, form validation, HTTP request flow |
-| DPP API               | Business logic, request validation, domain mapping, REST endpoints                 |
+| DPP Frontend          | User interface rendering, interaction handling, form validation, HTTP request flow |
+| DPP Backend API       | Business logic, request validation, domain mapping, REST endpoints                 |
 | BaSyx Environment API | Provides access to persisted AAS-related product information and submodel data     |
 | Traefik               | Routes incoming requests, performs SSL termination, and handles service discovery  |
 
@@ -212,16 +213,16 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 **Subsystem Collaboration**  
 
-The Frontend communicates with the Backend through RESTful HTTP requests routed via the Docker internal networking. 
-The Backend retrieves product- and submodel-related information by internal queryies to the BaSyx Environment API, which connects to a MongoDB database. 
+The DPP Frontend communicates with the Backend through RESTful HTTP requests routed via the Docker internal networking. 
+The DPP Backend retrieves product- and submodel-related information by internal queryies to the BaSyx Environment API, which connects to a MongoDB database. 
 Traefik dynamically routes traffic based on container labels, ensuring request isolation and secure HTTPS access.
 
 <br>
 
 **Subsystem Boundaries**  
 
-- Presentation concerns are strictly contained within the Frontend.  
-- Domain logic, schema mapping, and validation remain inside the Backend.  
+- Presentation concerns are strictly contained within the DPP Frontend.  
+- Domain logic, schema mapping, and validation remain inside the DPP Backend.  
 - Persistence and AAS service interaction are delegated to the corresponding API endpoints provided by the BaSyx Environment API.  
 - Infrastructure-level routing and TLS termination are handled centrally by Traefik.
 
@@ -252,12 +253,12 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 <br>
 
-The user triggers the request via the frontend. The frontend calls the backend service using RESTful HTTP requests. 
+The user triggers the request via the DPP frontend. The DPP frontend calls the DPP backend service using RESTful HTTP requests. 
 *Traefik routes the request to the correct container based on service labels. (On server deployment)*  
-The backend internally queries the BaSyx Environent API endpoints to retrieve AAS and submodel data and then maps the result to the internal DPP schema. 
-The processed data is returned to the frontend as a JSON payload and finally rendered in the UI.
+The DPP backend internally queries the BaSyx Environent API endpoints to retrieve AAS and submodel data and then maps the result to the internal DPP schema. 
+The processed data is returned to the DPP frontend as a JSON payload and finally rendered in the UI.
 
-If the BaSyx Environment API endpoints are unavailable, the backend returns a descriptive error response.
+If the BaSyx Environment API endpoints are unavailable, the DPP backend returns a descriptive error response.
 
 <br>
 
@@ -270,19 +271,19 @@ It shows the chronological order of messages exchanged between the involved comp
 
 <img src="./diagrams/sequence-diagram/TINF24F_SAS_Team_6_Sequence-Diagram_R10.drawio.svg" alt="BaSyx DPP API – Sequence Diagram" width="100%" height="100%">
 
-*Figure 4-2 &mdash; Sequence Diagram for DPP Data Retrieval &ndash; chronological interaction between the user, frontend, Traefik, backend, and the BaSyx Environment API endpoints during a Digital Product Passport (DPP) request.*
+*Figure 4-2 &mdash; Sequence Diagram for DPP Data Retrieval &ndash; chronological interaction between the user, DPP frontend, Traefik, DPP backend, and the BaSyx Environment API endpoints during a Digital Product Passport (DPP) request.*
 
 <br>
 
-When a user initiates a DPP data request through the frontend, the application sends an HTTP request to the backend service via the Traefik reverse proxy. Traefik forwards the request to the appropriate backend container based on routing rules.
-The backend validates the request, queries the BaSyx Environment API endpoints for the required AAS and submodel information, and maps the received data to the internal DPP schema.
-Once processing is complete, the backend returns the consolidated JSON response to the frontend, which then renders the corresponding product information to the user.
+When a user initiates a DPP data request through the DPP frontend, the application sends an HTTP request to the DPP backend service via the Traefik reverse proxy. Traefik forwards the request to the appropriate DPP backend container based on routing rules.
+The DPP backend validates the request, queries the BaSyx Environment API endpoints for the required AAS and submodel information, and maps the received data to the internal DPP schema.
+Once processing is complete, the DPP backend returns the consolidated JSON response to the frontend, which then renders the corresponding product information to the user.
 
 <br>
 
 **Rationale**  
 
-This sequence demonstrates a clear separation of concerns: user interaction and rendering are handled by the frontend, data orchestration and processing by the backend, and AAS data retrieval by the BaSyx Environment API endpoints. This separation improves maintainability, testability, and supports the modular microservice architecture.
+This sequence demonstrates a clear separation of concerns: user interaction and rendering are handled by the DPP frontend, data orchestration and processing by the DPP backend, and AAS data retrieval by the BaSyx Environment API endpoints. This separation improves maintainability, testability, and supports the modular microservice architecture.
 
 <br>
 
@@ -307,6 +308,8 @@ This view is architecturally relevant because the system relies on external data
 
 ### 5.2. Data Model and Data Flow
 
+> THIS PART NEEDS REWORK! (noahdbecker – 2026-05-08)
+
 The system does not maintain its own persistent storage. Instead, it retrieves product-related information from the BaSyx AAS infrastructure and converts this data into a DPP-specific format. The conceptual model is centred around four core entities:
 
 - **Asset Administration Shell (AAS):** Digital representation of a product and anchor point for related data.
@@ -318,12 +321,12 @@ The system does not maintain its own persistent storage. Instead, it retrieves p
 
 **Data Flow Overview:**  
 
-**1.** The frontend requests DPP data from the backend.  
-**2.** The backend queries the BaSyx Environment API endpoints for AAS and Submodel data.  
-**3.** The backend validates and maps this data into a unified DPP schema.  
-**4.** The processed result is returned as JSON to the frontend (and optionally external API consumers).  
+**1.** The DPP frontend requests DPP data from the backend.  
+**2.** The DPP backend queries the BaSyx Environment API endpoints for AAS and Submodel data.  
+**3.** The DPP backend validates and maps this data into a unified DPP schema.  
+**4.** The processed result is returned as JSON to the DPP frontend (and optionally external API consumers).  
 
-The backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
+The DPP backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
 
 <br><br>
 
@@ -331,7 +334,7 @@ The backend acts as the sole integration and transformation point to ensure a co
 
 ### 6.1. DPP API Specification
 
-The [DIN EN 18222 (Draft)](./files/DIN_EN_18222_Draft.pdf) specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
+The [DIN EN 18222 (2025-08 Draft)](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
 
 - **Life Cycle API (Main Methods):** Includes the main GET, POST, PATCH and DELETE functionalities  
 - **Registry API for Register:** Covers access to external methods of the EC Registry, in order to register a new DPP at the registry of the EC  
@@ -379,11 +382,11 @@ All relevant Submodels are stored in the AAS and need to be retrieved in order t
 
 | **Step (no.)** | **Step (title)** | **Description** | **Involved endpoint(s)** |
 |----------------|------------------|-----------------|--------------------------|
-| **1**          | Request          | User or third-party-application requests the DPP of a product | Frontend / DPP API endpoint |
-| **2**          | Data retrieval   | DPP API has to gather the necessary information about the submodels of the product | DPP API <br> BaSyx Environment API |
-| **3**          | Data mapping     | Reducing the response-data to the DPP-relevant keys and map the response to the required DPP scheme | DPP API |
-| **4**          | Response         | Respond with the correct DPP data object | DPP API <br> Third-Party-Application |
-| **5^\*^**      | Display data     | Display the data visually in the DPP Viewer | Frontend / User |
+| **1**          | Request          | User or third-party-application requests the DPP of a product | DPP Frontend / DPP Backend API endpoint |
+| **2**          | Data retrieval   | DPP API Backend has to gather the necessary information about the submodels of the product | DPP API Backend <br> BaSyx Environment API |
+| **3**          | Data mapping     | Reducing the response-data to the DPP-relevant keys and map the response to the required DPP scheme | DPP API Backend |
+| **4**          | Response         | Respond with the correct DPP data object | DPP API Backend <br> Third-Party-Application |
+| **5^\*^**      | Display data     | Display the data visually in the DPP Viewer | DPP Frontend / User |
 
 *\* Only when request origins from the DPP Viewer*
 
