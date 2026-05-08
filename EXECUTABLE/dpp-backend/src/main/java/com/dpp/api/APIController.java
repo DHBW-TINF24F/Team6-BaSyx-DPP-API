@@ -190,10 +190,14 @@ public class APIController {
                     results.get(0));
 
             ObjectNode collctedSubmodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
+            ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
+            ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
 
             // TODO: mach den payload richtig!!!
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("assetInformation", collectedAssetInformation);
+            response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", collctedSubmodels);
             return ResponseEntity.ok(response);
 
@@ -446,9 +450,13 @@ public class APIController {
                     results.get(results.size() - 1));
 
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
+            ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
+            ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("assetInformation", collectedAssetInformation);
+            response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", submodels);
             return ResponseEntity.ok(response);
 
@@ -486,9 +494,13 @@ public class APIController {
                     results.get(0));
 
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
+            ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
+            ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("assetInformation", collectedAssetInformation);
+            response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", submodels);
             return ResponseEntity.ok(response);
 
