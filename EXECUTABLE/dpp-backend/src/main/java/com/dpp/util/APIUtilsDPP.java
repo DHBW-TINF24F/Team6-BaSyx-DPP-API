@@ -61,6 +61,74 @@ public class APIUtilsDPP {
 
     }
 
+
+    public static ObjectNode collectAdministration(ObjectMapper mapper, MongoDppTemplate dpp, RestClient restClient,
+            Logger logger) {
+
+        try {
+            String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+            if (externalApiBase == null || externalApiBase.isEmpty()) {
+                externalApiBase = "http://localhost:8081";
+            }
+
+            String externalUrl = externalApiBase + "/shells/"
+                    + Base64DPP.ensureEncoding(dpp.getProductId());
+
+            // Using RestClient (Blocking/Synchronous)
+            JsonNode externalPayload = restClient.get()
+                    .uri(externalUrl)
+                    .retrieve()
+                    .body(JsonNode.class);
+
+            logger.info("External API call successful for /shells/{}", dpp.getProductId());
+
+            if (externalPayload != null) {
+                ObjectNode collectedAdministration = mapper.createObjectNode();
+                collectedAdministration.putPOJO("administration", externalPayload.get("administration"));
+                return collectedAdministration;
+            }
+
+        } catch (Exception apiEx) {
+            logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
+        }
+
+        return null;
+    }
+
+
+    public static ObjectNode collectAssetInformation(ObjectMapper mapper, MongoDppTemplate dpp, RestClient restClient,
+            Logger logger) {
+
+        try {
+            String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+            if (externalApiBase == null || externalApiBase.isEmpty()) {
+                externalApiBase = "http://localhost:8081";
+            }
+
+            String externalUrl = externalApiBase + "/shells/"
+                    + Base64DPP.ensureEncoding(dpp.getProductId());
+
+            // Using RestClient (Blocking/Synchronous)
+            JsonNode externalPayload = restClient.get()
+                    .uri(externalUrl)
+                    .retrieve()
+                    .body(JsonNode.class);
+
+            logger.info("External API call successful for /shells/{}", dpp.getProductId());
+
+            if (externalPayload != null) {
+                ObjectNode collectedAssetInformation = mapper.createObjectNode();
+                collectedAssetInformation.putPOJO("assetInformation", externalPayload.get("assetInformation"));
+                return collectedAssetInformation;
+            }
+
+        } catch (Exception apiEx) {
+            logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
+        }
+
+        return null;
+    }
+
     public static ObjectNode collectSubmodelData(ObjectMapper mapper, MongoDppTemplate dpp, RestClient restClient,
             Logger logger) {
         ObjectNode collctedSubmodels = mapper.createObjectNode();
@@ -69,9 +137,9 @@ public class APIUtilsDPP {
 
             try {
                 String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
-if (externalApiBase == null || externalApiBase.isEmpty()) {
-    externalApiBase = "http://localhost:8081";
-}
+                if (externalApiBase == null || externalApiBase.isEmpty()) {
+                    externalApiBase = "http://localhost:8081";
+                }
 
                 String externalUrl = externalApiBase + "/submodels/"
                         + Base64DPP.encodeIdentifier(submodel.getReference()) + "/submodel-elements";
@@ -96,15 +164,14 @@ if (externalApiBase == null || externalApiBase.isEmpty()) {
         return collctedSubmodels;
     }
 
-
     static {
         Map<Integer, String> map = new HashMap<>();
-        
+
         // Mapping basierend auf prEN 18222:2025, Tabelle 16
-        map.put(200,"Success");
-        map.put(201,"SuccessCreated");
-        map.put(202,"SuccessAccepted");
-        map.put(204,"SuccessNoContent");
+        map.put(200, "Success");
+        map.put(201, "SuccessCreated");
+        map.put(202, "SuccessAccepted");
+        map.put(204, "SuccessNoContent");
         map.put(400, "ClientErrorBadRequest");
         map.put(401, "ClientNotAuthorized");
         map.put(403, "ClientForbidden");
@@ -124,17 +191,17 @@ if (externalApiBase == null || externalApiBase.isEmpty()) {
         return ERROR_MAP.getOrDefault(errorCode, "UnknownError");
     }
 
-
-    public static ResponseEntity<ObjectNode> create_generic_response(int code, String text, String messageType,ObjectMapper mapper) {
+    public static ResponseEntity<ObjectNode> create_generic_response(int code, String text, String messageType,
+            ObjectMapper mapper) {
         ObjectNode response = mapper.createObjectNode();
         ObjectNode inner = mapper.createObjectNode();
         ArrayNode arr = response.putArray("message");
 
-        inner.put("code",code);
-        inner.put("messageType",messageType);
-        inner.put("correlationId",getStatusCode(code));
-        inner.put("text",text);
-        inner.put("timeStamp",Instant.now().toString());
+        inner.put("code", code);
+        inner.put("messageType", messageType);
+        inner.put("correlationId", getStatusCode(code));
+        inner.put("text", text);
+        inner.put("timeStamp", Instant.now().toString());
 
         arr.add(inner);
 
