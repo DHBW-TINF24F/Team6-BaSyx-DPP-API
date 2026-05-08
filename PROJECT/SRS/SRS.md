@@ -102,7 +102,7 @@ graph LR
 <p align="center"> <i>Abbildung 1: Visuelle Übersicht des Projekts</i> </p>
 
 ### 1.3 Datenmodell und Semantik
-Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die grob folgenden Aufbau haben:
+Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur des DPP muss durch geeignete IDTA-Submodel-Templates erfüllt werden, die typischerweise folgenden Aufbau haben:
 1. **Digital Nameplate (IDTA-02035-1):** Beinhaltet Informations und Stammdaten.
 2. **Handcover Documentation (IDTA-02035-2):** Beinhaltet Dokumente und Nachweise.
 3. **Product Carbon Footprint (IDTA-02035-3):** Beinhaltet Informationen über die CO2 Emission.
