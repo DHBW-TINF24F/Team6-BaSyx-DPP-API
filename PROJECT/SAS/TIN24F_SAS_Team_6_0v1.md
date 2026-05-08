@@ -22,6 +22,7 @@
 | **Version** | **Date**   | **Author**  | **Comment**                         |
 |-------------|------------|-------------|-------------------------------------|
 | 1.0         | 2025-11-19 | Noah Becker | First architecture specifications   |
+| 1.0         | 2026-05-08 | Noah Becker | Substantive changes |
 
 ---
 
