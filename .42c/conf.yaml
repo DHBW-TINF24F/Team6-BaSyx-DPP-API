@@ -1,0 +1,3 @@
+apis:
+  EXECUTABLE/swagger/din18222.yaml:
+    alias: digitaler-produktpass-dpp-api-te
