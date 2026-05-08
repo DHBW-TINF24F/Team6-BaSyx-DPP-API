@@ -235,8 +235,20 @@ The main goal of this project is the implementation of a **REST-API** for the ma
 |Demo‑Server|Publically hosted instance of the project|Docker-Compose File|
 |Konfiguration|Easily changable configuration parameters (Database link, Password, etc.)|.env File|
 
-## 8 Sources
-|NR.|Referenz|Titel|Version|
-|---|---|---|---|
-|1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|Dokument, dass die Anforderungen an eine API für den Digitalen Produktpass enthält.|
-|2|Aufgabenstellung| Aufgabenstellung Team 6|2025||
+
+## 8 References
+
+| **NR.** | **Referenz** | **Titel** | **Version** | **Link** |
+|---------|--------------|-----------|-------------|----------|
+| 1       | DIN EN 18222 | Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability | 2025 | [Link](/PROJECT/SAS/files/DIN_EN_18222_Draft.pdf) |
+| 2       | IDTA-02035-1 | Digital Battery Passport - Part 1 | 2025 | [Link](./files/IDTA-02035-1_Battery_Digital_Nameplate_1_0.pdf) |
+| 3       | IDTA-02035-2 | Digital Battery Passport - Part 2 | 2025 | [Link](./files/IDTA-02035-2_Battery_Handover_Documentation_1_0.pdf) |
+| 4       | IDTA-02035-3 | Digital Battery Passport - Part 3 | 2025 | [Link](./files/IDTA-02035-3_Battery_CarbonFootprint_1_0.pdf) |
+| 5       | IDTA-02035-4 | Digital Battery Passport - Part 4 | 2025 | [Link](./files/IDTA-02035-4_Battery_TechnicalData_1_0.pdf) |
+| 6       | IDTA-02035-5 | Digital Battery Passport - Part 5 | 2025 | [Link](./files/IDTA-02035-5_Product_Condition_1_0.pdf) |
+| 7       | IDTA-02035-6 | Digital Battery Passport - Part 6 | 2025 | [Link](./files/IDTA-02035-6_Material_Composition_1_0.pdf) |
+| 8       | IDTA-02035-7 | Digital Battery Passport - Part 7 | 2025 | [Link](./files/IDTA-02035-7_Circularity_1_0.pdf) |
+| 9       | HARTING AAS  | HARTING Han 24B Assembly ZSN1 - AAS | - | [Link](https://dpp40.harting.com:3000/?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==) |
+| 10      | HARTING DPP  | HARTING Han 24B Assembly ZSN1 - AAS displayed in DPP structure | - | [Link](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ) |
+| 11      | SRS          | Software Requirement Specification | 2025 | [Link](/PROJECT/SRS/SRS.md) |
+| 12      | Aufgabenstellung | Team 6: BaSyx API Aufgabenstellung | 2025 | [Link](https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md) |
