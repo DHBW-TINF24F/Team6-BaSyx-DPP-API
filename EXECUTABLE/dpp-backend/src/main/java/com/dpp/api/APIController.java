@@ -35,7 +35,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.POJONode;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
@@ -49,16 +48,15 @@ public class APIController {
     private final ObjectMapper mapper;
     private final RestClient restClient = RestClient.create();
     private final MongoTemplate mongoTemplate; // Using MongoTemplate for Upsert logic
-    private       MongoTemplate aasRegistryTemplate; // Only needed for the /registerDpp api call
+    private MongoTemplate aasRegistryTemplate; // Only needed for the /registerDpp api call
 
     public APIController(ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
 
-
         // Manually create the DB connection for the registry once
         String mongoUri = System.getenv("SPRING_DATA_MONGODB_URI");
-        
+
         MongoClient manualClient = MongoClients.create(mongoUri);
         this.aasRegistryTemplate = new MongoTemplate(manualClient, "aasregistry");
 
@@ -151,7 +149,6 @@ public class APIController {
     }
 
     @GetMapping("/dpps/{dppId}")
-    // check
     public ResponseEntity<ObjectNode> readDppById(@PathVariable String dppId) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -177,7 +174,6 @@ public class APIController {
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
 
-            // TODO: mach den payload richtig!!!
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
             response.putPOJO("assetInformation", collectedAssetInformation);
@@ -190,14 +186,6 @@ public class APIController {
             return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
-
-    /*
-     * ellementId -> submodelId
-     * 
-     * 1. get submodels from dpp
-     * 2. search every submodel for the ellementId
-     * 3. return all value of submodel
-     */
 
     @GetMapping("/dpps/{dppId}/collections/{elementId}")
     public ResponseEntity<ObjectNode> readElementCollection(
@@ -218,6 +206,10 @@ public class APIController {
             for (Submodels submodel : dpp.getSubmodels()) {
                 String submodelBase64 = Base64DPP.ensureEncoding(submodel.getReference());
 
+                logger.info("submodelBase {}", submodelBase64);
+                logger.info("elementpath  {}", elementId);
+                logger.info("");
+
                 if (submodelBase64.equals(elementId)) {
 
                     try {
@@ -226,20 +218,20 @@ public class APIController {
                             externalApiBase = "http://localhost:8081";
                         }
 
-                        String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
+                        String externalUrl = externalApiBase + "/submodels/" + submodelBase64;
 
-                        // Using RestClient (Blocking/Synchronous)
                         JsonNode externalPayload = restClient.get()
                                 .uri(externalUrl)
                                 .retrieve()
                                 .body(JsonNode.class);
 
-                        logger.info("External API call successful for submodel: {}", submodel);
-
-                        if (externalPayload != null && externalPayload.has("result")) {
+                        if (externalPayload != null && externalPayload.has("submodelElements")) {
+                            logger.info("External API call successful for submodel: {}", submodel);
                             response.put("status", "success");
-                            response.putPOJO("payload", externalPayload.get("result"));
+                            response.putPOJO("payload", externalPayload.get("submodelElements"));
                             return ResponseEntity.ok(response);
+                        } else {
+                            logger.info("External API call NOT successful for submodel: {}", submodel);
                         }
 
                     } catch (Exception apiEx) {
@@ -249,6 +241,7 @@ public class APIController {
 
                 }
             }
+            logger.error("Error submodel could not be found. submodel: {}", elementId);
             return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
 
         } catch (Exception e) {
@@ -256,14 +249,6 @@ public class APIController {
             return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
-
-    /*
-     * 1. Submodel <- ElementPath: Erstes Ding vor dem Punkt "." is das submodel
-     * 
-     * 2. dppId -> finde den submodelid für das submodel
-     * 
-     * 3. dann call 8081/submodels/{submodelId}/submodel-elements/{elementPath}
-     */
 
     @GetMapping("dpps/{dppId}/elements/{elementPath}")
     public ResponseEntity<ObjectNode> readElement(
@@ -279,12 +264,11 @@ public class APIController {
             return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
 
-
         List<Submodels> dpp_submodels = dpp.getSubmodels();
 
         for (Submodels submodel : dpp_submodels) {
-            logger.warn("atempting submodel {}",submodel.getName());
-            logger.warn("Element was {}",submodel_name);
+            logger.warn("atempting submodel {}", submodel.getName());
+            logger.warn("Element was {}", submodel_name);
             if (submodel.getName().toLowerCase().equals(submodel_name.toLowerCase())) {
                 submodel_identifyer = submodel.getReference();
                 logger.warn("SUCCESS");
@@ -303,7 +287,6 @@ public class APIController {
             String externalUrl = externalApiBase + "/submodels/" + submodel_identifyer + "/submodel-elements/"
                     + elementPath;
 
-            // Using RestClient (Blocking/Synchronous)
             JsonNode externalPayload = restClient.get()
                     .uri(externalUrl)
                     .retrieve()
@@ -345,7 +328,7 @@ public class APIController {
                             externalApiBase = "http://localhost:8081";
                         }
 
-                        String externalUrl = externalApiBase + "/shells/" + submodelBase64 + "/submodel-refs";
+                        String externalUrl = externalApiBase + "/submodels/" + submodelBase64 + "/$value";
 
                         JsonNode externalPayload = restClient.patch()
                                 .uri(externalUrl)
@@ -356,7 +339,7 @@ public class APIController {
 
                         logger.info("External API call successful for submodel: {}", submodel);
 
-                        if (externalPayload != null && externalPayload.has("result")) {
+                        if (externalPayload != null && externalPayload.has("submodelElements")) {
                             response.put("status", "success");
                             response.putPOJO("payload", body);
                             return ResponseEntity.ok(response);
@@ -377,37 +360,7 @@ public class APIController {
         return ResponseEntity.status(200).body(response);
     }
 
-    /*
-
-    submodel.data1.data2.Entry
-
-    get("alles bis .").get(alles bis .).
-
-    @GetMapping("/dpps/{dppId}/elements/{elementPath}")
-    public ResponseEntity<ObjectNode> readElement(
-            @PathVariable String dppId,
-            @PathVariable String elementPath) {
-        ObjectNode response = mapper.createObjectNode();
-
-        response.put("status", "git es noch ned!!!");
-        return ResponseEntity.status(501).body(response);
-    }
-
-    @PatchMapping("/dpps/{dppId}/collections/{elementId}")
-    public ResponseEntity<ObjectNode> updateElement(
-            @PathVariable String dppId,
-            @PathVariable String elementId,
-            @RequestBody JsonNode body) {
-        ObjectNode response = mapper.createObjectNode();
-
-        response.put("status", "git es noch ned!!!");
-        return ResponseEntity.status(501).body(response);
-            }
-
-            */
-
     @GetMapping("/dppsByProductId/{productId}")
-    // check
     public ResponseEntity<ObjectNode> readDppByProductId(@PathVariable String productId) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -445,9 +398,8 @@ public class APIController {
             return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
     }
-            
+
     @GetMapping("/dppsByProductIdAndDate/{productId}")
-    // check
     public ResponseEntity<ObjectNode> readDppByProductIdAndDate(
             @PathVariable String productId,
             @RequestParam String date) {
@@ -555,7 +507,7 @@ public class APIController {
         ObjectNode response = mapper.createObjectNode();
 
         try {
-            
+
             Aggregation agg = Aggregation.newAggregation(
                     Aggregation.match(Criteria.where("dpps._id").is(dppId)),
                     Aggregation.unwind("dpps"),
@@ -641,66 +593,6 @@ public class APIController {
         }
     }
 
-    /*
-    // FR-BE-11: ReadElement - Abrufen eines Elements aus dem DPP per ID und elementPath
-    @GetMapping("/dpps/{dppId}/elements/{elementPath}")
-    public ResponseEntity<ObjectNode> readElement(
-            @PathVariable String dppId,
-            @PathVariable String elementPath) {
-        ObjectNode response = mapper.createObjectNode();
-
-        // FR-BE-13: Validierung der Eingabeparameter
-        if (dppId == null || dppId.trim().isEmpty()) {
-            logger.error("Invalid input: dppId is empty or null");
-            response.put("status", "error");
-            response.put("message", "Invalid parameter: dppId cannot be empty");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        if (elementPath == null || elementPath.trim().isEmpty()) {
-            logger.error("Invalid input: elementPath is empty or null");
-            response.put("status", "error");
-            response.put("message", "Invalid parameter: elementPath cannot be empty");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        try {
-            // Retrieve the DPP document by dppId
-            MongoDppTemplate dpp = APIUtilsDPP.getDppById(dppId, mongoTemplate);
-
-            if (dpp == null) {
-                logger.warn("DPP not found for dppId: {}", dppId);
-                response.put("status", "failure");
-                response.put("message", "DPP not found for the provided dppId");
-                return ResponseEntity.status(404).body(response);
-            }
-
-            // Navigate through the DPP structure using the elementPath
-            // elementPath format: "productId" or "submodels.0.name" etc.
-            JsonNode dppJson = mapper.convertValue(dpp, JsonNode.class);
-            JsonNode element = dppJson.at("/" + elementPath.replace(".", "/"));
-
-            if (element == null || element.isMissingNode()) {
-                logger.warn("Element not found at path: {} in dppId: {}", elementPath, dppId);
-                response.put("status", "failure");
-                response.put("message", "Element not found at the specified path: " + elementPath);
-                return ResponseEntity.status(404).body(response);
-            }
-
-            response.put("status", "success");
-            response.putPOJO("element", element);
-            response.put("elementPath", elementPath);
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            logger.error("Error retrieving element from DPP: {}", e.getMessage(), e);
-            response.put("status", "error");
-            response.put("message", "Error retrieving element: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
-        }
-    }
-    */
-    // FR-BE-12: UpdateElement - Updaten eines Elements aus dem DPP per ID und elementPath
     @PatchMapping("/dpps/{dppId}/elements/{elementPath}")
     public ResponseEntity<ObjectNode> updateElement(
             @PathVariable String dppId,
@@ -708,7 +600,6 @@ public class APIController {
             @RequestBody JsonNode updateValue) {
         ObjectNode response = mapper.createObjectNode();
 
-        // FR-BE-13: Validierung der Eingabeparameter
         if (dppId == null || dppId.trim().isEmpty()) {
             logger.error("Invalid input: dppId is empty or null");
             response.put("status", "error");
@@ -741,12 +632,8 @@ public class APIController {
                 return ResponseEntity.status(404).body(response);
             }
 
-            // Convert the path notation to MongoDB update notation
-            // e.g., "productId" -> "dpps.0.productId"
-            // e.g., "submodels.0.name" -> "dpps.0.submodels.0.name"
             String mongoPath = "dpps.0." + elementPath;
 
-            // Build the update query using MongoDB Update
             Query query = new Query(Criteria.where("dpps._id").is(dppId));
             Update update = new Update().set(mongoPath, updateValue);
 
@@ -780,7 +667,6 @@ public class APIController {
         }
     }
 
-
     @PostMapping("/registerDPP")
     public ResponseEntity<ObjectNode> registerDpp(@RequestBody JsonNode dpp) {
         ObjectNode response = mapper.createObjectNode();
@@ -805,16 +691,16 @@ public class APIController {
                     externalApiBase = "http://localhost:8081";
                 }
                 String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-refs";
-                
+
                 JsonNode externalPayload = restClient.get()
-                    .uri(externalUrl)
-                    .retrieve()
-                    .body(JsonNode.class);
-                
+                        .uri(externalUrl)
+                        .retrieve()
+                        .body(JsonNode.class);
+
                 if (externalPayload != null && externalPayload.has("result")) {
                     filteredSubmodels = APIUtilsDPP.extractAndFilterSubmodels(externalPayload.get("result"));
                 }
-                
+
             } catch (Exception apiEx) {
                 logger.warn("External API call failed during registration: {}", apiEx.getMessage());
             }
@@ -826,7 +712,7 @@ public class APIController {
 
             Query query = new Query(Criteria.where("_id").is(shellId));
             Update update = new Update().push("dpps", dppContent);
-            
+
             // Secondary db
             aasRegistryTemplate.upsert(query, update, "dpp-repo");
 
@@ -840,6 +726,5 @@ public class APIController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
-
 
 }

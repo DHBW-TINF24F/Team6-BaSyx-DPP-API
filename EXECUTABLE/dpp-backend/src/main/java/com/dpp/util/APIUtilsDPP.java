@@ -184,9 +184,6 @@ public class APIUtilsDPP {
         ERROR_MAP = Collections.unmodifiableMap(map);
     }
 
-    /**
-     * Liefert den normgerechten Statuscode für einen HTTP-Fehlercode.
-     */
     private static String getStatusCode(int errorCode) {
         return ERROR_MAP.getOrDefault(errorCode, "UnknownError");
     }
@@ -208,10 +205,6 @@ public class APIUtilsDPP {
         return ResponseEntity.status(code).body(response);
     }
 
-    /**
-     * Helper to extract submodels based on a whitelist and keyword search anywhere
-     * in the path.
-     */
     public static List<MongoDppTemplate.Submodels> extractAndFilterSubmodels(JsonNode resultsArray) {
         List<MongoDppTemplate.Submodels> list = new ArrayList<>();
 
