@@ -49,12 +49,8 @@ public class APIController {
     private final ObjectMapper mapper;
     private final RestClient restClient = RestClient.create();
     private final MongoTemplate mongoTemplate; // Using MongoTemplate for Upsert logic
-    private       MongoTemplate aasRegistryTemplate; // Using MongoTemplate for Upsert logic
+    private       MongoTemplate aasRegistryTemplate; // Only needed for the /registerDpp api call
 
-    /**
-     * Constructor injection for the ObjectMapper and MongoTemplate.
-     * Spring Boot automatically provides these beans.
-     */
     public APIController(ObjectMapper mapper, MongoTemplate mongoTemplate) {
         this.mapper = mapper;
         this.mongoTemplate = mongoTemplate;
@@ -76,15 +72,7 @@ public class APIController {
         return ResponseEntity.ok(node);
     }
 
-    /**
-     * Processes a DPP request.
-     * 1. Extracts the Shell ID.
-     * 2. Finds the shell in MongoDB or prepares to create it.
-     * 3. Calls external AAS registry to extract and filter submodels.
-     * 4. Appends the provided DPP entry to the 'dpps' array.
-     */
     @PostMapping("/dpps")
-    // check
     public ResponseEntity<ObjectNode> createDpp(@RequestBody JsonNode dpp) {
         ObjectNode response = mapper.createObjectNode();
 
@@ -95,13 +83,10 @@ public class APIController {
         }
 
         try {
-            // 1. Extract the Shell ID to use as the Document ID (_id)
             String shellId = dpp.get("shell").get("id").asText();
 
-            // 2. Extract the first DPP entry from the incoming JSON array
             JsonNode dppEntry = dpp.get("shell").get("dpps").get(0);
 
-            // get The current time construct the dppId
             String timeStamp = String.valueOf(Instant.now().toEpochMilli());
             String dppId = dppEntry.get("productId").asText() + timeStamp;
             dppId = Base64DPP.ensureEncoding(dppId);
@@ -118,7 +103,6 @@ public class APIController {
 
                 String externalUrl = externalApiBase + "/shells/" + aasIdentifier + "/submodel-refs";
 
-                // Using RestClient (Blocking/Synchronous)
                 JsonNode externalPayload = restClient.get()
                         .uri(externalUrl)
                         .retrieve()
@@ -290,17 +274,13 @@ public class APIController {
         String submodel_name = elementPath.split("\\.")[0];
         String submodel_identifyer = "";
 
-        JsonNode responseNode = readDppById(dppId).getBody();
-        if (responseNode == null || !responseNode.has("dpp")) {
+        MongoDppTemplate dpp = APIUtilsDPP.getDppById(dppId, mongoTemplate);
+        if (dpp == null) {
             return APIUtilsDPP.create_generic_response(500, "Internal Server ERROR", "EXCEPTION", mapper);
         }
 
-        POJONode pojoNode = (POJONode) responseNode.get("dpp");
 
-        MongoDppTemplate dppTemplate = (MongoDppTemplate) pojoNode.getPojo();
-
-
-        List<Submodels> dpp_submodels = dppTemplate.getSubmodels();
+        List<Submodels> dpp_submodels = dpp.getSubmodels();
 
         for (Submodels submodel : dpp_submodels) {
             logger.warn("atempting submodel {}",submodel.getName());
@@ -575,6 +555,7 @@ public class APIController {
         ObjectNode response = mapper.createObjectNode();
 
         try {
+            
             Aggregation agg = Aggregation.newAggregation(
                     Aggregation.match(Criteria.where("dpps._id").is(dppId)),
                     Aggregation.unwind("dpps"),
@@ -831,7 +812,7 @@ public class APIController {
                     .body(JsonNode.class);
                 
                 if (externalPayload != null && externalPayload.has("result")) {
-                    filteredSubmodels = extractAndFilterSubmodels(externalPayload.get("result"));
+                    filteredSubmodels = APIUtilsDPP.extractAndFilterSubmodels(externalPayload.get("result"));
                 }
                 
             } catch (Exception apiEx) {
@@ -860,38 +841,5 @@ public class APIController {
         }
     }
 
-    private List<MongoDppTemplate.Submodels> extractAndFilterSubmodels(JsonNode resultsArray) {
-        List<MongoDppTemplate.Submodels> list = new ArrayList<>();
-        
-        Map<String, String> submodelMap = new HashMap<>();
-        submodelMap.put("digitalnameplate", "DigitalNamePlate");
-        submodelMap.put("circularity", "Circularity");
-        submodelMap.put("carbonfootprint", "CarbonFootPrint");
-        submodelMap.put("handoverdocumentation", "HandoverDocumentation");
-        submodelMap.put("technicaldata", "TechnicalData");
-        submodelMap.put("productcondition", "ProductCondition");
-        submodelMap.put("materialcomposition", "MaterialComposition");
-
-        for (JsonNode entry : resultsArray) {
-            JsonNode keys = entry.path("keys");
-            if (keys.isArray() && !keys.isEmpty()) {
-                String fullPath = keys.get(0).path("value").asText();
-                
-                String normalizedPath = fullPath.toLowerCase()
-                        .replace("_", "")
-                        .replace("-", "")
-                        .replace(".", "")
-                        .replace("/", "");
-
-                for (Map.Entry<String, String> target : submodelMap.entrySet()) {
-                    if (normalizedPath.contains(target.getKey())) {
-                        list.add(new MongoDppTemplate.Submodels(fullPath, target.getValue(), "1.0"));
-                        break; 
-                    }
-                }
-            }
-        }
-        return list;
-    }
 
 }
