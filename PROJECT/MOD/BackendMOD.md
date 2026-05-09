@@ -59,14 +59,14 @@ Das DPP-Backend ist ein **Spring-Boot-REST-Service**, der als Datenvermittler zw
 │  MongoConfig              (Verbindungskonfiguration)    │
 └───────────────┬─────────────────────────┬───────────────┘
                 │                         │
-       ┌────────▼────────┐     ┌──────────▼──────────┐
-       │  MongoDB         │     │  AAS-Registry        │
-       │  DB: aas-env     │     │  :8081               │
-       │  Collection:     │     │  (extern)            │
-       │  dpp-repo        │     └─────────────────────┘
-       │                  │
-       │  DB: aasregistry │  ← für /registerDPP
-       └──────────────────┘
+       ┌────────▼────────┐    ┌──────────▼──────────┐
+       │  MongoDB        │    │  AAS-Registry       │
+       │  DB: aas-env    │    │  :8081              │
+       │  Collection:    │    │  (extern)           │
+       │  dpp-repo       │    └─────────────────────┘
+       │                 │
+       │ DB: aasregistry │  ← für /registerDPP
+       └─────────────────┘
 ```
 
 **Datenbankschema (vereinfacht):**
@@ -162,8 +162,6 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 - `getDatabaseName()` legt die primäre Datenbank auf `aas-env` fest.
 - Die Verbindungs-URI wird aus der **Umgebungsvariable** `SPRING_DATA_MONGODB_URI` gelesen. Falls diese nicht gesetzt ist, wird ein lokaler Fallback-Wert verwendet (nützlich für lokale Entwicklung).
 - `MongoClientSettings` ermöglicht zukünftige Erweiterungen (TLS, Connection-Pooling etc.).
-
-> ⚠️ **Hinweis:** Das Fallback-Passwort im Code ist nur für lokale Entwicklung gedacht und sollte in Produktionsumgebungen ausschließlich über Umgebungsvariablen gesetzt werden.
 
 ---
 
@@ -532,8 +530,6 @@ public static List<MongoDppTemplate.Submodels> extractAndFilterSubmodels(JsonNod
 
 Parst die Antwort der AAS-Registry (`/shells/{id}/submodel-refs`) und filtert Submodelle nach einer Whitelist bekannter Submodell-Typen heraus. Der Pfad wird normalisiert (Kleinbuchstaben, keine Sonderzeichen), um robuste Substring-Matches zu ermöglichen.
 
-> **Hinweis:** Diese Methode existiert sowohl in `APIUtilsDPP` (mit `"nameplate"`) als auch privat im `APIController` (mit `"digitalnameplate"`). Dies ist eine Inkonsistenz, die bei einem Refactoring bereinigt werden sollte.
-
 ---
 
 ## 6. APIController – Endpunkte im Detail
@@ -748,8 +744,6 @@ mongoTemplate.upsert(query, update, "dpp-repo");
 6. Antwort: 200 OK { "status": "success", "payload": { ... } }
 ```
 
-> ⚠️ **Hinweis:** Der Aufruf von `readDppById()` intern und das anschließende Casten via `(POJONode)` ist ein ungewöhnliches Muster, das eng an die interne Datenstruktur der `ObjectNode`-Antwort gebunden ist. Robuster wäre ein direkter `getDppById()`-Aufruf aus `APIUtilsDPP`.
-
 ---
 
 ### 6.7 `PATCH /dpps/{dppId}/collections/{elementId}`
@@ -819,7 +813,7 @@ Criteria.where("dpps.productId").is(productId)
         .and("dpps.createdAt").is(date)
 ```
 
-> **Hinweis:** Der Timestamp ist ein Unix-Millisekunden-String. Der Client muss den exakten Wert kennen.
+> **Hinweis:** Der Timestamp ist ein Unix-Millisekunden-String. Der Client muss den exakten Wert kennen. Er kann diesen über den Call `GET /dppsByProductId/{productId}` bekommen.
 
 ---
 
@@ -892,7 +886,7 @@ Aggregation.project()
 5. Antwort: 200 OK { "status": "success", "newDppId": "..." }
 ```
 
-> **Hinweis:** Pull und Push sind **zwei separate** Datenbankoperationen, keine atomare Transaktion. Bei einem Fehler zwischen den beiden Schritten könnte der alte DPP bereits gelöscht sein, ohne dass der neue eingefügt wurde.
+> **Hinweis:** Pull und Push sind **zwei separate** Datenbankoperationen, keine atomare Transaktion. Bei einem Fehler zwischen den beiden Schritten könnte der alte DPP bereits gelöscht sein, ohne dass der neue eingefügt wurde. Lösungsmöglichkeiten: Wir ändern die Konfiguration der MongoDB, was jedoch zu Konflikten mit den gesamten BaSyx Diensten führt, deshalb wird dieses Problem an dieser Stelle akzeptiert.
 
 ---
 
