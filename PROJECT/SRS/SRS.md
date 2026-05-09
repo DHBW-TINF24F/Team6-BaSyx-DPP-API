@@ -20,6 +20,7 @@
 |Version|Autor|Datum|Kommentar|
 |---|---|---|---|
 |1.0|Luca Schmoll|04.11.2025|Ersterstellung der Grundstruktur|
+|1.1|Luca Schmoll|08.05.2026|SRS Struktur überarbeitet|
 
 ---
 
@@ -44,8 +45,34 @@
 2. [Anwendungsfälle](#2-anwendungsfälle)
 3. [Funktionale Anforderungen (FR)](#3-funktionale-anforderungen-fr)
     1. [Daten und API-Anforderungen](#31-daten-und-api-anforderungen)
+        1. [FR-BE-01](#fr-be-01)
+        2. [FR-BE-02](#fr-be-02)
+        3. [FR-BE-03](#fr-be-03)
+        4. [FR-BE-04](#fr-be-04)
+        5. [FR-BE-05](#fr-be-05)
+        6. [FR-BE-06](#fr-be-06)
+        7. [FR-BE-07](#fr-be-07)
+        8. [FR-BE-08](#fr-be-08)
+        9. [FR-BE-09](#fr-be-09)
+        10. [FR-BE-10](#fr-be-10)
+        11. [FR-BE-11](#fr-be-11)
+        12. [FR-BE-12](#fr-be-12)
+        13. [FR-BE-13](#fr-be-13)
     2. [Frontend-Anforderungen](#32-frontend-anforderungen)
+        1. [FR-FE-01](#fr-fe-01)
+        2. [FR-FE-02](#fr-fe-02)
+        3. [FR-FE-03](#fr-fe-03)
+        4. [FR-FE-04](#fr-fe-04)
+        5. [FR-FE-05](#fr-fe-05)
+        6. [FR-FE-06](#fr-fe-06)
+        7. [FR-FE-07](#fr-fe-07)
+        8. [FR-FE-08](#fr-fe-08)
+        9. [FR-FE-09](#fr-fe-09)
+        10. [FR-FE-10](#fr-fe-10)
 4. [Nicht-funktionale Anforderungen (NFR)](#4-nicht-funktionale-anforderungen-nfr)
+    1. [NFR-01](#nfr-01)
+    1. [NFR-02](#nfr-02)
+    1. [NFR-03](#nfr-03)
 5. [Usability Konzept & Workflows](#5-usability-konzept--workflows)
 6. [Qualitätssicherung & Tests](#6-qualitätssicherung--tests)
 7. [MockUps & Wireframes](#7-mockupswireframes)
@@ -228,7 +255,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 ### FR-FE-01
 |ID|FR-FE-01|
 |---|---|
-|Name|Laden eines digitalen Produktpasses (DPP)|
+|Name|Visualisieren eines digitalen Produktpasses (DPP)|
 |Beschreibung|Das System muss in der Lage sein, einen DPP anhand einer übermittelten AAS ID oder DPP-URL zu laden und die darin enthaltenen Submodelle anzuzeigen.|
 |Priorität|5 - Sehr hoch|
 |Akzeptanzkriterium|Durch Eingabe einer DPP ID bekommt man das vollständige DPP angezeigt.|
@@ -247,7 +274,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 ### FR-FE-03
 |ID|FR-FE-03|
 |---|---|
-|Name|Klickbare Navigation|
+|Name|Informationen ein-/ausblenden|
 |Beschreibung|Durch das Klicken der Seitenleisten-Navigation müssen alle Informationen des Submodells angezeigt werden.|
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Die Seitenleistenmodule sind klickbar und öffnen Informationen|
@@ -266,7 +293,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 ### FR-FE-05
 |ID|FR-FE-05|
 |---|---|
-|Name|Menu oberhalb des Viewers|
+|Name|Main-Menü oberhalb des Viewers erweitern|
 |Beschreibung|Oberhalb des Viewers muss das Menü verfügbar sein, dass einen Wechsel zwischen DPP Viewer, AAS Viewer und Submodel Viewer möglich macht.|
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Ein Menü mit Wechsel in die anderen Modi muss Verfügbar sein.|
@@ -384,16 +411,18 @@ Contract[Contract‑Tests DIN EN 18222]
 Mockups und Wireframes können <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PM/Mockups%20%26%20Wireframes">hier</a> gefunden werden.
 
 ## 8. Quellen & Referenzen
-|NR.|Referenz|Titel|Version|Beschreibung|
-|---|---|---|---|---|
-|1|DIN EN 18222|Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability|2025|Dokument, dass die Anforderungen an eine API für den Digitalen Produktpass enthält.|
-|2|IDTA-02035-1|Digital Battery Passport - Part 1|2025|Enthält Informationen über den Tab Digital Nameplate, der innerhalb des Projekts umgesetzt wird.|
-|3|IDTA-02035-5|Digital Battery Passport - Part 5|2025|Enthält Informationen über den Tab Product Condition, der innerhalb des Projekts umgesetzt wird.|
-|4|IDTA-02035-2|Digital Battery Passport - Part 2|2025|Enthält Informationen über den Tab Documentation, der innerhalb des Projekts umgesetzt wird.|
-|5|IDTA-02035-3|Digital Battery Passport - Part 3|2025|Enthält Informationen über den Tab Carbon Footprint, der innerhalb des Projekts umgesetzt wird.|
-|6|IDTA-02035-4|Digital Battery Passport - Part 4|2025|Enthält Informationen über den Tab Technical Data, der innerhalb des Projekts umgesetzt wird.|
-|7|IDTA-02035-6|Digital Battery Passport - Part 6|2025|Enthält Informationen über den Tab Material Composition, der innerhalb des Projekts umgesetzt wird.|
-|8|IDTA-02035-7|Digital Battery Passport - Part 7|2025|Enthält Informationen über den Tab Circularity, der innerhalb des Projekts umgesetzt wird.|
-|9|Harting|<a href="https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ">DPP Lösung Harting<a/>|-|Dient als Orientierung und Vorlage für eine schöne, bereits bestehende DPP Lösung.|
-|10|CRS|<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/CRS">Customer Requirement Specification</a>|2025|Wurde innerhalb dieses Projekts erstellt und dient als Grundlage fur vielerlei Themen innerhalb dieses Dokuments.|
-|11|Aufgabenstellung|<a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">Team 6: BaSyx API Aufgabenstellung</a>|2025|Dient als Grundlage für dieses Projekt|
+
+| **NR.** | **Referenz** | **Titel** | **Version** | **Link** |
+|---------|--------------|-----------|-------------|----------|
+| 1       | DIN EN 18222 | Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability | 2025 | [Link](/PROJECT/SAS/files/DIN_EN_18222_Draft.pdf) |
+| 2       | IDTA-02035-1 | Digital Battery Passport - Part 1 | 2025 | [Link](./files/IDTA-02035-1_Battery_Digital_Nameplate_1_0.pdf) |
+| 3       | IDTA-02035-2 | Digital Battery Passport - Part 2 | 2025 | [Link](./files/IDTA-02035-2_Battery_Handover_Documentation_1_0.pdf) |
+| 4       | IDTA-02035-3 | Digital Battery Passport - Part 3 | 2025 | [Link](./files/IDTA-02035-3_Battery_CarbonFootprint_1_0.pdf) |
+| 5       | IDTA-02035-4 | Digital Battery Passport - Part 4 | 2025 | [Link](./files/IDTA-02035-4_Battery_TechnicalData_1_0.pdf) |
+| 6       | IDTA-02035-5 | Digital Battery Passport - Part 5 | 2025 | [Link](./files/IDTA-02035-5_Product_Condition_1_0.pdf) |
+| 7       | IDTA-02035-6 | Digital Battery Passport - Part 6 | 2025 | [Link](./files/IDTA-02035-6_Material_Composition_1_0.pdf) |
+| 8       | IDTA-02035-7 | Digital Battery Passport - Part 7 | 2025 | [Link](./files/IDTA-02035-7_Circularity_1_0.pdf) |
+| 9       | HARTING AAS  | HARTING Han 24B Assembly ZSN1 - AAS | - | [Link](https://dpp40.harting.com:3000/?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==) |
+| 10      | HARTING DPP  | HARTING Han 24B Assembly ZSN1 - AAS displayed in DPP structure | - | [Link](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ) |
+| 11      | CRS          | Customer Requirement Specification | 2025 | [Link](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/CRS) |
+| 12      | Aufgabenstellung | Team 6: BaSyx API Aufgabenstellung | 2025 | [Link](https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md) |
