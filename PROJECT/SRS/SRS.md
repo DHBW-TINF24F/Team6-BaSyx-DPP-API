@@ -274,7 +274,7 @@ Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt d
 ### FR-FE-03
 |ID|FR-FE-03|
 |---|---|
-|Name|Klickbare Navigation|
+|Name|Informationen ein-/ausblenden|
 |Beschreibung|Durch das Klicken der Seitenleisten-Navigation müssen alle Informationen des Submodells angezeigt werden.|
 |Priorität|4 - Hoch|
 |Akzeptanzkriterium|Die Seitenleistenmodule sind klickbar und öffnen Informationen|
