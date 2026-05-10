@@ -30,18 +30,6 @@ info:
 
     ---
 
-    ### Bekannte Einschränkungen / Known Limitations
-
-    | # | Problem (DE) | Issue (EN) | Betroffen / Affected |
-    |---|---|---|---|
-    | 1 | Doppelter Code `extractAndFilterSubmodels` | Duplicate `extractAndFilterSubmodels` code | `APIController` + `APIUtilsDPP` |
-    | 2 | `PATCH /elements/{path}` adressiert immer `dpps.0.` | `PATCH /elements/{path}` always targets `dpps.0.` | `updateElement()` |
-    | 3 | `collectAssetInformation` und `collectAdministration` machen identische HTTP-Calls | `collectAssetInformation` and `collectAdministration` make identical HTTP calls | `APIUtilsDPP` |
-    | 4 | Kein atomares Update in `PATCH /dpps/{dppId}` | Non-atomic update in `PATCH /dpps/{dppId}` | `updateDpp()` |
-    | 5 | `assetInformation` und `administration` doppelt verschachtelt | `assetInformation` and `administration` double-nested | `readDppById()` |
-    | 6 | Kein Match in collections-Endpunkt liefert 500 statt 404 | No match in collections endpoint returns 500 instead of 404 | `readElementCollection()` |
-    | 7 | `PATCH /dpps/{dppId}` ist nicht atomar (Pull+Push getrennt) | `PATCH /dpps/{dppId}` is not atomic (separate Pull+Push) | `updateDpp()` |
-
   x-description-en: |
     OpenAPI 3.1.0 specification for the DPP backend (Team 6).
     Conformant with prEN 18222:2025. Error format per Table 16.
@@ -136,7 +124,6 @@ paths:
         **[DE]** Erstellt einen neuen DPP-Eintrag in der primären Datenbank (`aas-env`, Collection `dpp-repo`).
 
         **Validierung:** `shell.id`, `shell.dpps[0].productId` und `shell.dpps[0].version` sind Pflichtfelder
-        (gemäß `ValidateDPP.validateJsonTillFirstEntry()`).
 
         **ID-Generierung:** `dppId = Base64URL(productId + currentTimeMillis)` – serverseitig generiert.
 
@@ -151,7 +138,6 @@ paths:
         **[EN]** Creates a new DPP entry in the primary database (`aas-env`, collection `dpp-repo`).
 
         **Validation:** `shell.id`, `shell.dpps[0].productId`, and `shell.dpps[0].version` are mandatory
-        (via `ValidateDPP.validateJsonTillFirstEntry()`).
 
         **ID generation:** `dppId = Base64URL(productId + currentTimeMillis)` – generated server-side.
 
@@ -217,8 +203,8 @@ paths:
       description: |
         **[DE]** Liest einen einzelnen DPP anhand seiner ID (prEN 18222:2025, Tabelle 1).
         Reichert die Antwort mit Daten vom externen AAS-Server an:
-        - `assetInformation` – aus `/shells/{productId}` (doppelt verschachtelt, Einschränkung #5)
-        - `administration` – aus `/shells/{productId}` (doppelt verschachtelt, Einschränkung #5)
+        - `assetInformation` – aus `/shells/{productId}`
+        - `administration` – aus `/shells/{productId}`
         - `submodels_values` – aus `/submodels/{id}/submodel-elements` je Submodell
 
         **Norm-Referenz:** prEN 18222:2025, Tabelle 1, Tabelle 17
@@ -228,8 +214,8 @@ paths:
 
         **[EN]** Returns a single DPP by its ID (prEN 18222:2025, Table 1).
         Enriches the response with data from the external AAS server:
-        - `assetInformation` – from `/shells/{productId}` (double-nested, limitation #5)
-        - `administration` – from `/shells/{productId}` (double-nested, limitation #5)
+        - `assetInformation` – from `/shells/{productId}`
+        - `administration` – from `/shells/{productId}`
         - `submodels_values` – from `/submodels/{id}/submodel-elements` per submodel
 
         **Norm reference:** prEN 18222:2025, Table 1, Table 17
@@ -507,8 +493,6 @@ paths:
 
         MongoDB-Aggregation: `match → unwind → match → project(productId, dppId)`.
 
-        **Hinweis laut Norm (Tabelle 4):** Die Parameter `limit` und `cursor` können vom Client
-        zur Steuerung des Seitenumbruchs verwendet werden. Aktuell in der Implementierung nicht unterstützt.
 
         **Norm-Referenz:** prEN 18222:2025, Tabelle 4, Tabelle 17
         `semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0`
@@ -519,9 +503,6 @@ paths:
         Results are grouped by `productId`.
 
         MongoDB aggregation: `match → unwind → match → project(productId, dppId)`.
-
-        **Note per standard (Table 4):** The `limit` and `cursor` parameters may be used by the client
-        for pagination control. Currently not supported in the implementation.
 
         **Norm reference:** prEN 18222:2025, Table 4, Table 17
         `semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0`
@@ -573,8 +554,6 @@ paths:
         Die `elementId` wird serverseitig via `Base64DPP.ensureEncoding()` ggf. Base64-kodiert.
         Sucht in den `submodels` des DPPs nach einem Match mit der `elementId`.
 
-        ⚠️ **Einschränkung #6:** Kein Match → aktuell `500 Internal Server Error` statt `404 Not Found`.
-
         **Norm-Referenz:** prEN 18222:2025, Tabelle 9, Tabelle 19
         `semanticId: https://jtc24/dpp/API/ReadDataElementCollection/1/0`
 
@@ -583,8 +562,6 @@ paths:
         **[EN]** Returns a specific DataElementCollection (prEN 18222:2025, Table 9).
         The `elementId` is Base64-encoded server-side via `Base64DPP.ensureEncoding()` if needed.
         Searches the DPP's `submodels` for a match with the `elementId`.
-
-        ⚠️ **Limitation #6:** No match → currently `500 Internal Server Error` instead of `404 Not Found`.
 
         **Norm reference:** prEN 18222:2025, Table 9, Table 19
         `semanticId: https://jtc24/dpp/API/ReadDataElementCollection/1/0`
@@ -604,14 +581,20 @@ paths:
         "500":
           description: |
             **[DE]** Interner Serverfehler – tritt auch auf, wenn kein passendes Submodell gefunden wurde
-            (bekannte Einschränkung #6, sollte `404` sein).
 
             **[EN]** Internal server error – also occurs when no matching submodel is found
-            (known limitation #6, should be `404`).
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResult"
+              example:
+                message:
+                  - code: 500
+                    messageType: "Exception"
+                    correlationId: "ServerInternalError"
+                    text: "An unexpected error occurred"
+                    timestamp: "2026-05-08T10:00:00.000Z"
+
 
     patch:
       tags: ["DPP Fine-Granular Life Cycle API"]
@@ -689,7 +672,6 @@ paths:
         Path format: `<SubmodelName>.<ElementPath>` (e.g. `NamePlate.ManufacturerName`).
 
         Internally calls `readDppById()` and extracts the DPP template via `(POJONode)` cast
-        (known limitation #8 – direct `getDppById()` call would be more robust).
 
         Then: `GET {AAS_URL}/submodels/{submodelId}/submodel-elements/{elementPath}`
 
@@ -806,14 +788,6 @@ paths:
         **[DE]** Wie `POST /dpps`, schreibt aber zusätzlich in die **sekundäre Datenbank** `aasregistry`
         (prEN 18222:2025, Tabelle 8).
 
-        Unterschied zu `POST /dpps`:
-        - Verwendet intern eine abweichende Submodell-Whitelist (`"digitalnameplate"` statt `"nameplate"`)
-        - Schreibt via `aasRegistryTemplate.upsert()` in `aasregistry`
-        - Laut Norm: gibt eine `registryIdentifier` zurück (aktuell: gibt `dppId` zurück)
-
-        ⚠️ **Einschränkung #6 (MOD):** `aasRegistryTemplate` wird im Konstruktor mit potenziell
-        `null`-URI erstellt. Null-Check fehlt.
-
         **Norm-Referenz:** prEN 18222:2025, Tabelle 8, Tabelle 18
         `semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0`
 
@@ -821,14 +795,6 @@ paths:
 
         **[EN]** Like `POST /dpps`, but also writes to the **secondary database** `aasregistry`
         (prEN 18222:2025, Table 8).
-
-        Differences from `POST /dpps`:
-        - Uses an internally different submodel whitelist (`"digitalnameplate"` instead of `"nameplate"`)
-        - Writes via `aasRegistryTemplate.upsert()` into `aasregistry`
-        - Per standard: should return a `registryIdentifier` (currently: returns `dppId`)
-
-        ⚠️ **Limitation #6 (MOD):** `aasRegistryTemplate` is created in the constructor with a potentially
-        `null` URI. Null-check is missing.
 
         **Norm reference:** prEN 18222:2025, Table 8, Table 18
         `semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0`
