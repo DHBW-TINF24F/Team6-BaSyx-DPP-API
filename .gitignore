@@ -2,3 +2,4 @@
 ./SOURCE/frontend/node_modules/
 ./SOURCE/backend/.idea/
 .DS_Store
+./tools

@@ -18,6 +18,7 @@
 |1.2|Manuel Lutz|15.03.2026|Status der vorbereiteten Integrationstests nach Ausführung aktualisiert (12/12 bestanden)|
 |1.3|Manuel Lutz|27.03.2026|Anpassung der Integrationstests auf DIN EN 18222 DPP-Data-Object-Structure Mapping|
 |1.4|Manuel Lutz|30.03.2026|Methoden-/Endpoint-Abgleich mit API-Mapping (PATCH/POST, Date-Query, Namenskonventionen) präzisiert|
+|1.5|Manuel Lutz|09.05.2026|Real-Backend-Test-Struktur implementiert; Mock-Harness und Setup-Skript hinzugefügt; 26/26 Tests mit Umschaltungsmechanismus|
 
 ---
 
@@ -171,24 +172,71 @@ Namenskonventionen aus dem Mapping sind bewusst unterschiedlich und werden in de
 |IT-BX-05|Asset Information Extraction|Extraktion und Verwendung von Asset Information für AAS Creation|Pass|
 
 ## 5. Artefakte und Ablage
+
+### Test-Dateien
 Die vorbereiteten Integrationstests liegen im Frontend-Projekt unter:
 - [SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/DppApiIntegration.test.ts) – 14 Tests für DIN EN 18222 API-Endpoints
 - [SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/FrontendBackendIntegration.test.ts) – 7 Tests für Viewer und API Interaktion
 - [SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/BaSyxIntegration.test.ts) – 5 Tests für BaSyx AAS Orchestrierung
+- [SOURCE/frontend/aas-web-ui/tests/integration/integrationHarness.ts](../../SOURCE/frontend/aas-web-ui/tests/integration/integrationHarness.ts) – Geteilte Mock-Backend Implementation und Test Utilities
 
-**Referenzierung der Standard-Mappings:**
+### Setup und Dokumentation
+- [SOURCE/frontend/aas-web-ui/REAL_BACKEND_SETUP.md](../../SOURCE/frontend/aas-web-ui/REAL_BACKEND_SETUP.md) – Anleitung zur Ausführung gegen echtes Backend
+- [SOURCE/frontend/aas-web-ui/scripts/setupTestData.mjs](../../SOURCE/frontend/aas-web-ui/scripts/setupTestData.mjs) – Automatisiertes Skript zur Vorbereitung von Test-Daten im echten Backend
+
+### Standardreferenzen
 - [PROJECT/SAS/mapping/DPP-Data-Object-Structure.md](../../PROJECT/SAS/mapping/DPP-Data-Object-Structure.md) – Vollständige DIN EN 18222 Datenstrukturspezifikation
 
+### Konfiguration und Automation
 Zur reproduzierbaren Ausführung im Repository wurden außerdem hinterlegt:
 - [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit dem Skript `test:integration`
 - [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit dem Skript `test:integration:real` für Real-Backend-Tests (ohne Mocking, mit `RUN_REAL_BACKEND_TESTS=true` und konfigurierbarer `DPP_BACKEND_BASE_URL`)
 - [SOURCE/frontend/aas-web-ui/package.json](../../SOURCE/frontend/aas-web-ui/package.json) mit `engines.node` zur Vorgabe der unterstützten Node.js-Versionen für WSL und CI
 - [.github/workflows/systemtest-issue-tracker.yml](../../.github/workflows/systemtest-issue-tracker.yml) zur automatisierten Ausführung der STR-nahen Tests in GitHub Actions
 
+### 5.1 Real Backend Testing Vorbereitung
+
+Die Tests können nach Backend-Fertigstellung **ohne Code-Änderungen** gegen das echte Backend ausgeführt werden.
+
+**Schritt 1: Backend starten**
+Stelle sicher, dass der DPP-Backend auf `http://localhost:8080` läuft (oder konfiguriere `DPP_BACKEND_BASE_URL` für abweichende URLs).
+
+**Schritt 2: Test-Daten vorbereiten**
+Führe das Setup-Skript aus:
+```bash
+cd SOURCE/frontend/aas-web-ui
+node scripts/setupTestData.mjs
+# Oder mit benutzerdefinierten Backend-URL:
+node scripts/setupTestData.mjs http://backend.example.com:8080
+```
+
+Das Skript erstellt automatisch:
+- Test-DPP mit ID `urn:uuid:test-dpp-1`
+- Product-ID Mapping `urn:uuid:prod-123`
+- Registry-Eintrag `aas-registry://dpps/test-dpp-1`
+- Submodel-Daten (Nameplate, Technical Data, Carbon Footprint)
+
+**Schritt 3: Real-Backend-Tests ausführen**
+```bash
+yarn test:integration:real
+# Oder:
+RUN_REAL_BACKEND_TESTS=true DPP_BACKEND_BASE_URL=http://localhost:8080 yarn test:integration
+```
+
+Erwartetes Ergebnis: **26/26 Tests bestanden** (API: 14, Frontend: 7, BaSyx: 5)
+
+**Weitere Details:**
+Siehe [REAL_BACKEND_SETUP.md](../../SOURCE/frontend/aas-web-ui/REAL_BACKEND_SETUP.md)
+
 ## 6. Zusammenfassung
 Die Systemtests sind inhaltlich aus dem SRS abgeleitet und wurden auf die [DIN EN 18222 DPP-Data-Object-Structure Spezifikation](../../PROJECT/SAS/mapping/DPP-Data-Object-Structure.md) mappiert. Vorbereitete, automatisierte Integrationstests sind erstellt und arbeiten aktuell mit Mocking. Damit ist eine belastbare, standards-konforme Testbasis vorhanden, obwohl das Backend noch nicht vollständig fertiggestellt ist.
 
 Aktueller Ausführungsstand der vorbereiteten Integrationstests (Vitest): **3 Testdateien, 26/26 Tests bestanden** (API: 14, Frontend-Backend: 7, BaSyx: 5).
+
+**Umschaltungsmechanismus für echtes Backend:**
+- **Standard:** Mock-basierte Tests (`yarn test:integration`) – läuft ohne Backend-Installation
+- **Production-Ready:** Real-Backend-Tests (`yarn test:integration:real`) – läuft gegen echten Backend nach Vorbereitung
+- **Setup-Automatisierung:** `node scripts/setupTestData.mjs` erstellt Test-Daten automatisch
 
 **Mappings und Konformität:**
 - API-Tests folgen exakt den DIN EN 18222 Endpoints: CreateDPP, ReadDPPById, ReadDPPByProductId, ReadDPPVersionByProductIdAndDate, ReadDPPIdsByProductIds, UpdateDPPById, DeleteDPPById, PostNewDPPToRegistry, ReadDataElementCollection, ReadDataElement, UpdateDataElementCollection, UpdateDataElement, sowie Error Responses.
@@ -196,9 +244,9 @@ Aktueller Ausführungsstand der vorbereiteten Integrationstests (Vitest): **3 Te
 - BaSyx-Tests prüfen Transformation und Orchestrierung gemäß AAS-Datenmodell.
 
 Nächste sinnvolle Schritte:
-1. Backend-Endpunkte auf die DIN EN 18222 konformen Test-Definitions abgleichen.
-2. Mock-Responses schrittweise durch echte Backend-Antworten ersetzen.
-3. BaSyx Repository, Registry und Discovery Integration validieren.
-4. Testergebnisse nach Ausführung in diesem STR dokumentieren.
+1. **Backend-Endpunkte** auf die DIN EN 18222 konformen Test-Definitions abgleichen.
+2. **Mock-Responses** schrittweise durch echte Backend-Antworten ersetzen (automatisch über Umgebungsvariable).
+3. **BaSyx Repository, Registry und Discovery Integration** validieren.
+4. **Testergebnisse** nach Ausführung in diesem STR dokumentieren.
 
-**Gesamtstatus:** DIN EN 18222 konforme Mock-basierte Integrationstests erstellt und erfolgreich ausgeführt; echte Backend-/BaSyx-Integration noch ausstehend.
+**Gesamtstatus:** DIN EN 18222 konforme Mock-basierte Integrationstests erstellt und erfolgreich ausgeführt (26/26). Real-Backend-Test-Infrastruktur bereit; wechselt automatisch beim Setzen von `RUN_REAL_BACKEND_TESTS=true`. Setup-Skript für Test-Datenvorbereitung vorhanden. **Bereit für echte Backend-Integration.**
