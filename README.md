@@ -154,9 +154,9 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 |----------|-------------|------|
 | **SRS** — Software Requirements Specification | Functional & non-functional requirements | [SRS](./PROJECT/SRS/SRS.md) |
 | **SAS** — Software Architecture Specification | System architecture, diagrams, technical concepts | [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md) |
-| **CRS** — Customer Requirements Specification | Customer requirements & use cases | [CRS](./PROJECT/CRS/TINF24F_CRS_Team_6_0v1.md) |
+| **CRS** — Customer Requirements Specification | Customer requirements & use cases | [CRS](./PROJECT/CRS/crs.md) |
 | **MOD** — Module Documentation | Module descriptions & interfaces | [MOD](./PROJECT/MOD/) |
-| **User Documentation** | End-user guide for the DPP Viewer | [User Documentation](./PROJECT/USER_DOC/) |
+| **User Manual** | End-user guide for the DPP Viewer | [User Manual](./PROJECT/USER_MANUAL/usermanual.md) |
 | **Developer README** | Setup, local development, backend & frontend | [dev README](./README.dev.md) |
 | **Meeting Protocols** | All project meeting minutes | [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/) |
 | **Presentation** | Final project presentation | [PowerPoint](./PROJECT/PRESENTATION/Team%206%20BaSyx%20DPP%20API.pptx) |
