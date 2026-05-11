@@ -1,14 +1,10 @@
 package com.dpp.util;
 
-import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class ValidateDPP {
 
-    /*
-    maybe return an error message later?
-     */
     public static boolean validateJsonTillFirstEntry(JsonNode dpp) {
 
         // 1. Check top-level 'shell' and 'id'
@@ -32,7 +28,6 @@ public class ValidateDPP {
                 return false;
             }
         }
-        // Success logic here
         return true;
     }
 }
