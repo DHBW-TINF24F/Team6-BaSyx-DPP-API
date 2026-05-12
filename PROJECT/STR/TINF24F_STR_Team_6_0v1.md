@@ -19,7 +19,7 @@
 |1.3|Manuel Lutz|27.03.2026|Anpassung der Integrationstests auf DIN EN 18222 DPP-Data-Object-Structure Mapping|
 |1.4|Manuel Lutz|30.03.2026|Methoden-/Endpoint-Abgleich mit API-Mapping (PATCH/POST, Date-Query, Namenskonventionen) präzisiert|
 |1.5|Manuel Lutz|09.05.2026|Real-Backend-Test-Struktur implementiert; Mock-Harness und Setup-Skript hinzugefügt; 26/26 Tests mit Umschaltungsmechanismus|
-|1.6|Manuel Lutz|12.05.2026|STR auf README-Vorgaben ausgerichtet; Struktur, Traceability und Abgrenzung zwischen Systemtest und vorbereiteten Integrationstests präzisiert|
+|1.6|Manuel Lutz|12.05.2026|Struktur, Traceability und Abgrenzung zwischen Systemtest und vorbereiteten Integrationstests präzisiert|
 
 ---
 
@@ -68,13 +68,13 @@ Der Schwerpunkt liegt auf:
 - **Zielplattform:** Web-Anwendung im BaSyx-Kontext
 - **Frontend:** Vue 3 / Vitest / Vue Test Utils
 - **Testausführung:** Vitest im bestehenden Frontend-Projekt
-- **Mocking:** `vi.fn()` und `vi.stubGlobal()` fuer HTTP- und Service-Mocks
+- **Mocking:** `vi.fn()` und `vi.stubGlobal()` für HTTP- und Service-Mocks
 - **Referenzdaten:** Beispiel-DPPs auf Basis der in der SRS genannten IDTA-Submodelle
 - **Echte Integration:** BaSyx AAS Repository, Submodel Repository, Registry, Discovery
 - **Testdatenpflege:** `SOURCE/frontend/aas-web-ui/scripts/setupTestData.mjs`
 
 ### 2.1 Bewertungslogik
-Systemtestfaelle werden als Pass bewertet, wenn Funktion, Statuscode und Rueckgabeformat dem STP entsprechen. Teilweise ausgefuehrte oder vorbereitete Faelle werden als Not Executed markiert und gesondert begruendet.
+Systemtestfaelle werden als Pass bewertet, wenn Funktion, Statuscode und Rückgabeformat dem STP entsprechen. Teilweise ausgeführte oder vorbereitete Faelle werden als Not Executed markiert und gesondert begründet.
 
 ## 3. Systemtestfälle
 
@@ -82,51 +82,51 @@ Systemtestfaelle werden als Pass bewertet, wenn Funktion, Statuscode und Rueckga
 
 |Test-ID|Beschreibung|Schritte|Erwartetes Ergebnis|Tatsächliches Ergebnis|Status|
 |---|---|---|---|---|---|
-|TC-BE-01|Erstellung eines DPP|Gueltiger DPP-Payload|POST /dpps absenden|Neues DPP-Submodel bzw. DPP wird angelegt|Pass|
-|TC-BE-02|Abrufen eines DPP per ID|Vorhandene `dppId`|GET /dpps/{dppId} absenden|Volle DPP-Daten zurueck|Pass|
+|TC-BE-01|Erstellung eines DPP|Gültiger DPP-Payload|POST /dpps absenden|Neues DPP-Submodel bzw. DPP wird angelegt|Pass|
+|TC-BE-02|Abrufen eines DPP per ID|Vorhandene `dppId`|GET /dpps/{dppId} absenden|Volle DPP-Daten zurück|Pass|
 |TC-BE-03|Updaten eines DPP per ID|Bestehende `dppId`, partielle Aenderungen|PATCH /dpps/{dppId} absenden|Aktualisierte Daten gespeichert|Not Executed|
 |TC-BE-04|Loeschen eines DPP per ID|Bestehende `dppId`|DELETE /dpps/{dppId} absenden|DPP nicht mehr auffindbar|Not Executed|
-|TC-BE-05|Abrufen eines DPP per `productId`|Gueltige `productId`|GET /dppsByProductId/{productId} absenden|Zugeordnetes DPP zurueck|Pass|
-|TC-BE-06|Abrufen eines DPP per Datum|Gueltige `productId` und ISO-8601-Datum|GET /dppsByProductIdAndDate/{productId}?date=... absenden|Historische oder aktuelle Version wird geliefert|Pass|
+|TC-BE-05|Abrufen eines DPP per `productId`|Gültige `productId`|GET /dppsByProductId/{productId} absenden|Zugeordnetes DPP zurück|Pass|
+|TC-BE-06|Abrufen eines DPP per Datum|Gültige `productId` und ISO-8601-Datum|GET /dppsByProductIdAndDate/{productId}?date=... absenden|Historische oder aktuelle Version wird geliefert|Pass|
 |TC-BE-07|Abrufen mehrerer DPPs per Liste|Liste von `productIds`|POST /dppsByProductIds absenden|Liste von DPP-IDs wird geliefert|Pass|
-|TC-BE-08|Registrierung im AAS Registry|Gueltiges DPP mit Registry-Referenz|POST /registerDPP ausfuehren|DPP im Registry auffindbar|Pass|
-|TC-BE-09|Abrufen spezifischer Submodel-Daten|Gueltige `dppId` und `elementId`|GET /dpps/{dppId}/collections/{elementId} absenden|Gespeicherte Daten zurueck|Pass|
-|TC-BE-10|Abrufen eines Elements per `elementPath`|Gueltige `dppId` und `elementPath`|GET /dpps/{dppId}/elements/{elementPath} absenden|Element wird korrekt geliefert|Pass|
-|TC-BE-11|Updaten spezifischer Submodel-Daten|Gueltige `dppId`, `elementId` und Wert|PATCH /dpps/{dppId}/collections/{elementId} absenden|Element aktualisiert|Pass|
-|TC-BE-12|Ungueltige Parameter|Falsche `dppId` oder ungueltiger Query-Parameter|Request absenden|Strukturierte 400/404-Fehlerantwort|Pass|
+|TC-BE-08|Registrierung im AAS Registry|Gültiges DPP mit Registry-Referenz|POST /registerDPP ausführen|DPP im Registry auffindbar|Pass|
+|TC-BE-09|Abrufen spezifischer Submodel-Daten|Gültige `dppId` und `elementId`|GET /dpps/{dppId}/collections/{elementId} absenden|Gespeicherte Daten zurück|Pass|
+|TC-BE-10|Abrufen eines Elements per `elementPath`|Gültige `dppId` und `elementPath`|GET /dpps/{dppId}/elements/{elementPath} absenden|Element wird korrekt geliefert|Pass|
+|TC-BE-11|Updaten spezifischer Submodel-Daten|Gültige `dppId`, `elementId` und Wert|PATCH /dpps/{dppId}/collections/{elementId} absenden|Element aktualisiert|Pass|
+|TC-BE-12|Ungültige Parameter|Falsche `dppId` oder ungültiger Query-Parameter|Request absenden|Strukturierte 400/404-Fehlerantwort|Pass|
 
 ### 3.2 Frontend-Testfälle
 
 |Test-ID|Beschreibung|Schritte|Erwartetes Ergebnis|Tatsächliches Ergebnis|Status|
 |---|---|---|---|---|---|
-|TC-FE-01|Laden eines DPP|Gueltige AAS-/DPP-Referenz|DPP im Viewer oeffnen|Volles DPP angezeigt|Pass|
-|TC-FE-02|Navigation innerhalb des DPP|DPP mit mehreren Submodellen|Seitenleiste pruefen und Element waehlen|Seitenleiste mit Submodellen sichtbar|Pass|
+|TC-FE-01|Laden eines DPP|Gültige AAS-/DPP-Referenz|DPP im Viewer oeffnen|Volles DPP angezeigt|Pass|
+|TC-FE-02|Navigation innerhalb des DPP|DPP mit mehreren Submodellen|Seitenleiste prüfen und Element wählen|Seitenleiste mit Submodellen sichtbar|Pass|
 |TC-FE-03|Klickbare Navigation|Submodell in Seitenleiste waehlen|Informationen anzeigen|Submodel-Informationen werden angezeigt|Pass|
-|TC-FE-04|Highlighting des Submodells|Aktives Submodell wechseln|Hervorhebung pruefen|Aktuelles Submodell ist markiert|Pass|
-|TC-FE-05|Menue oberhalb des Viewers|Viewer mit Navigationsmenue|Modi wechseln|Menue mit DPP-, AAS- und Submodel-Ansicht vorhanden|Pass|
-|TC-FE-06|Informationen zum Produkt|DPP mit Produktmetadaten|Header pruefen|`productId`, Version und Name werden angezeigt|Pass|
-|TC-FE-07|Anzeige der Kategorien|Submodell mit Kategorien|Darstellung pruefen|Zweispaltige, uebersichtliche Darstellung|Pass|
-|TC-FE-08|Fehlende Daten|DPP mit fehlenden optionalen Feldern|Anzeige pruefen|Fehlende Daten werden markiert oder als N/A dargestellt|Pass|
-|TC-FE-09|Tooltips fuer Daten|Datenfelder mit Zusatzinfos|Tooltip pruefen|Tooltip mit DIN-/IDTA-Informationen sichtbar|Pass|
-|TC-FE-10|Responsives Design|Desktop- und Mobilansicht|Layout pruefen|Responsive Darstellung korrekt|Pass|
+|TC-FE-04|Highlighting des Submodells|Aktives Submodell wechseln|Hervorhebung prüfen|Aktuelles Submodell ist markiert|Pass|
+|TC-FE-05|Menü oberhalb des Viewers|Viewer mit Navigationsmenü|Modi wechseln|Menü mit DPP-, AAS- und Submodel-Ansicht vorhanden|Pass|
+|TC-FE-06|Informationen zum Produkt|DPP mit Produktmetadaten|Header prüfen|`productId`, Version und Name werden angezeigt|Pass|
+|TC-FE-07|Anzeige der Kategorien|Submodell mit Kategorien|Darstellung prüfen|Zweispaltige, übersichtliche Darstellung|Pass|
+|TC-FE-08|Fehlende Daten|DPP mit fehlenden optionalen Feldern|Anzeige prüfen|Fehlende Daten werden markiert oder als N/A dargestellt|Pass|
+|TC-FE-09|Tooltips für Daten|Datenfelder mit Zusatzinfos|Tooltip prüfen|Tooltip mit DIN-/IDTA-Informationen sichtbar|Pass|
+|TC-FE-10|Responsives Design|Desktop- und Mobilansicht|Layout prüfen|Responsive Darstellung korrekt|Pass|
 
 ### 3.3 Nicht-funktionale Testfälle
 
 |Test-ID|Beschreibung|Schritte|Erwartetes Ergebnis|Tatsächliches Ergebnis|Status|
 |---|---|---|---|---|---|
-|TC-NFR-01|OpenAPI-Konformitaet|API gegen Spezifikation validieren|Konform mit Spezifikation|Konformitaetspruefung dokumentiert|Pass|
-|TC-NFR-02|BaSyx-Konformitaet|API-Calls und Integrationspfade pruefen|Nur BaSyx-Schnittstellen verwendet|BaSyx-Pfade werden verwendet|Pass|
-|TC-NFR-03|Automatisierte Tests|Unit- und Integrationstests ausfuehren|Tests vorhanden und erfolgreich|Mock-basierte Tests erfolgreich|Pass|
+|TC-NFR-01|OpenAPI-Konformitaet|API gegen Spezifikation validieren|Konform mit Spezifikation|Konformitaetsprüfung dokumentiert|Pass|
+|TC-NFR-02|BaSyx-Konformitaet|API-Calls und Integrationspfade prüfen|Nur BaSyx-Schnittstellen verwendet|BaSyx-Pfade werden verwendet|Pass|
+|TC-NFR-03|Automatisierte Tests|Unit- und Integrationstests ausführen|Tests vorhanden und erfolgreich|Mock-basierte Tests erfolgreich|Pass|
 
 ## 4. Ausführung und Ergebnisse
 
 ### 4.1 Ziel und Abgrenzung
-Weil das Backend noch nicht in allen Bereichen final vorliegt, wurden systemnahe Integrationstests als vorbereitete Mock-Tests erstellt. Diese Tests pruefen bereits heute:
+Weil das Backend noch nicht in allen Bereichen final vorliegt, wurden systemnahe Integrationstests als vorbereitete Mock-Tests erstellt. Diese Tests prüfen bereits heute:
 - Request- und Response-Strukturen,
 - die Interaktion des Frontends mit einer DPP-API,
 - die Orchestrierung geplanter BaSyx-Integrationen.
 
-Sobald das Backend vollstaendig bereitsteht, koennen die Mock-Antworten schrittweise durch echte API-Aufrufe ersetzt werden, ohne die Testfaelle zu aendern.
+Sobald das Backend vollständig bereitsteht, können die Mock-Antworten schrittweise durch echte API-Aufrufe ersetzt werden, ohne die Testfälle zu ändern.
 
 ### 4.2 API-Integration (DIN EN 18222 konform)
 
@@ -178,9 +178,9 @@ Namenskonventionen aus dem Mapping sind bewusst unterschiedlich und werden in de
 |IT-BX-05|Asset Information Extraction|Extraktion und Verwendung von Asset Information für AAS Creation|Pass|
 
 ### 4.5 Auswertungslogik
-- Pass: Testfall erfolgreich ausgefuehrt und fachlich korrekt
-- Not Executed: Testfall dokumentiert, aber im aktuellen Stand noch nicht gegen das reale Backend ausgefuehrt
-- Die Tabellen in Abschnitt 3 bilden den Soll-Zustand der Systemtests ab; Abschnitt 4 dokumentiert die aktuell verfuegbaren Ausfuehrungen und vorbereiteten Integrationspruefungen
+- Pass: Testfall erfolgreich ausgeführt und fachlich korrekt
+- Not Executed: Testfall dokumentiert, aber im aktuellen Stand noch nicht gegen das reale Backend ausgeführt
+- Die Tabellen in Abschnitt 3 bilden den Soll-Zustand der Systemtests ab; Abschnitt 4 dokumentiert die aktuell verfügbaren Ausführungen und vorbereiteten Integrationsprüfungen
 
 ## 5. Artefakte und Ablage
 
@@ -260,4 +260,4 @@ Nächste sinnvolle Schritte:
 3. **BaSyx Repository, Registry und Discovery Integration** validieren.
 4. **Testergebnisse** nach Ausführung in diesem STR dokumentieren.
 
-**Gesamtstatus:** Die vorbereiteten System- und Integrationstests sind fachlich aus dem SRS abgeleitet, auf das STP gemappt und in Mock-Mode erfolgreich ausgefuehrt worden (26/26 vorbereitete Integrationstests). Die realen Backend- und BaSyx-Tests sind vorbereitet, aber in der aktuellen Projektlage noch nicht vollstaendig gegen das Endsystem abgenommen.
+**Gesamtstatus:** Die vorbereiteten System- und Integrationstests sind fachlich aus dem SRS abgeleitet, auf das STP gemappt und in Mock-Mode erfolgreich ausgeführt worden (26/26 vorbereitete Integrationstests). Die realen Backend- und BaSyx-Tests sind vorbereitet, aber in der aktuellen Projektlage noch nicht vollstaendig gegen das Endsystem abgenommen.
