@@ -788,13 +788,28 @@ paths:
         **[DE]** Wie `POST /dpps`, schreibt aber zusätzlich in die **sekundäre Datenbank** `aasregistry`
         (prEN 18222:2025, Tabelle 8).
 
+        Der Aufruf legt einen neuen **Digital Product Passport (DPP)**-Eintrag in der Registry an und verknüpft diesen mit einer entsprechenden **Asset Administration Shell (AAS)**.
+
+        Folgende Fälle werden unterstützt:
+        - **Standardfall**: Erzeugung einer neuen DPP-ID sowie Anlage/Synchronisation einer neuen AAS.
+        - **AAS existiert bereits**: Es wird nur eine neue DPP-ID erzeugt und mit der bestehenden AAS verknüpft (z. B. Nachregistrierung).
+        - **Registry-only**: Anlage eines reinen DPP-Registry-Eintrags ohne direkte AAS-Erzeugung (implementierungsabhängig).
+
         **Norm-Referenz:** prEN 18222:2025, Tabelle 8, Tabelle 18
         `semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0`
 
+
         ---
 
-        **[EN]** Like `POST /dpps`, but also writes to the **secondary database** `aasregistry`
+        **[EN]** Like `POST /dpps`, but additionally writes to the **secondary database** `aasregistry`
         (prEN 18222:2025, Table 8).
+
+        This endpoint creates a new **Digital Product Passport (DPP)** entry in the registry and links it to a corresponding **Asset Administration Shell (AAS)**.
+
+        The following cases are supported:
+        - **Standard case**: A new DPP-ID is generated and a new AAS is created or synchronized in the AAS repository.
+        - **AAS already exists**: Only a new DPP-ID is created and linked to the existing AAS (e.g. for re-registration or extension of an existing asset).
+        - **Registry-only**: Creation of a DPP registry entry without directly creating an AAS (implementation-dependent).
 
         **Norm reference:** prEN 18222:2025, Table 8, Table 18
         `semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0`
