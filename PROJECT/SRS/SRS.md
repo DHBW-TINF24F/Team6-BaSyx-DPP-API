@@ -139,7 +139,7 @@ Ein DPP entspricht einer AAS mit den DPP-relevanten Submodellen. Die Struktur de
 7. **Circularity (IDTA-02035-7):** Beinhaltet Informationen zur Wiederverwendbarkeit und Nachhaltigkeit.
 
 ## 2. Anwendungsfälle
-Die Anwendungsfälle für diese Software können innerhalb des <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/CRS/TINF24F_CRS_Team_6_0v1.md#use-cases">CRS</a> (Kapitel 04) gefunden werden.
+Die Anwendungsfälle für diese Software können innerhalb des [CRS](../CRS/crs.md) (Kapitel 04) gefunden werden.
 
 ## 3. Funktionale Anforderungen (FR)
 Innerhalb dieses Kapitels werden die funktionalen Anforderungen an das Produkt definiert. Diese unterteilen sich in Anforderungen an das Backend (Daten und API) und Anforderungen an das Frontend.
