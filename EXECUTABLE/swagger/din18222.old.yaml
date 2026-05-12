@@ -10,12 +10,11 @@ info:
     3.  **Fine-Granular API**: Optionale Methoden für den detaillierten Lese- und Schreibzugriff auf einzelne Datenelemente innerhalb eines DPP.
   version: "1.0.0"
 
+
 servers:
-  - url: https://srv01.noah-becker.de/uni/swe/api/
+  - url: http://srv01.noah-becker.de/api
     description: "Produktiv-Server"
-  - url: https://srv01.noah-becker.de/uni/swe/swagger/
-    description: "Swagger"
-  - url: http://localhost:3000/api/
+  - url: http://localhost:3000/api
     description: "Lokale Entwicklungsumgebung"
 
 tags:

@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/eclipse-basyx/basyx-aas-web-ui) [![Deploy Web UI (WIP)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_webui.yml/badge.svg?branch=main)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_webui.yml) [![Deploy Swagger Specification](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml/badge.svg)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml)
+![GitHub](https://img.shields.io/github/license/eclipse-basyx/basyx-aas-web-ui) [![Build and Deploy Frontend](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_frontend.yml/badge.svg)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_frontend.yml) [![Build and Deploy Backend](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_backend.yml/badge.svg)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_backend.yml) [![Deploy Swagger Specification](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml/badge.svg)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml)
 
 
 
@@ -11,11 +11,14 @@
 <a href="https://1drv.ms/p/c/94b53bce14d0456b/EVwut7JiukRCs4097VqIiFMBA16DA1QQZXdYSsWuQjsq4Q?e=AmxA4S">Presentation</a>
 <hr>
 
-<img style="height:70" src="./SOURCE/media/basyx_icon.svg" >
+![](./SOURCE/media/basyx_logo.png)     
 
-<img src="./SOURCE/media/screenshot_frontend.png" >
 
-This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) standard, integrated into the Eclipse BaSyx framework.  
+<img src="./SOURCE/media/dpp_harting.png" >
+<br>
+<br>
+
+This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) draft standard, integrated into the Eclipse BaSyx framework.  
 
 
 Our main task is to define an API according to the DIN standard and provide it through a backend service. As a potential release, we plan to offer a new DPP “BaSyx” Docker container. The core idea is to call existing BaSyx APIs-particularly the “Asset Administration Shell Repository API” and map their responses to the required DIN compliant output format.

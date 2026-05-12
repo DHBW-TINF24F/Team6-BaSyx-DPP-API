@@ -1,8 +1,14 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
-
-
 ## Table of Contents
+- [Meeting 08.05.2026 - Feedback Review](#feedback)
+- [Meeting 07.05.2026 - Status](#status3)
+- [Meeting 30.04.2026 - UI Logic & AAS-DPP Mapping](#uiDPP)
+- [Meeting 21.04.2026 - Quick Update](#quickUpdate)
+- [Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild](#backendRebuild)
+- [Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration](#bigMeeting)
+- [Meeting 02.04.2026 - Quick Check](#quickCheck)
+- [Meeting 27.03.2026 - DPP Structure &Repo Integration](#dppIntegration)
 - [Meeting 20.03.2026 - "Back, but not end" - Backend Strategy](#backendStrategy)
 - [Meeting 13.03.2026 - New start](#newStart) 
 - [Meeting 19.11.2025 – Final discussion for presentation](#finalPresentationMeeting)
@@ -17,6 +23,522 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+
+<a id="feedback">
+  
+## Meeting 08.05.2026 - "Feedback Review"
+  
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | General Project Requirements | Nataliia Chubak | 10 min|
+| 2 | Swagger & API Documentation | BackendTeam | 20 min |
+| 3 | SRS & SAS Refinement | Luca Schmoll + Noah Becker | 15 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart/Teams
+**Date:** 08.05.2026  
+**Time:** 11:00 – 11:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Feedback  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. General Requirements
+- Visualization: Screenshots of the frontend must be included in the README.
+- Hosting: The REST API must be hosted (demonstration-ready).
+- Interlinking: All documents must be linked to one another.
+- Open Source Contribution: Contact Aaron (BaSyx). Submit a pull request to the BaSyx repository with:
+- Screenshots of frontend and backend sections.
+- Brief description & communication diagram (from the SAS).
+
+### II. Documentation & Specifications
+1. Swagger (API Specification)
+- Delete any unnecessary .yaml files.
+- Error Handling: Clearly define error scenarios and distinguish between cases.
+-  Specify message texts and status messages from the backend.
+2. SRS (Software Requirements Specification)
+- Wording: Use “Display/Visualize” instead of “Load”.
+- Navigation: Replace “clickable navigation” with “show/hide information.”
+- Terminology: Use “Main Menu” (analogous to AAS Web UI).
+- Structure: Include all Functional Requirements (FR) in the table of contents; incorporate/link sources & references from the SAS.
+3. SAS (Software Architecture Specification)
+- Naming: Use “DPP Front-End/Back-End” consistently throughout instead of just “Front-End/Back-End”.
+- Diagrams: Adjust Figure 3.1; move architecture principles to the beginning (top-down approach).
+- Structure: Rename the “White-Box” chapter to “Architecture Diagram [Backend/Frontend]” for better readability.
+- Details: List Traefik as a technology and under the term “Routing.”
+
+### *Notes*
+More -> WhatsApp group -> "Feedback_08_05_2026.txt"
+
+---
+
+<a id="status3">
+
+## Meeting 07.05.2026 - "Backend/Frontend & Modules & Testing Integration"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Completion | BackendTeam | 10 min|
+| 2 | Frontend: UI Components & Logic | FrontendTeam | 20 min |
+| 3 | Testing: CI/CD & Mockups | Manuel Lutz | 15 min |
+| 4 | Module Definition (MOD DPP) | Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 07.05.2026  
+**Time:** 13:00 – 13:55
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Backend: The backend is fully complete. All core functions have been implemented and are stable.
+2. Testing:
+  - The Software Test Reports (STR) are up to date with the tests performed so far.
+  - CI/CD: Test cases have been integrated via GitHub Actions and are now a mandatory requirement for pull requests (PRs).
+  - Methodology: Mockup tests are complete; some tests against the “production” backend are already running. Due to the latest backend changes, a refactoring of the test suites is necessary this week.
+
+### II. Discussion Points
+1. Frontend Structure:
+  - DPP General: Focus on the AAS list (API integration) and the registration workflow (pop-up).
+  - DPP Details: Design of the dashboard and the editor (including the edit button).
+
+  - ### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| AAS-Liste (API Integration) finalise | Nataliia Chubak | 15.05.2026 | 
+| Editor (Framework + Button) | Nataliia Chubak | 15.05.2026 | 
+| Web Interface & Dashboard Setup | Felix Schulz | 15.05.2026  |
+| Editor (API-Connection) | Noah Becker | 15.05.2026  |
+| MOD: DPP Backend | Luca Schmoll + Magnus Lörcher  | 15.05.2026 |
+| MOD: DPP API | Fabian Steiß | 15.05.2026 |
+| MOD: DPP Routing-Spezifikation | Noah Becker | 15.05.2026 |
+| MOD: DPP Frontend | Felix Schulz | 15.05.2026 |
+||||
+
+
+### IV. Future meeting
+The next meeting is planned for 15.05.2026
+
+---
+
+<a id="uiDPP">
+
+## Meeting 30.04.2026 - "UI Logic & AAS-DPP Mapping"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Concept: 1-to-1 Mapping (DPP/AAS) | FrontendTeam | 10 min|
+| 2 | Frontend: Overview & Detail View | FrontendTeam | 10 min |
+| 3 | Versioning & Dropdown Logic | FrontendTeam | 7 min |
+| 4 | Task Distribution | FrontendTeam | 3 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 30.04.2026  
+**Time:** 10:45 – 11:15
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+Defining the user interface in the frontend and establishing the logic for creating Digital Product Passports (DPP) from existing Asset Administration Shells (AAS).
+II. Discussion Points
+*Core Concept:*
+- It was decided: One DPP per AAS. This simplifies mapping and structure in the demonstrator.
+- The overview page lists all available AAS.
+*Registration Logic:*
+- If an AAS is selected that does not yet have a registered DPP, a pop-up appears.
+- Via this pop-up, the user can “register” the DPP directly for this AAS.
+*Detail View & Versioning:*
+- By default, the detail view always displays the latest version of the DPP.
+- To view older versions, a drop-down menu is implemented that allows users to access specific versions/history.
+*Design Review:*
+- The team discussed the visual design of the web pages based on feedback from Mr. Renschler to ensure intuitive navigation between the list and the editor.
+
+### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Create a list: Generate an overview of all AAS for the frontend | Nataliia Chubak | 07.05.2026 | 
+| Implementation: Logic transfer (based on Felix's preliminary work) from the AAS list to DPP generation | Felix Schulz | 07.05.2026  |
+| UI Component: Develop a pop-up for DPP registration | Noah Becker | 07.05.2026  |
+| Dropdown Logic: Check the backend connection for retrieving historical versions | Team | 07.05.2026 |
+||||
+
+
+### IV. Future meeting
+The next meeting is planned for 07.05.2026. Focus: Review the implemented list and test the registration pop-up.
+
+---
+
+<a id="quickUpdate">
+
+## Meeting 21.04.2026 - Quick Update
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Missing Backend Methods | BackendTeam | 10 min|
+| 2 | API Registry & Parameter Error Handling | BackendTeam | 10 min |
+| 3 | Frontend | FrontendTeam | 7 min |
+| 4 | Stakeholder Meeting Prep | Nataliia Chubak | 3 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 21.04.2026  
+**Time:** 10:00 – 11:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Progress on the backend branch was discussed. The following components are still missing and are currently in development:
+2. AAS Registration: The method for official registration with the AAS is still missing.
+3. Path Access: Retrieving and updating elements via elementPath.
+4. Error Handling: Correct error messages for invalid parameters (see the backend README for details).
+5. API Clarification: Specific consultation regarding the PostNewDppToRegistery method.
+
+### II. Frontend & Organization
+Frontend Adjustment: After further discussion, it was decided to remove the Favorites (heart icon) feature to focus on the core functions of the DPP Editor.
+Rentschler Meeting: Preparation of the to-do list for the upcoming meeting with Mr. Rentschler.
+
+### To-dos
+### III. To-dos 
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Implementation of Element-Update via elementPath | BackendTeam | 30.04.2026 | 
+| Document error handling in the backend code | BackendTeam | 27.04.2026 |
+||||
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 30.04.2026
+
+
+---
+
+<a id="backendRebuild">
+
+## Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Architecture Reset | Luca Schmoll | 20 min|
+| 2 | Spring Boot& MongoDB Integration | Fabian Steiß | 10 min |
+| 3 | API Method Implementation | Magnus Lörcher | 40 min |
+| 4 | Open Tasks & Dynamic Calls| Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Discord
+**Date:** 17.04.2026  
+**Time:** 20:30 – 22:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Ad-hoc-Meeting: based on the feedback from Mr. Rentschler
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß
+
+---
+### I. Objectives
+1. Complete rebuild of the backend based on feedback from Mr. Rentschler
+2. Implementation of the database connection and basic CRUD operations
+
+### II. Discussion Points & Progress
+1. Restructuring: The backend has been completely rebuilt. A new branch was created for this purpose to ensure a clean codebase. 
+2. Database: A connection to MongoDB has been established and successfully tested.
+3. Implemented API Methods:
+  - POST /dpps: Creates new records in MongoDB.
+  - GET /dpps/{dppid}: Returns a complete DPP via DPP ID.
+  - GET /dppsByProductId/{productId}: Returns the latest DPP version for a product ID.
+  - GET /dppsByProductIdAndDate/{productID}: Retrieves a DPP for a specific date.
+  - DELETE /dpps/{id}: Deletes a DPP via ID.
+  - POST /dppIdsByProductIds: Batch query for a set of Product IDs.
+  - PUT /dpps/{dppId}: Updates or inserts DPP data.
+
+### III. To-dos 
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Dynamics: createDPP – Dynamically call SubmodelIdentifier | BackendTeam | 27.04.2026 | 
+| payload: Customize getDPP methods (resolve references & retrieve submodel data for the frontend)| BackendTeam | 27.04.2026 |
+| Path Logic: Implementing elementPath & elementID (idShort) | BackendTeam| 27.04.2026 |
+| Backend online hosten | Noah Becker| 23.04.2026 |
+||||
+
+---
+### Notes
+Due to the urgency of Mr. Rentschler’s request for feedback, this meeting was held on short notice and outside the regular schedule.
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 21.04.2026
+
+---
+<a id="bigMeeting">
+
+## Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Definition of DPP and AAS IDs | Noah Becker | 15 min|
+| 2 |  Backend Status | Backend Team | 20 min |
+| 3 | Frontend -> Favorites | Nataliia Chubak | 5 min |
+| 4 | Editor | Frontend Team | 10 min |
+| 5 | Testing Plan | Manuel Lutz | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 02.04.2026  
+**Time:** 10:00 – 11:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Alignment of DPP and AAS identifiers (Product ID).
+2. Assessment of backend readiness and transition to the containerization phase.
+3. Coordination of frontend interaction with backend models to create the editor.
+
+### II. Implementation Status
+The structure of DPP IDs and Product IDs has been defined. AAS identifiers were discussed separately—it was decided to use Base64 decoding (instead of encoding) for proper processing.
+
+Successfully implemented packaging of AAS models and their invocation via API for local modules.
+
+Current status: the backend is running stably. The project is in its final stage; only the last steps remain before full completion.
+
+The need to create a Docker container for the backend was discussed.
+
+Frontend and UI:
+- The “Favorites” feature (Heart icons) has been implemented.
+
+The team discussed the details of the web page. Clarified the requirements for the editor’s visualization and determined exactly where the models will be processed.
+
+Currently, the frontend is awaiting the finished models from the backend for further integration into the editor.
+
+### III. To-Dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| “Favorites” feature (Heart icons/Favorites)| Nataliia Chubak | 10.04.2026 | 
+| Begin testing the backend and DPP calls | Manuel Lutz | 17.04.2026 |
+| Schedule a meeting with Mr. Rentschler| Nataliia Chubak | 17.04.2026 |
+| Integrate models into the editor (after receiving data from the backend) | Frontend Team | 17.04.2026 |
+||||
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 17.04.2026
+
+---
+
+<a id="quickCheck">
+
+## Meeting 02.04.2026 - Quick Check
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Health-Endpoint Verification| Backend Team  | 10 min|
+| 2 |  Listing Logic for AAS | Backend Team | 5 min |
+| 3 | DIN-Norm Prototyping (/dpp) | Backend Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 02.04.2026  
+**Time:** 12:45 – 13:10
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz
+
+---
+
+### I. Objectives
+Defining and testing the initial API structure to ensure that the backend is accessible to the frontend.
+
+### II. Implementation Status
+The backend team presented the current status of the REST API. The following endpoints are registered in the system:
+
+- /api/v1/health * Status: Functional.
+
+Purpose: Serves as a health check to ensure that the API is active and can accept requests (“liveness probe”).
+
+- /api/v1/dpp/list * Status: Under review.
+
+Purpose: This endpoint returns a list of currently registered Asset Administration Shells (AAS). It is still being verified whether the filtering of the shells has been fully optimized on the server side.
+
+- /dpp/{productId} * Status: Prototype / Shell.
+
+Purpose: This is the central entry point in accordance with the DIN standard.
+
+Details: The basic structure is already in place but is not yet 100% complete. The logic for aggregating data from the submodel elements is currently being refined.
+
+### III. To-Dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| “Favorites” feature (Heart icons/Favorites)| Nataliia Chubak | 10.04.2026 | 
+| Finalization of the /dpp/{productId} logic (DIN-compliant) | Backend Team | 10.04.2026 |
+| Documentation of endpoints in Swagger/OpenAPI | Backend team | 15.04.2026 |
+
+
+### IV. Future meeting
+The next meeting is planned for 10.04.2026
+
+---
+
+<a id="dppIntegration">
+
+## Meeting 27.03.2026 - DPP Structure & Repo Integration
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | DPP Object & DIN-Payload | Noah Becker  | 10 min|
+| 2 |  Repository & Submodule Setup | Noah Becker | 10 min |
+| 3 | Spring Boot Prototyping | Magnus Lörcher, Luca Schmoll, Fabian Steiß | 15 min |
+| 4 | Frontend Strategy | Frontend Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 27.03.2026  
+**Time:** 11:00 – 11:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Felix Schulz
+
+---
+
+### I. Objectives
+1. Defining the DPP object structure based on AAS endpoints and DIN standards.
+2. Restructuring the project repositories to enable efficient collaboration between front-end and back-end teams.
+3. Evaluating the initial steps of the Spring Boot implementation.
+
+### II. Discussion Points
+1. DPP Object Modeling: The team reviewed the Digital Product Passport (DPP) object. The payload (specific attributes in the JSON response object)
+ was defined in accordance with the DIN standard. The data is aggregated from the existing AAS Environment API endpoints.
+2. Repository Structure (GitHub): To enable direct work on the codebase, the aas-web-ui (frontend) and basyx-java-server-sdk (backend) repositories 
+were forked within the TINF24 organization.
+3. Two new repos: Team6-BaSyx-DPP-API_Frontend & Team6-BaSyx-DPP-API_Backend.
+4. These are now linked to the main repo via Git submodules to enable parallel changes without manually switching repos.
+5. Backend prototyping: Luca, Magnus, and Fabian have begun implementing the backend model in Spring Boot. 
+This was initially done in an external test environment to verify the logic without directly affecting the complex BaSyx codebase.
+
+### III. To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Frontend: implementation of the first user interface elements (buttons, layout structure)| Frontend Team | 03.04.2026 | 
+| Frontend: Map the JSON payload to UI components | Frontend Team | 03.04.20226 |
+| Familiarize with the BaSyx codebase (backend) | Felix Schulz, Nataliia Chubak | 03.04.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 02.04.2026
+
+---
 
 
 <a id="backendStrategy">
