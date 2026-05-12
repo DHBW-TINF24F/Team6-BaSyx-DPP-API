@@ -1,117 +1,233 @@
-openapi: 3.0.3
+openapi: 3.1.0
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HINWEIS / NOTE
+# Diese Spezifikation ist bilingual (DE/EN). Sprachabhängige Felder sind mit
+# x-description-de (Deutsch) und x-description-en (Englisch) doppelt gepflegt.
+# Das primäre `description`-Feld enthält immer den deutschen Text.
+# Zum Wechsel auf Englisch: alle `description`-Felder durch den jeweiligen
+# `x-description-en`-Wert ersetzen (z. B. per sed oder Swagger-Postprocessor).
+#
+# This specification is bilingual (DE/EN). Language-dependent fields are
+# maintained twice using x-description-de (German) and x-description-en
+# (English). The primary `description` field always contains the German text.
+# To switch to English: replace all `description` fields with the corresponding
+# `x-description-en` value (e.g. via sed or a Swagger post-processor).
+# ═══════════════════════════════════════════════════════════════════════════════
+
 info:
-  title: "Digitaler Produktpass (DPP) API"
+  title: "Digitaler Produktpass (DPP) API – Team 6 / Digital Product Passport (DPP) API – Team 6"
   description: |
-    **[DE]** <br>
-    OpenAPI-Spezifikation basierend auf dem aktuellen Implementierungsstand der DPP-API.
+    **[DE]** OpenAPI 3.1.0-Spezifikation für das DPP-Backend (Team 6).
+    Konform zu **prEN 18222:2025** (DIN EN 18222, Entwurf August 2025).
+    Implementierungsdetails basieren auf der Moduldokumentation des Spring-Boot-Backends (Mai 2026).
+    Fehlerformat normiert nach prEN 18222:2025, Tabelle 16.
 
-    Diese API standardisiert die Schnittstellen für das Lebenszyklusmanagement und die Durchsuchbarkeit von Digitalen Produktpässen (DPP).
-
-    Status:
-    - Ein Teil der Endpunkte ist bereits implementiert und anhand realer curl-Aufrufe dokumentiert.
-    - Weitere Endpunkte sind fachlich vorgesehen, aber aktuell noch nicht umgesetzt.
+    **[EN]** OpenAPI 3.1.0 specification for the DPP backend (Team 6).
+    Conformant with **prEN 18222:2025** (DIN EN 18222, Draft August 2025).
+    Implementation details are based on the module documentation of the Spring Boot backend (May 2026).
+    Error format standardised according to prEN 18222:2025, Table 16.
 
     ---
-    **[EN]** <br>
-    OpenAPI specification based on the current implementation status of the DPP API.
 
-    This API standardizes the interfaces for lifecycle management and discoverability of Digital Product Passports (DPP).
-
-    Status:
-    - Some endpoints are already implemented and documented with real curl calls.
-    - Additional endpoints are conceptually planned but not yet implemented.
-  version: "1.0.0"
+  x-description-en: |
+    OpenAPI 3.1.0 specification for the DPP backend (Team 6).
+    Conformant with prEN 18222:2025. Error format per Table 16.
+  version: "1.3.0"
+  contact:
+    name: "Team 6 – DPP Backend"
+  license:
+    name: "prEN 18222:2025"
+    url: "https://www.din.de"
 
 servers:
-  - url: https://srv01.noah-becker.de/uni/swe/api/dpp/
-    description: "PROD"
+  - url: https://srv01.noah-becker.de/uni/swe/api/dpp
+    description: "Production / Produktion"
   - url: http://localhost:8080
-    description: "DEV (local)"
+    description: "Development / Entwicklung"
 
 tags:
+  - name: "Health"
+    description: |
+      **[DE]** Dienstverfügbarkeit prüfen.
+      **[EN]** Check service availability.
+    x-description-en: "Check service availability."
+
   - name: "DPP Life Cycle API"
     description: |
-      **[DE]** Hauptmethoden zur Verwaltung des DPP-Lebenszyklus.
-      **[EN]** Main methods for managing the DPP lifecycle.
+      **[DE]** Hauptmethoden der Lebensweg-API gemäß prEN 18222:2025, Abschnitt 4 und Tabelle 17.
+      Verwaltet Erstellung, Lesen, Aktualisieren und Löschen von DPPs.
+
+      **[EN]** Core methods of the Life Cycle API as per prEN 18222:2025, Section 4 and Table 17.
+      Manages creation, reading, updating, and deletion of DPPs.
+    x-description-en: "Core methods of the Life Cycle API per prEN 18222:2025 Section 4 / Table 17."
+    externalDocs:
+      description: "prEN 18222:2025 – Abschnitt 4 / Section 4"
+      url: "https://www.din.de"
+
   - name: "DPP Registry API"
     description: |
-      **[DE]** Schnittstelle zur Registrierung von DPPs im zentralen Register.
-      **[EN]** Interface for registering DPPs in the central registry.
+      **[DE]** Register-API gemäß prEN 18222:2025, Abschnitt 5 und Tabelle 18.
+      Registriert DPPs im EG-Register (sekundäre Datenbank `aasregistry`).
+
+      **[EN]** Registry API as per prEN 18222:2025, Section 5 and Table 18.
+      Registers DPPs in the EC registry (secondary database `aasregistry`).
+    x-description-en: "Registry API per prEN 18222:2025 Section 5 / Table 18."
+
   - name: "DPP Fine-Granular Life Cycle API"
     description: |
-      **[DE]** Optionale Operationen für den feingranularen Zugriff auf DPP-Daten.
-      **[EN]** Optional operations for fine-grained access to DPP data.
+      **[DE]** Feingranulare Lebensweg-API gemäß prEN 18222:2025, Abschnitt 6 und Tabelle 19.
+      Ermöglicht Zugriff auf einzelne Datenelemente und Collections.
+
+      **[EN]** Fine-granular Life Cycle API as per prEN 18222:2025, Section 6 and Table 19.
+      Provides access to individual data elements and collections.
+    x-description-en: "Fine-granular Life Cycle API per prEN 18222:2025 Section 6 / Table 19."
 
 paths:
-  /dpps:
-    post:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] Neuen DPP erstellen (CreateDPP) | [EN] Create new DPP (CreateDPP)"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # HEALTH
+  # prEN 18222: nicht normiert, aber übliche Implementierungspraxis
+  # ─────────────────────────────────────────────────────────────────────────────
+  /health:
+    get:
+      tags: ["Health"]
+      summary: "Health Check"
+      operationId: "healthCheck"
       description: |
-        **[DE]** Erstellt einen neuen Digitalen Produktpass.
+        **[DE]** Einfacher Liveness-Check. Gibt `{"status": "UP"}` zurück.
 
-        ---
-        **[EN]** Creates a new Digital Product Passport.
-      operationId: "createDPP"
-      x-semanticId: "https://jtc24/dpp/API/CreateDPP/1/0"
-      requestBody:
-        required: true
-        description: |
-          **[DE]** Das vollständige DPP-Objekt, das erstellt werden soll.
-
-          ---
-          **[EN]** The complete DPP object to be created.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DPP"
-            example:
-              shell:
-                id: "https://team6.dpp/asset/battery-proto-001"
-                dpps:
-                  - productId: "https://team6.dpp/batterypass/proto-001"
-                    version: "1.0.0"
+        **[EN]** Simple liveness check. Returns `{"status": "UP"}`.
+      x-description-en: "Simple liveness check. Returns {\"status\": \"UP\"}."
       responses:
         "200":
           description: |
-            **[DE]** DPP erfolgreich erstellt.
+            **[DE]** Dienst ist verfügbar. / **[EN]** Service is available.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              example:
+                status: "UP"
 
-            ---
-            **[EN]** DPP successfully created.
+  # ─────────────────────────────────────────────────────────────────────────────
+  # POST /dpps – CreateDPP
+  # prEN 18222:2025 Tabelle 5 / Table 5 + Tabelle 17 / Table 17
+  # semanticId: https://jtc24/dpp/API/CreateDPP/1/0
+  # ─────────────────────────────────────────────────────────────────────────────
+  /dpps:
+    post:
+      tags: ["DPP Life Cycle API"]
+      summary: "CreateDPP"
+      operationId: "createDPP"
+      description: |
+        **[DE]** Erstellt einen neuen DPP-Eintrag in der primären Datenbank (`aas-env`, Collection `dpp-repo`).
+
+        **Validierung:** `shell.id`, `shell.dpps[0].productId` und `shell.dpps[0].version` sind Pflichtfelder
+
+        **ID-Generierung:** `dppId = Base64URL(productId + currentTimeMillis)` – serverseitig generiert.
+
+        **Submodelle:** Der Server ruft automatisch den externen AAS-Server ab, um verfügbare Submodelle
+        zu ermitteln und zu filtern. Fehler beim AAS-Abruf werden nur geloggt (kein Abbruch).
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 5 (CreateDPP), Tabelle 17 (HTTPS-Mapping)
+        `semanticId: https://jtc24/dpp/API/CreateDPP/1/0`
+
+        ---
+
+        **[EN]** Creates a new DPP entry in the primary database (`aas-env`, collection `dpp-repo`).
+
+        **Validation:** `shell.id`, `shell.dpps[0].productId`, and `shell.dpps[0].version` are mandatory
+
+        **ID generation:** `dppId = Base64URL(productId + currentTimeMillis)` – generated server-side.
+
+        **Submodels:** The server automatically queries the external AAS server to retrieve and filter
+        available submodels. AAS errors are only logged (no abort).
+
+        **Norm reference:** prEN 18222:2025, Table 5 (CreateDPP), Table 17 (HTTPS mapping)
+        `semanticId: https://jtc24/dpp/API/CreateDPP/1/0`
+      x-description-en: "Creates a new DPP. Validates shell.id, productId, version. Returns generated dppId."
+      x-norm-ref: "prEN 18222:2025 Table 5, Table 17 – semanticId: https://jtc24/dpp/API/CreateDPP/1/0"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDPPRequest"
+            example:
+              shell:
+                id: "urn:example:shell:001"
+                dpps:
+                  - productId: "urn:example:product:123"
+                    version: "1.0"
+      responses:
+        "201":
+          description: |
+            **[DE]** DPP erfolgreich erstellt. / **[EN]** DPP successfully created.
+            prEN 18222:2025 – `SuccessCreated`
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreateDPPResponse"
               example:
                 status: "success"
-                dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
+                dppId: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjMxNzE0NTY3ODkwMTI"
         "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
+          description: |
+            **[DE]** Validierungsfehler – Pflichtfelder fehlen. / **[EN]** Validation error – required fields missing.
+            prEN 18222:2025 – `ClientErrorBadRequest`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+              example:
+                message:
+                  - code: 400
+                    messageType: "Error"
+                    correlationId: "ClientErrorBadRequest"
+                    text: "Missing required field: shell.id"
+                    timestamp: "2026-05-08T10:00:00.000Z"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # GET /dpps/{dppId} – ReadDPPById
+  # prEN 18222:2025 Tabelle 1 / Table 1 + Tabelle 17 / Table 17
+  # semanticId: https://jtc24/dpp/API/ReadDPPById/1/0
+  # ─────────────────────────────────────────────────────────────────────────────
   /dpps/{dppId}:
     get:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] DPP anhand seiner ID abrufen (ReadDPPById) | [EN] Read DPP by ID (ReadDPPById)"
+      tags: ["DPP Life Cycle API"]
+      summary: "ReadDPPById"
+      operationId: "readDPPById"
       description: |
-        **[DE]** Gibt den Digitalen Produktpass für eine bekannte DPP-Kennung zurück.
+        **[DE]** Liest einen einzelnen DPP anhand seiner ID (prEN 18222:2025, Tabelle 1).
+        Reichert die Antwort mit Daten vom externen AAS-Server an:
+        - `assetInformation` – aus `/shells/{productId}`
+        - `administration` – aus `/shells/{productId}`
+        - `submodels_values` – aus `/submodels/{id}/submodel-elements` je Submodell
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 1, Tabelle 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPById/1/0`
 
         ---
-        **[EN]** Returns the Digital Product Passport for a known DPP identifier.
-      operationId: "readDPPById"
-      x-semanticId: "https://jtc24/dpp/API/ReadDPPById/1/0"
+
+        **[EN]** Returns a single DPP by its ID (prEN 18222:2025, Table 1).
+        Enriches the response with data from the external AAS server:
+        - `assetInformation` – from `/shells/{productId}`
+        - `administration` – from `/shells/{productId}`
+        - `submodels_values` – from `/submodels/{id}/submodel-elements` per submodel
+
+        **Norm reference:** prEN 18222:2025, Table 1, Table 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPById/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 1, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       responses:
         "200":
           description: |
-            **[DE]** Erfolgreiche Antwort mit dem angeforderten DPP.
-
-            ---
-            **[EN]** Successful response with the requested DPP.
+            **[DE]** DPP erfolgreich gelesen. / **[EN]** DPP successfully retrieved.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
@@ -119,225 +235,283 @@ paths:
               example:
                 status: "success"
                 dpp:
-                  dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                  productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                  createdAt: "1776845156948"
-                  version: "1.0.0"
+                  dppId: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjMxNzE0NTY3ODkwMTI"
+                  productId: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM"
+                  createdAt: "1714567890123"
+                  version: "1.0"
                   submodels:
-                    - reference: "https://team6.dpp/sm/nameplate"
-                      version: "1.0"
+                    - reference: "urn:example:submodel:nameplate"
                       name: "NamePlate"
-                    - reference: "https://team6.dpp/sm/material_composition"
                       version: "1.0"
-                      name: "MaterialComposition"
+                assetInformation:
+                  assetInformation:
+                    assetKind: "Instance"
+                    globalAssetId: "urn:example:asset:001"
+                administration:
+                  administration:
+                    version: "1"
+                    revision: "0"
                 submodels_values:
                   NamePlate:
-                    - modelType: "Property"
-                      value: "Team 6 Energy Corp."
-                      valueType: "xs:string"
-                      idShort: "ManufacturerName"
+                    - idShort: "ManufacturerName"
+                      value: "Example Corp"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
-    put:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] DPP aktualisieren (UpdateDPPById) | [EN] Update DPP by ID (UpdateDPPById)"
+    patch:
+      tags: ["DPP Life Cycle API"]
+      summary: "UpdateDPPById"
+      operationId: "updateDPPById"
       description: |
-        **[DE]** Aktualisiert den Inhalt eines DPPs anhand seiner ID.
+        **[DE]** Aktualisiert einen DPP per Versionsfortschreibung (prEN 18222:2025, Tabelle 6).
+        Der alte Eintrag wird per `$pull` aus dem `dpps`-Array entfernt,
+        ein neuer mit frischem Timestamp und neuer `dppId` per `$push` eingefügt.
 
-        Dieser Endpunkt ist implementiert. Die aktuelle Implementierung verwendet PUT statt PATCH.
+        ⚠️ **Einschränkung #4/#7:** Pull und Push sind zwei separate Datenbankoperationen (nicht atomar).
+        Bei einem Fehler dazwischen kann der alte DPP bereits gelöscht sein, ohne dass der neue eingefügt wurde.
+        MongoDB-Transaktionen wären die korrekte Lösung.
+
+        `newDppId = Base64URL(productId + currentTimeMillis)`
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 6, Tabelle 17
+        `semanticId: https://jtc24/dpp/API/UpdateDPPById/1/0`
 
         ---
-        **[EN]** Updates the content of a DPP by its ID.
 
-        This endpoint is implemented. The current implementation uses PUT instead of PATCH.
-      operationId: "updateDPPById"
-      x-semanticId: "https://jtc24/dpp/API/UpdateDPPById/1/0"
+        **[EN]** Updates a DPP via version continuation (prEN 18222:2025, Table 6).
+        The old entry is removed from the `dpps` array via `$pull`,
+        a new one with a fresh timestamp and new `dppId` is inserted via `$push`.
+
+        ⚠️ **Limitation #4/#7:** Pull and Push are two separate database operations (not atomic).
+        If an error occurs between them, the old DPP may already be deleted without the new one being inserted.
+        MongoDB transactions would be the correct solution.
+
+        `newDppId = Base64URL(productId + currentTimeMillis)`
+
+        **Norm reference:** prEN 18222:2025, Table 6, Table 17
+        `semanticId: https://jtc24/dpp/API/UpdateDPPById/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 6, Table 17 – semanticId: https://jtc24/dpp/API/UpdateDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       requestBody:
         required: true
         description: |
-          **[DE]** Ein DPP-Objekt mit den zu aktualisierenden Daten.
-
-          ---
-          **[EN]** A DPP object with the data to be updated.
+          **[DE]** Partielle DPP-Daten (nur zu aktualisierende Felder).
+          **[EN]** Partial DPP data (only fields to be updated).
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PartialDPP"
+              $ref: "#/components/schemas/UpdateDPPRequest"
             example:
-              version: "2.0"
+              version: "1.1"
               submodels:
-                - reference: "http://example.com/submodel1"
-                  semanticId: "http://example.com/semantic1"
+                - reference: "urn:example:submodel:nameplate"
+                  name: "NamePlate"
+                  version: "1.0"
       responses:
         "200":
           description: |
-            **[DE]** DPP erfolgreich aktualisiert. Gibt den vollständigen, aktualisierten DPP zurück.
-
-            ---
-            **[EN]** DPP successfully updated. Returns the complete, updated DPP.
+            **[DE]** Neue DPP-Version erfolgreich erstellt. / **[EN]** New DPP version successfully created.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPP"
+                $ref: "#/components/schemas/UpdateDPPResponse"
               example:
-                dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                version: "2.0"
-                submodels:
-                  - reference: "http://example.com/submodel1"
-                    semanticId: "http://example.com/semantic1"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
+                status: "success"
+                newDppId: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjMxNzE0NTY3OTk5OTk"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     delete:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] DPP löschen (DeleteDPPById) | [EN] Delete DPP by ID (DeleteDPPById)"
+      tags: ["DPP Life Cycle API"]
+      summary: "DeleteDPPById"
+      operationId: "deleteDPPById"
       description: |
-        **[DE]** Entfernt einen DPP anhand seiner ID, z. B. am Ende seines Lebenszyklus.
+        **[DE]** Entfernt einen einzelnen DPP-Eintrag aus dem `dpps`-Array via MongoDB `$pull`.
+        Das übergeordnete Shell-Dokument bleibt erhalten (auch wenn `dpps` danach leer ist).
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 7, Tabelle 17
+        `semanticId: https://jtc24/dpp/API/DeleteDPPById/1/0`
 
         ---
-        **[EN]** Removes a DPP by its ID, e.g. at the end of its lifecycle.
-      operationId: "deleteDPPById"
-      x-semanticId: "https://jtc24/dpp/API/DeleteDPPById/1/0"
+
+        **[EN]** Removes a single DPP entry from the `dpps` array via MongoDB `$pull`.
+        The parent shell document is retained (even if `dpps` is empty afterwards).
+
+        **Norm reference:** prEN 18222:2025, Table 7, Table 17
+        `semanticId: https://jtc24/dpp/API/DeleteDPPById/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 7, Table 17 – semanticId: https://jtc24/dpp/API/DeleteDPPById/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
       responses:
-        "204":
+        "200":
           description: |
-            **[DE]** DPP erfolgreich gelöscht.
-
-            ---
-            **[EN]** DPP successfully deleted.
-        "403":
-          $ref: "#/components/responses/Forbidden"
+            **[DE]** DPP erfolgreich gelöscht. / **[EN]** DPP successfully deleted.
+            prEN 18222:2025 – `Success`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              example:
+                status: "success"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # GET /dppsByProductId/{productId} – ReadDPPByProductId
+  # prEN 18222:2025 Tabelle 2 / Table 2 + Tabelle 17 / Table 17
+  # semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0
+  # ─────────────────────────────────────────────────────────────────────────────
   /dppsByProductId/{productId}:
     get:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] Aktuellen DPP anhand der Produkt-ID abrufen (ReadDPPByProductId) | [EN] Read current DPP by Product ID (ReadDPPByProductId)"
+      tags: ["DPP Life Cycle API"]
+      summary: "ReadDPPByProductId"
+      operationId: "readDPPByProductId"
       description: |
-        **[DE]** Gibt den aktuell aktiven (letzte Version) DPP für eine bekannte Produkt-Kennung zurück.
+        **[DE]** Sucht den aktuell aktiven DPP (letzte Version) für eine gegebene `productId` (prEN 18222:2025, Tabelle 2).
+
+        ⚠️ **Einschränkung #9 (MOD):** Verwendet `results.get(results.size() - 1)` – also den letzten Treffer
+        in der Aggregationsreihenfolge. Da keine explizite Sortierung nach `createdAt` vorliegt,
+        entspricht dies der natürlichen MongoDB-Dokumentreihenfolge, nicht zwingend der neuesten Version.
+        Empfehlung: `Aggregation.sort(Sort.by("createdAt").descending())` hinzufügen.
+
+        Antwortstruktur identisch mit `ReadDPPById`.
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 2, Tabelle 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0`
 
         ---
-        **[EN]** Returns the currently active (latest version) DPP for a known product identifier.
-      operationId: "readDPPByProductId"
-      x-semanticId: "https://jtc24/dpp/API/ReadDPPByProductId/1/0"
+
+        **[EN]** Returns the currently active DPP (latest version) for a given `productId` (prEN 18222:2025, Table 2).
+
+        ⚠️ **Limitation #9 (MOD):** Uses `results.get(results.size() - 1)` – the last hit in the aggregation order.
+        Without explicit sorting by `createdAt`, this reflects the natural MongoDB document order,
+        not necessarily the newest version.
+        Recommendation: add `Aggregation.sort(Sort.by("createdAt").descending())`.
+
+        Response structure identical to `ReadDPPById`.
+
+        **Norm reference:** prEN 18222:2025, Table 2, Table 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 2, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0"
       parameters:
         - $ref: "#/components/parameters/productId"
       responses:
         "200":
           description: |
-            **[DE]** Erfolgreiche Antwort mit dem angeforderten DPP.
-
-            ---
-            **[EN]** Successful response with the requested DPP.
+            **[DE]** DPP erfolgreich gelesen. / **[EN]** DPP successfully retrieved.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DPPReadResponse"
-              example:
-                status: "success"
-                dpp:
-                  dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                  productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAx"
-                  createdAt: "1776845156948"
-                  version: "1.0.0"
-                  submodels:
-                    - reference: "https://team6.dpp/sm/nameplate"
-                      version: "1.0"
-                      name: "NamePlate"
-                    - reference: "https://team6.dpp/sm/material_composition"
-                      version: "1.0"
-                      name: "MaterialComposition"
-                submodels_values:
-                  NamePlate:
-                    - modelType: "Property"
-                      value: "Team 6 Energy Corp."
-                      valueType: "xs:string"
-                      idShort: "ManufacturerName"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # GET /dppsByProductIdAndDate/{productId} – ReadDPPVersionByProductIdAndDate
+  # prEN 18222:2025 Tabelle 3 / Table 3 + Tabelle 17 / Table 17
+  # semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0
+  # ─────────────────────────────────────────────────────────────────────────────
   /dppsByProductIdAndDate/{productId}:
     get:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] DPP-Version nach Produkt-ID und Datum abrufen (ReadDPPVersionByProductIdAndDate) | [EN] Read DPP version by Product ID and Date (ReadDPPVersionByProductIdAndDate)"
+      tags: ["DPP Life Cycle API"]
+      summary: "ReadDPPVersionByProductIdAndDate"
+      operationId: "readDPPVersionByProductIdAndDate"
       description: |
-        **[DE]** Gibt eine spezifische Version eines DPP zurück, basierend auf seiner Produkt-ID und einem angegebenen Zeitstempel.
+        **[DE]** Gibt eine DPP-Version anhand der `productId` und eines exakten `createdAt`-Timestamps zurück
+        (prEN 18222:2025, Tabelle 3). Der Timestamp muss als Unix-Millisekunden-Wert übergeben werden.
+
+        **Hinweis:** Der Client muss den exakten Timestamp kennen.
+        Laut Norm ist diese Methode optional für den Wirtschaftsteilnehmer.
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 3, Tabelle 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0`
 
         ---
-        **[EN]** Returns a specific version of a DPP based on its product ID and a given timestamp.
-      operationId: "readDPPVersionByProductIdAndDate"
-      x-semanticId: "https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0"
+
+        **[EN]** Returns a DPP version based on its `productId` and an exact `createdAt` timestamp
+        (prEN 18222:2025, Table 3). The timestamp must be provided as a Unix milliseconds value.
+
+        **Note:** The client must know the exact timestamp.
+        According to the standard, this method is optional for the economic operator.
+
+        **Norm reference:** prEN 18222:2025, Table 3, Table 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 3, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0"
       parameters:
         - $ref: "#/components/parameters/productId"
-        - name: timeStamp
+        - name: date
           in: query
           required: true
           description: |
-            **[DE]** Unix-Zeitstempel in Millisekunden, für den die DPP-Version angefordert wird.
+            **[DE]** Exakter Unix-Millisekunden-Timestamp (`createdAt`-Wert des gesuchten DPPs).
+            Typ laut prEN 18222:2025: UTC-basierter Zeitstempel.
 
-            ---
-            **[EN]** Unix timestamp in milliseconds for which the DPP version is requested.
+            **[EN]** Exact Unix milliseconds timestamp (`createdAt` value of the requested DPP).
+            Type per prEN 18222:2025: UTC-based timestamp.
           schema:
             type: integer
             format: int64
-          example: 1776840257913
+            example: 1714567890123
       responses:
         "200":
           description: |
-            **[DE]** Erfolgreiche Antwort mit der angeforderten DPP-Version.
-
-            ---
-            **[EN]** Successful response with the requested DPP version.
+            **[DE]** DPP für den angegebenen Zeitpunkt gefunden. / **[EN]** DPP found for the given timestamp.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DPP"
-              example:
-                dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-                productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMAAx"
-                createdAt: "1776845156948"
-                version: "1.0.0"
-                submodels:
-                  - reference: "https://team6.dpp/sm/nameplate"
-                    version: "1.0"
-                    name: "NamePlate"
+                $ref: "#/components/schemas/DPPReadResponse"
         "404":
           $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
-  /dppIdsByProductIds:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # POST /dppsByProductIds – ReadDPPIdsByProductIds
+  # prEN 18222:2025 Tabelle 4 / Table 4 + Tabelle 17 / Table 17
+  # semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0
+  # ─────────────────────────────────────────────────────────────────────────────
+  /dppsByProductIds:
     post:
-      tags:
-        - "DPP Life Cycle API"
-      summary: "[DE] DPP-IDs für eine Liste von Produkt-IDs abrufen (ReadDPPIdsByProductIds) | [EN] Read DPP IDs for a list of Product IDs (ReadDPPIdsByProductIds)"
+      tags: ["DPP Life Cycle API"]
+      summary: "ReadDPPIdsByProductIds"
+      operationId: "readDPPIdsByProductIds"
       description: |
-        **[DE]** Gibt eine Liste von DPP-Kennungen zurück, die zu einer Menge von Produkt-Kennungen passen.
+        **[DE]** Batch-Abfrage: Liefert alle `dppId`s für eine Liste von `productId`s (prEN 18222:2025, Tabelle 4).
+        Ergebnis ist nach `productId` gruppiert.
+
+        MongoDB-Aggregation: `match → unwind → match → project(productId, dppId)`.
+
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 4, Tabelle 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0`
 
         ---
-        **[EN]** Returns a list of DPP identifiers matching a set of product identifiers.
-      operationId: "readDPPIdsByProductIds"
-      x-semanticId: "https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0"
+
+        **[EN]** Batch query: returns all `dppId`s for a list of `productId`s (prEN 18222:2025, Table 4).
+        Results are grouped by `productId`.
+
+        MongoDB aggregation: `match → unwind → match → project(productId, dppId)`.
+
+        **Norm reference:** prEN 18222:2025, Table 4, Table 17
+        `semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 4, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0"
       requestBody:
         required: true
         description: |
-          **[DE]** Eine Liste von Produkt-IDs, für die die entsprechenden DPP-IDs gefunden werden sollen.
-
-          ---
-          **[EN]** A list of product IDs for which the corresponding DPP IDs should be found.
+          **[DE]** Liste der Base64-kodierten Produkt-IDs.
+          **[EN]** List of Base64-encoded product IDs.
         content:
           application/json:
             schema:
@@ -345,535 +519,335 @@ paths:
               items:
                 $ref: "#/components/schemas/Identifier"
             example:
-              - "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDA"
-              - "PID"
+              - "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM"
+              - "dXJuOmV4YW1wbGU6cHJvZHVjdDo0NTY"
       responses:
         "200":
           description: |
-            **[DE]** Eine Liste der passenden DPP-Kennungen.
-
-            ---
-            **[EN]** A list of matching DPP identifiers.
+            **[DE]** DPP-IDs erfolgreich abgerufen. / **[EN]** DPP IDs successfully retrieved.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Identifier"
+                $ref: "#/components/schemas/DppIdsByProductIdsResponse"
               example:
-                - "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0MDI1NzkxMw"
-                - "ZHBwLWlkLTI="
-        "400":
-          $ref: "#/components/responses/BadRequest"
+                status: "success"
+                results:
+                  dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM:
+                    - dppId: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjMxNzE0NTY3ODkwMTI"
+                  dXJuOmV4YW1wbGU6cHJvZHVjdDo0NTY:
+                    - dppId: "dXJuOmV4YW1wbGU6cHJvZHVjdDo0NTYxNzE0NTY3ODkwMTI"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
-  /registerDPP:
-    post:
-      tags:
-        - "DPP Registry API"
-      summary: "[DE] Neuen DPP im zentralen Register registrieren (PostNewDPPToRegistry) | [EN] Register new DPP in central registry (PostNewDPPToRegistry)"
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Fine-Granular – Collections
+  # prEN 18222:2025 Tabelle 9, 11 / Table 9, 11 + Tabelle 19 / Table 19
+  # ─────────────────────────────────────────────────────────────────────────────
+  /dpps/{dppId}/collections/{elementId}:
+    get:
+      tags: ["DPP Fine-Granular Life Cycle API"]
+      summary: "ReadDataElementCollection"
+      operationId: "readDataElementCollection"
       description: |
-        **[DE]** Registriert einen neuen DPP im zentralen Register der EU-Kommission.
+        **[DE]** Gibt eine bestimmte DataElementCollection zurück (prEN 18222:2025, Tabelle 9).
+        Die `elementId` wird serverseitig via `Base64DPP.ensureEncoding()` ggf. Base64-kodiert.
+        Sucht in den `submodels` des DPPs nach einem Match mit der `elementId`.
 
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 9, Tabelle 19
+        `semanticId: https://jtc24/dpp/API/ReadDataElementCollection/1/0`
 
         ---
-        **[EN]** Registers a new DPP in the central registry of the EU Commission.
 
-        This endpoint is conceptually planned but not yet implemented.
-      operationId: "postNewDPPToRegistry"
-      x-semanticId: "https://jtc24/dpp/API/RegisterDPP/1/0"
+        **[EN]** Returns a specific DataElementCollection (prEN 18222:2025, Table 9).
+        The `elementId` is Base64-encoded server-side via `Base64DPP.ensureEncoding()` if needed.
+        Searches the DPP's `submodels` for a match with the `elementId`.
+
+        **Norm reference:** prEN 18222:2025, Table 9, Table 19
+        `semanticId: https://jtc24/dpp/API/ReadDataElementCollection/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 9, Table 19 – semanticId: https://jtc24/dpp/API/ReadDataElementCollection/1/0"
+      parameters:
+        - $ref: "#/components/parameters/dppId"
+        - $ref: "#/components/parameters/elementId"
+      responses:
+        "200":
+          description: |
+            **[DE]** Collection erfolgreich gelesen. / **[EN]** Collection successfully retrieved.
+            prEN 18222:2025 – `Success`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionReadResponse"
+        "500":
+          description: |
+            **[DE]** Interner Serverfehler – tritt auch auf, wenn kein passendes Submodell gefunden wurde
+
+            **[EN]** Internal server error – also occurs when no matching submodel is found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+              example:
+                message:
+                  - code: 500
+                    messageType: "Exception"
+                    correlationId: "ServerInternalError"
+                    text: "An unexpected error occurred"
+                    timestamp: "2026-05-08T10:00:00.000Z"
+
+
+    patch:
+      tags: ["DPP Fine-Granular Life Cycle API"]
+      summary: "UpdateDataElementCollection"
+      operationId: "updateDataElementCollection"
+      description: |
+        **[DE]** Aktualisiert eine DataElementCollection eines DPPs über den AAS-Server (prEN 18222:2025, Tabelle 11).
+        Leitet den Request-Body als PATCH an den externen AAS-Server weiter:
+        `PATCH {AAS_URL}/shells/{elementId}/submodel-refs`
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 11, Tabelle 19
+        `semanticId: https://jtc24/dpp/API/UpdateDataElementCollection/0`
+
+        ---
+
+        **[EN]** Updates a DataElementCollection of a DPP via the AAS server (prEN 18222:2025, Table 11).
+        Forwards the request body as PATCH to the external AAS server:
+        `PATCH {AAS_URL}/shells/{elementId}/submodel-refs`
+
+        **Norm reference:** prEN 18222:2025, Table 11, Table 19
+        `semanticId: https://jtc24/dpp/API/UpdateDataElementCollection/0`
+      x-norm-ref: "prEN 18222:2025 Table 11, Table 19 – semanticId: https://jtc24/dpp/API/UpdateDataElementCollection/0"
+      parameters:
+        - $ref: "#/components/parameters/dppId"
+        - $ref: "#/components/parameters/elementId"
       requestBody:
         required: true
         description: |
-          **[DE]** Ein Objekt, das die Kennungen für Produkt, Betreiber und Sicherungsbetreiber enthält (Teilmenge des DPP-Headers).
-
-          ---
-          **[EN]** An object containing the identifiers for product, operator, and backup operator (subset of the DPP header).
+          **[DE]** Partielle DataElementCollection (nur zu aktualisierende Teile).
+          **[EN]** Partial DataElementCollection (only parts to be updated).
         content:
           application/json:
             schema:
               type: object
-              properties:
-                productId:
-                  $ref: "#/components/schemas/Identifier"
-                operatorId:
-                  $ref: "#/components/schemas/Identifier"
-                backupOperatorId:
-                  $ref: "#/components/schemas/Identifier"
-            example:
-              productId: "https://team6.dpp/batterypass/proto-001"
-              operatorId: "operator-001"
-              backupOperatorId: "backup-001"
-      responses:
-        "201":
-          description: |
-            **[DE]** DPP erfolgreich registriert. Gibt die neue Registrierungs-ID zurück.
-
-            ---
-            **[EN]** DPP successfully registered. Returns the new registry ID.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  registryIdentifier:
-                    $ref: "#/components/schemas/Identifier"
-              example:
-                registryIdentifier: "registry-identifier-001"
-        "501":
-          description: |
-            **[DE]** Noch nicht implementiert.
-
-            ---
-            **[EN]** Not yet implemented.
-
-  /dpps/{dppId}/collections/{elementId}:
-    get:
-      tags:
-        - "DPP Fine-Granular Life Cycle API"
-      summary: "[DE] Eine Daten-Sammlung aus einem DPP lesen (ReadDataElementCollection) | [EN] Read a data element collection from a DPP (ReadDataElementCollection)"
-      description: |
-        **[DE]** Gibt eine spezifische 'DataElementCollection' anhand ihrer ID aus einem bestimmten DPP zurück.
-
-        ---
-        **[EN]** Returns a specific 'DataElementCollection' by its ID from a specific DPP.
-      operationId: "readDataElementCollection"
-      x-semanticId: "https://jtc24/dpp/API/ReadDataElementCollection/1/0"
-      parameters:
-        - $ref: "#/components/parameters/dppId"
-        - $ref: "#/components/parameters/elementId"
+              additionalProperties: true
       responses:
         "200":
           description: |
-            **[DE]** Die angeforderte DataElementCollection.
-
-            ---
-            **[EN]** The requested DataElementCollection.
+            **[DE]** Collection erfolgreich aktualisiert. / **[EN]** Collection successfully updated.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataElementCollection"
+                $ref: "#/components/schemas/ElementUpdateResponse"
               example:
-                name: "Battery Prototype 001"
-                manufacturerName: "Team 6"
-                model: "proto-001"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                status: "success"
+                payload: {}
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
-    patch:
-      tags:
-        - "DPP Fine-Granular Life Cycle API"
-      summary: "[DE] Eine Daten-Sammlung in einem DPP aktualisieren (UpdateDataElementCollection) | [EN] Update a data element collection in a DPP (UpdateDataElementCollection)"
-      description: |
-        **[DE]** Aktualisiert den Inhalt einer 'DataElementCollection' in einem bestimmten DPP.
-
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
-
-        ---
-        **[EN]** Updates the content of a 'DataElementCollection' in a specific DPP.
-
-        This endpoint is conceptually planned but not yet implemented.
-      operationId: "updateDataElementCollection"
-      parameters:
-        - $ref: "#/components/parameters/dppId"
-        - $ref: "#/components/parameters/elementId"
-      requestBody:
-        description: |
-          **[DE]** Partielle DataElementCollection, die nur die zu aktualisierenden Teile enthält.
-
-          ---
-          **[EN]** Partial DataElementCollection containing only the parts to be updated.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PartialDataElementCollection"
-            example:
-              model: "proto-002"
-      responses:
-        "200":
-          description: |
-            **[DE]** Erfolgreich aktualisiert. Gibt optional die aktualisierte Collection zurück.
-
-            ---
-            **[EN]** Successfully updated. Optionally returns the updated collection.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DataElementCollection"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "501":
-          description: |
-            **[DE]** Noch nicht implementiert.
-
-            ---
-            **[EN]** Not yet implemented.
-
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Fine-Granular – Elements
+  # prEN 18222:2025 Tabelle 10, 12 / Table 10, 12 + Tabelle 19 / Table 19
+  # ─────────────────────────────────────────────────────────────────────────────
   /dpps/{dppId}/elements/{elementPath}:
     get:
-      tags:
-        - "DPP Fine-Granular Life Cycle API"
-      summary: "[DE] Ein einzelnes Datenelement aus einem DPP lesen (ReadDataElement) | [EN] Read a single data element from a DPP (ReadDataElement)"
+      tags: ["DPP Fine-Granular Life Cycle API"]
+      summary: "ReadDataElement"
+      operationId: "readDataElement"
       description: |
-        **[DE]** Ermöglicht das Lesen eines spezifischen Datenelements mittels seines eindeutigen Pfades innerhalb eines DPPs.
+        **[DE]** Liest ein einzelnes Submodell-Element anhand eines Pfads (prEN 18222:2025, Tabelle 10).
+        Pfad-Format: `<SubmodellName>.<ElementPfad>` (z. B. `NamePlate.ManufacturerName`).
 
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+        Ruft intern `readDppById()` auf und extrahiert das DPP-Template per `(POJONode)`-Cast
+        (bekannte Einschränkung #8 – robuster wäre direkter `getDppById()`-Aufruf).
+
+        Danach: `GET {AAS_URL}/submodels/{submodelId}/submodel-elements/{elementPath}`
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 10, Tabelle 19
+        `semanticId: https://jtc24/dpp/API/ReadDataElement/1/0`
 
         ---
-        **[EN]** Enables reading a specific data element using its unique path within a DPP.
 
-        This endpoint is conceptually planned but not yet implemented.
-      operationId: "readDataElement"
-      x-semanticId: "https://jtc24/dpp/API/ReadDataElement/1/0"
+        **[EN]** Returns a specific data element by path (prEN 18222:2025, Table 10).
+        Path format: `<SubmodelName>.<ElementPath>` (e.g. `NamePlate.ManufacturerName`).
+
+        Internally calls `readDppById()` and extracts the DPP template via `(POJONode)` cast
+
+        Then: `GET {AAS_URL}/submodels/{submodelId}/submodel-elements/{elementPath}`
+
+        **Norm reference:** prEN 18222:2025, Table 10, Table 19
+        `semanticId: https://jtc24/dpp/API/ReadDataElement/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 10, Table 19 – semanticId: https://jtc24/dpp/API/ReadDataElement/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementPath"
       responses:
         "200":
           description: |
-            **[DE]** Das angeforderte Datenelement.
-
-            ---
-            **[EN]** The requested data element.
+            **[DE]** Element erfolgreich gelesen. / **[EN]** Element successfully retrieved.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataElement"
-              example: 42
+                $ref: "#/components/schemas/ElementReadResponse"
+              example:
+                status: "success"
+                payload:
+                  idShort: "ManufacturerName"
+                  value: "Example Corp"
         "404":
           $ref: "#/components/responses/NotFound"
-        "501":
-          description: |
-            **[DE]** Noch nicht implementiert.
-
-            ---
-            **[EN]** Not yet implemented.
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
     patch:
-      tags:
-        - "DPP Fine-Granular Life Cycle API"
-      summary: "[DE] Ein einzelnes Datenelement in einem DPP aktualisieren (UpdateDataElement) | [EN] Update a single data element in a DPP (UpdateDataElement)"
+      tags: ["DPP Fine-Granular Life Cycle API"]
+      summary: "UpdateDataElement"
+      operationId: "updateDataElement"
       description: |
-        **[DE]** Aktualisiert ein spezifisches Datenelement innerhalb eines DPPs. Ermöglicht auch das Hinzufügen oder Entfernen von Informationen.
+        **[DE]** Aktualisiert einen einzelnen Feldwert direkt in MongoDB (prEN 18222:2025, Tabelle 12).
 
-        Dieser Endpunkt ist fachlich vorgesehen, aktuell aber noch nicht implementiert.
+        ⚠️ **Einschränkung #2:** Pfad-Konvention `"dpps.0.<elementPath>"` adressiert immer den **ersten**
+        DPP-Eintrag im Array, unabhängig von der `dppId`.
+        Bei mehreren DPPs in einem Shell-Dokument kann dies den falschen Eintrag treffen.
+        Korrekte Lösung: MongoDB Array-Filter `dpps.$[elem].<path>` mit `arrayFilters`.
+
+        **Eingabe-Validierung:**
+        - `dppId` darf nicht null/leer sein → `400 Bad Request`
+        - `elementPath` darf nicht null/leer sein → `400 Bad Request`
+        - `updateValue` darf nicht null sein → `400 Bad Request`
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 12, Tabelle 19
+        `semanticId: https://jtc24/dpp/API/UpdateDataElement/1/0`
 
         ---
-        **[EN]** Updates a specific data element within a DPP. Also enables adding or removing information.
 
-        This endpoint is conceptually planned but not yet implemented.
-      operationId: "updateDataElement"
-      x-semanticId: "https://jtc24/dpp/API/UpdateDataElement/1/0"
+        **[EN]** Updates a single field value directly in MongoDB (prEN 18222:2025, Table 12).
+
+        ⚠️ **Limitation #2:** Path convention `"dpps.0.<elementPath>"` always targets the **first**
+        DPP entry in the array, regardless of `dppId`.
+        With multiple DPPs in a shell document, this may update the wrong entry.
+        Correct solution: MongoDB array filter `dpps.$[elem].<path>` with `arrayFilters`.
+
+        **Input validation:**
+        - `dppId` must not be null/empty → `400 Bad Request`
+        - `elementPath` must not be null/empty → `400 Bad Request`
+        - `updateValue` must not be null → `400 Bad Request`
+
+        **Norm reference:** prEN 18222:2025, Table 12, Table 19
+        `semanticId: https://jtc24/dpp/API/UpdateDataElement/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 12, Table 19 – semanticId: https://jtc24/dpp/API/UpdateDataElement/1/0"
       parameters:
         - $ref: "#/components/parameters/dppId"
         - $ref: "#/components/parameters/elementPath"
       requestBody:
-        description: |
-          **[DE]** Der neue Inhalt des Datenelements.
-
-          ---
-          **[EN]** The new content of the data element.
         required: true
+        description: |
+          **[DE]** Neuer Wert für das Datenelement (beliebiger JSON-Typ).
+          **[EN]** New value for the data element (any JSON type).
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/DataElement"
-            example: "new value"
+            example:
+              value: "neuer Wert / new value"
       responses:
         "200":
           description: |
-            **[DE]** Erfolgreich aktualisiert. Gibt das geänderte Datenelement zurück.
-
-            ---
-            **[EN]** Successfully updated. Returns the modified data element.
+            **[DE]** Element erfolgreich aktualisiert. / **[EN]** Element successfully updated.
+            prEN 18222:2025 – `Success`
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DataElement"
+                $ref: "#/components/schemas/ElementUpdateResponse"
+              example:
+                status: "success"
+                message: "Element updated successfully"
         "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "501":
           description: |
-            **[DE]** Noch nicht implementiert.
+            **[DE]** Validierungsfehler. / **[EN]** Validation error.
+            prEN 18222:2025 – `ClientErrorBadRequest`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
-            ---
-            **[EN]** Not yet implemented.
+  # ─────────────────────────────────────────────────────────────────────────────
+  # POST /registerDPP – PostNewDPPToRegistry
+  # prEN 18222:2025 Tabelle 8 / Table 8 + Tabelle 18 / Table 18
+  # semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0
+  # ─────────────────────────────────────────────────────────────────────────────
+  /registerDPP:
+    post:
+      tags: ["DPP Registry API"]
+      summary: "RegisterDPP (PostNewDPPToRegistry)"
+      operationId: "registerDPP"
+      description: |
+        **[DE]** Wie `POST /dpps`, schreibt aber zusätzlich in die **sekundäre Datenbank** `aasregistry`
+        (prEN 18222:2025, Tabelle 8).
 
+        Der Aufruf legt einen neuen **Digital Product Passport (DPP)**-Eintrag in der Registry an und verknüpft diesen mit einer entsprechenden **Asset Administration Shell (AAS)**.
+
+        Folgende Fälle werden unterstützt:
+        - **Standardfall**: Erzeugung einer neuen DPP-ID sowie Anlage/Synchronisation einer neuen AAS.
+        - **AAS existiert bereits**: Es wird nur eine neue DPP-ID erzeugt und mit der bestehenden AAS verknüpft (z. B. Nachregistrierung).
+        - **Registry-only**: Anlage eines reinen DPP-Registry-Eintrags ohne direkte AAS-Erzeugung (implementierungsabhängig).
+
+        **Norm-Referenz:** prEN 18222:2025, Tabelle 8, Tabelle 18
+        `semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0`
+
+
+        ---
+
+        **[EN]** Like `POST /dpps`, but additionally writes to the **secondary database** `aasregistry`
+        (prEN 18222:2025, Table 8).
+
+        This endpoint creates a new **Digital Product Passport (DPP)** entry in the registry and links it to a corresponding **Asset Administration Shell (AAS)**.
+
+        The following cases are supported:
+        - **Standard case**: A new DPP-ID is generated and a new AAS is created or synchronized in the AAS repository.
+        - **AAS already exists**: Only a new DPP-ID is created and linked to the existing AAS (e.g. for re-registration or extension of an existing asset).
+        - **Registry-only**: Creation of a DPP registry entry without directly creating an AAS (implementation-dependent).
+
+        **Norm reference:** prEN 18222:2025, Table 8, Table 18
+        `semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0`
+      x-norm-ref: "prEN 18222:2025 Table 8, Table 18 – semanticId: https://jtc24/dpp/API/PostNewDPPToRegistry/1/0"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDPPRequest"
+      responses:
+        "201":
+          description: |
+            **[DE]** DPP erfolgreich registriert. Laut prEN 18222:2025 sollte hier eine `registryIdentifier`
+            zurückgegeben werden; aktuell wird `dppId` zurückgegeben.
+
+            **[EN]** DPP successfully registered. Per prEN 18222:2025, a `registryIdentifier` should be
+            returned; currently `dppId` is returned.
+            prEN 18222:2025 – `SuccessCreated`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDPPResponse"
+        "400":
+          description: |
+            **[DE]** Validierungsfehler. / **[EN]** Validation error.
+            prEN 18222:2025 – `ClientErrorBadRequest`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+# ═════════════════════════════════════════════════════════════════════════════
+# COMPONENTS
+# ═════════════════════════════════════════════════════════════════════════════
 components:
-  schemas:
-    DPP:
-      type: object
-      description: |
-        **[DE]** Repräsentiert den Digitalen Produktpass.
-
-        Die aktuell implementierte Struktur ist teilweise generisch und wird hier mit Beispielen beschrieben.
-
-        ---
-        **[EN]** Represents the Digital Product Passport.
-
-        The currently implemented structure is partially generic and is described here with examples.
-      properties:
-        dppId:
-          $ref: "#/components/schemas/Identifier"
-        productId:
-          $ref: "#/components/schemas/Identifier"
-        createdAt:
-          type: string
-          description: |
-            **[DE]** Erstellungszeitpunkt als Unix-Zeitstempel in Millisekunden.
-
-            ---
-            **[EN]** Creation timestamp as Unix timestamp in milliseconds.
-          example: "1776845156948"
-        version:
-          type: string
-          example: "1.0.0"
-        shell:
-          type: object
-          properties:
-            id:
-              type: string
-              example: "https://team6.dpp/asset/battery-proto-001"
-            dpps:
-              type: array
-              items:
-                type: object
-                properties:
-                  productId:
-                    type: string
-                    example: "https://team6.dpp/batterypass/proto-001"
-                  version:
-                    type: string
-                    example: "1.0.0"
-        submodels:
-          type: array
-          items:
-            $ref: "#/components/schemas/SubmodelReference"
-      additionalProperties: true
-      example:
-        dppId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMDAxMTc3Njg0NTE1Njk0OA"
-        productId: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMAAx"
-        createdAt: "1776845156948"
-        version: "1.0.0"
-        submodels:
-          - reference: "https://team6.dpp/sm/nameplate"
-            version: "1.0"
-            name: "NamePlate"
-
-    PartialDPP:
-      type: object
-      description: |
-        **[DE]** Eine partielle Repräsentation des DPP für Update-Operationen.
-
-        ---
-        **[EN]** A partial representation of the DPP for update operations.
-      additionalProperties: true
-      example:
-        version: "2.0"
-        submodels:
-          - reference: "http://example.com/submodel1"
-            semanticId: "http://example.com/semantic1"
-
-    SubmodelReference:
-      type: object
-      properties:
-        reference:
-          type: string
-          example: "https://team6.dpp/sm/nameplate"
-        version:
-          type: string
-          example: "1.0"
-        name:
-          type: string
-          example: "NamePlate"
-        semanticId:
-          type: string
-          example: "http://example.com/semantic1"
-      additionalProperties: true
-
-    CreateDPPResponse:
-      type: object
-      required:
-        - status
-        - dppId
-      properties:
-        status:
-          type: string
-          example: "success"
-        dppId:
-          $ref: "#/components/schemas/Identifier"
-
-    DPPReadResponse:
-      type: object
-      required:
-        - status
-        - dpp
-        - submodels_values
-      properties:
-        status:
-          type: string
-          example: "success"
-        dpp:
-          $ref: "#/components/schemas/DPP"
-        submodels_values:
-          type: object
-          description: |
-            **[DE]** Enthält die Werte der Submodelle, gruppiert nach Submodell-Name.
-
-            ---
-            **[EN]** Contains the values of the submodels, grouped by submodel name.
-          additionalProperties:
-            type: array
-            items:
-              $ref: "#/components/schemas/SubmodelElement"
-          example:
-            NamePlate:
-              - modelType: "Property"
-                value: "Team 6 Energy Corp."
-                valueType: "xs:string"
-                idShort: "ManufacturerName"
-
-    SubmodelElement:
-      type: object
-      description: |
-        **[DE]** Generisches Element innerhalb eines Submodells.
-
-        ---
-        **[EN]** Generic element within a submodel.
-      properties:
-        modelType:
-          type: string
-          example: "Property"
-        idShort:
-          type: string
-          example: "ManufacturerName"
-        valueType:
-          type: string
-          example: "xs:string"
-        value:
-          description: |
-            **[DE]** Wert des Elements; kann je nach Typ String, Zahl, Objekt oder Liste sein.
-
-            ---
-            **[EN]** Value of the element; can be string, number, object, or list depending on type.
-        contentType:
-          type: string
-          example: "application/pdf"
-        orderRelevant:
-          type: boolean
-          example: true
-        typeValueListElement:
-          type: string
-          example: "SubmodelElementCollection"
-      additionalProperties: true
-
-    DataElement:
-      description: |
-        **[DE]** Ein einzelnes Datenelement innerhalb eines DPP. Kann ein beliebiger Typ sein.
-
-        ---
-        **[EN]** A single data element within a DPP. Can be any type.
-      example: 42
-
-    DataElementCollection:
-      type: object
-      description: |
-        **[DE]** Eine Sammlung von Datenelementen innerhalb eines DPPs.
-
-        ---
-        **[EN]** A collection of data elements within a DPP.
-      additionalProperties:
-        $ref: "#/components/schemas/DataElement"
-      example:
-        name: "Battery Prototype 001"
-        manufacturerName: "Team 6"
-        model: "proto-001"
-
-    PartialDataElementCollection:
-      type: object
-      description: |
-        **[DE]** Eine partielle Sammlung von Datenelementen für PATCH-Operationen.
-
-        ---
-        **[EN]** A partial collection of data elements for PATCH operations.
-      additionalProperties:
-        $ref: "#/components/schemas/DataElement"
-      example:
-        model: "proto-002"
-
-    Identifier:
-      type: string
-      description: |
-        **[DE]** Eine eindeutige Kennung.
-
-        ---
-        **[EN]** A unique identifier.
-      example: "aHR0cHM6Ly90ZWFtNi5kcHAvYmF0dGVyeXBhc3MvcHJvdG8tMAAx"
-
-    ErrorResult:
-      type: object
-      description: |
-        **[DE]** Das Standard-Antwortobjekt im Fehlerfall.
-
-        ---
-        **[EN]** The standard response object in case of error.
-      properties:
-        message:
-          type: array
-          items:
-            $ref: "#/components/schemas/Message"
-
-    Message:
-      type: object
-      properties:
-        messageType:
-          $ref: "#/components/schemas/MessageTypeEnum"
-        text:
-          type: string
-          description: |
-            **[DE]** Nachrichtentext, der den Fehler beschreibt.
-
-            ---
-            **[EN]** Message text describing the error.
-        code:
-          type: string
-          description: |
-            **[DE]** Ein technologieabhängiger Status- oder Fehlercode.
-
-            ---
-            **[EN]** A technology-dependent status or error code.
-        correlationId:
-          type: string
-          description: |
-            **[DE]** ID zur Verbindung von Nachrichten über mehrere Systeme hinweg.
-
-            ---
-            **[EN]** ID for connecting messages across multiple systems.
-        timestamp:
-          type: string
-          format: date-time
-          description: |
-            **[DE]** Zeitstempel der Nachricht.
-
-            ---
-            **[EN]** Timestamp of the message.
-
-    MessageTypeEnum:
-      type: string
-      enum:
-        - Info
-        - Warning
-        - Error
-        - Exception
 
   parameters:
     dppId:
@@ -881,10 +855,11 @@ components:
       in: path
       required: true
       description: |
-        **[DE]** Eindeutige Kennung des DPP.
+        **[DE]** Base64-URL-kodierter DPP-Identifier (ohne Padding, URL-sicher).
+        Format: `Base64URL(productId + Unix-Millisekunden-Timestamp)`
 
-        ---
-        **[EN]** Unique identifier of the DPP.
+        **[EN]** Base64-URL-encoded DPP identifier (no padding, URL-safe).
+        Format: `Base64URL(productId + Unix-milliseconds-timestamp)`
       schema:
         $ref: "#/components/schemas/Identifier"
 
@@ -893,10 +868,11 @@ components:
       in: path
       required: true
       description: |
-        **[DE]** Eindeutige Kennung des Produkts.
+        **[DE]** Base64-URL-kodierter Produkt-Identifier (ohne Padding).
+        Wird serverseitig via `Base64DPP.ensureEncoding()` sichergestellt.
 
-        ---
-        **[EN]** Unique identifier of the product.
+        **[EN]** Base64-URL-encoded product identifier (no padding).
+        Ensured server-side via `Base64DPP.ensureEncoding()`.
       schema:
         $ref: "#/components/schemas/Identifier"
 
@@ -905,10 +881,9 @@ components:
       in: path
       required: true
       description: |
-        **[DE]** Kennung der DataElementCollection innerhalb des DPP.
+        **[DE]** Submodell-Referenz-ID (wird serverseitig ggf. Base64-kodiert via `ensureEncoding()`).
 
-        ---
-        **[EN]** Identifier of the DataElementCollection within the DPP.
+        **[EN]** Submodel reference ID (Base64-encoded server-side if needed via `ensureEncoding()`).
       schema:
         $ref: "#/components/schemas/Identifier"
 
@@ -917,44 +892,538 @@ components:
       in: path
       required: true
       description: |
-        **[DE]** Der absolute Pfad zum spezifischen Datenelement innerhalb des DPP.
+        **[DE]** Pfad zum Element im Format `<SubmodellName>.<ElementPfad>`.
+        Beispiel: `NamePlate.ManufacturerName` – der erste Teil identifiziert das Submodell,
+        der Rest den Pfad innerhalb des AAS-Submodells.
 
-        ---
-        **[EN]** The absolute path to the specific data element within the DPP.
+        **[EN]** Path to the element in the format `<SubmodelName>.<ElementPath>`.
+        Example: `NamePlate.ManufacturerName` – the first part identifies the submodel,
+        the rest is the path within the AAS submodel.
       schema:
         type: string
-        example: "sustainability.recyclability.recycledContent"
+        example: "NamePlate.ManufacturerName"
+
+  schemas:
+
+    # ── Basistypen / Base types ────────────────────────────────────────────────
+    Identifier:
+      type: string
+      description: |
+        **[DE]** Base64-URL-kodierter Identifier (ohne Padding, URL-sicher gemäß AAS-API-Spezifikation).
+
+        **[EN]** Base64-URL-encoded identifier (no padding, URL-safe per AAS API specification).
+      example: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjMxNzE0NTY3ODkwMTI"
+
+    # ── Request-Schemas / Request schemas ─────────────────────────────────────
+    CreateDPPRequest:
+      type: object
+      required:
+        - shell
+      description: |
+        **[DE]** Eingabe-Payload für `CreateDPP` und `RegisterDPP`.
+        Validiert durch `ValidateDPP.validateJsonTillFirstEntry()`.
+        Pflichtfelder: `shell.id`, `shell.dpps[0].productId`, `shell.dpps[0].version`.
+
+        **[EN]** Input payload for `CreateDPP` and `RegisterDPP`.
+        Validated by `ValidateDPP.validateJsonTillFirstEntry()`.
+        Required fields: `shell.id`, `shell.dpps[0].productId`, `shell.dpps[0].version`.
+      properties:
+        shell:
+          type: object
+          required:
+            - id
+            - dpps
+          properties:
+            id:
+              type: string
+              description: |
+                **[DE]** Shell-Identifier (`shellId`) – Primärschlüssel des MongoDB-Dokuments in `dpp-repo`.
+
+                **[EN]** Shell identifier (`shellId`) – primary key of the MongoDB document in `dpp-repo`.
+              example: "urn:example:shell:001"
+            dpps:
+              type: array
+              minItems: 1
+              description: |
+                **[DE]** Liste der DPP-Einträge. Mindestens ein Eintrag erforderlich.
+                Nur `dpps[0]` wird verarbeitet.
+
+                **[EN]** List of DPP entries. At least one entry required.
+                Only `dpps[0]` is processed.
+              items:
+                $ref: "#/components/schemas/DPPEntry"
+
+    DPPEntry:
+      type: object
+      required:
+        - productId
+        - version
+      description: |
+        **[DE]** Einzelner DPP-Eintrag im Request. `productId` wird serverseitig Base64-kodiert gespeichert.
+
+        **[EN]** Single DPP entry in the request. `productId` is stored Base64-encoded server-side.
+      properties:
+        productId:
+          type: string
+          description: |
+            **[DE]** Produkt-Identifier (Klartext; wird serverseitig via `Base64DPP.ensureEncoding()` kodiert).
+
+            **[EN]** Product identifier (plain text; encoded server-side via `Base64DPP.ensureEncoding()`).
+          example: "urn:example:product:123"
+        version:
+          type: string
+          description: |
+            **[DE]** Version des DPP-Eintrags.
+            **[EN]** Version of the DPP entry.
+          example: "1.0"
+      additionalProperties: true
+
+    UpdateDPPRequest:
+      type: object
+      description: |
+        **[DE]** Partieller DPP für Aktualisierungsoperationen (prEN 18222:2025, Tabelle 6).
+        Enthält nur die zu ändernden Felder. Nicht angegebene Felder werden vom alten DPP übernommen.
+
+        **[EN]** Partial DPP for update operations (prEN 18222:2025, Table 6).
+        Contains only the fields to be changed. Omitted fields are carried over from the old DPP.
+      properties:
+        version:
+          type: string
+          description: |
+            **[DE]** Neue Version (optional – wenn nicht angegeben, wird die alte übernommen).
+            **[EN]** New version (optional – if omitted, the old one is used).
+          example: "1.1"
+        submodels:
+          type: array
+          items:
+            $ref: "#/components/schemas/Submodel"
+          description: |
+            **[DE]** Neue Submodell-Liste (optional).
+            **[EN]** New submodel list (optional).
+      additionalProperties: true
+
+    DataElement:
+      description: |
+        **[DE]** Beliebiger JSON-Wert für ein einzelnes DPP-Datenelement (prEN 18222:2025, Tabelle 12).
+        Wird als MongoDB-Feldwert unter dem Pfad `dpps.0.<elementPath>` gespeichert.
+
+        **[EN]** Any JSON value for a single DPP data element (prEN 18222:2025, Table 12).
+        Stored as a MongoDB field value at path `dpps.0.<elementPath>`.
+      nullable: true
+      additionalProperties: true
+
+    # ── Response-Schemas / Response schemas ───────────────────────────────────
+    HealthResponse:
+      type: object
+      description: |
+        **[DE]** Antwort des Health-Endpunkts.
+        **[EN]** Health endpoint response.
+      properties:
+        status:
+          type: string
+          enum: ["UP"]
+          example: "UP"
+
+    SuccessResponse:
+      type: object
+      description: |
+        **[DE]** Generische Erfolgsantwort ohne Payload.
+        **[EN]** Generic success response without payload.
+      properties:
+        status:
+          type: string
+          example: "success"
+
+    CreateDPPResponse:
+      type: object
+      description: |
+        **[DE]** Antwort auf `CreateDPP`. Gibt die serverseitig generierte `dppId` zurück.
+        Entspricht prEN 18222:2025 Tabelle 5 (Ausgabeparameter: `statusCode`, `dpp ID`).
+
+        **[EN]** Response to `CreateDPP`. Returns the server-generated `dppId`.
+        Corresponds to prEN 18222:2025 Table 5 (output parameters: `statusCode`, `dpp ID`).
+      properties:
+        status:
+          type: string
+          example: "success"
+        dppId:
+          $ref: "#/components/schemas/Identifier"
+
+    UpdateDPPResponse:
+      type: object
+      description: |
+        **[DE]** Antwort auf `UpdateDPPById`. Gibt die neue `dppId` der erstellten Version zurück.
+
+        **[EN]** Response to `UpdateDPPById`. Returns the new `dppId` of the created version.
+      properties:
+        status:
+          type: string
+          example: "success"
+        newDppId:
+          $ref: "#/components/schemas/Identifier"
+
+    DPPReadResponse:
+      type: object
+      description: |
+        **[DE]** Vollständige Leseantwort für `ReadDPPById`, `ReadDPPByProductId` und
+        `ReadDPPVersionByProductIdAndDate`. Entspricht prEN 18222:2025 Tabelle 1–3 (Nutzlast: DPP).
+
+        Die Felder `assetInformation` und `administration` sind **doppelt verschachtelt**
+        (Einschränkung #5): `assetInformation.assetInformation` bzw. `administration.administration`.
+
+        **[EN]** Full read response for `ReadDPPById`, `ReadDPPByProductId`, and
+        `ReadDPPVersionByProductIdAndDate`. Corresponds to prEN 18222:2025 Tables 1–3 (payload: DPP).
+
+        The fields `assetInformation` and `administration` are **double-nested**
+        (limitation #5): `assetInformation.assetInformation` and `administration.administration`.
+      properties:
+        status:
+          type: string
+          example: "success"
+        dpp:
+          $ref: "#/components/schemas/DPPDocument"
+        assetInformation:
+          $ref: "#/components/schemas/AssetInformationWrapper"
+        administration:
+          $ref: "#/components/schemas/AdministrationWrapper"
+        submodels_values:
+          $ref: "#/components/schemas/SubmodelsValues"
+
+    DPPDocument:
+      type: object
+      description: |
+        **[DE]** Der DPP-Eintrag aus MongoDB, entspricht dem `MongoDppTemplate`-POJO.
+
+        Hinweis: `createdAt` ist ein Unix-Millisekunden-Timestamp als **String** (kein ISO-8601-Datum),
+        um Zeitzonenprobleme zu vermeiden.
+
+        **[EN]** The DPP entry from MongoDB, corresponding to the `MongoDppTemplate` POJO.
+
+        Note: `createdAt` is a Unix milliseconds timestamp as a **string** (not ISO-8601),
+        to avoid timezone issues.
+      properties:
+        dppId:
+          $ref: "#/components/schemas/Identifier"
+        productId:
+          $ref: "#/components/schemas/Identifier"
+        createdAt:
+          type: string
+          description: |
+            **[DE]** Unix-Millisekunden-Timestamp als String (z. B. `"1714567890123"`).
+            **[EN]** Unix milliseconds timestamp as string (e.g. `"1714567890123"`).
+          example: "1714567890123"
+        version:
+          type: string
+          example: "1.0"
+        submodels:
+          type: array
+          items:
+            $ref: "#/components/schemas/Submodel"
+
+    Submodel:
+      type: object
+      description: |
+        **[DE]** Referenziertes AAS-Submodell mit URI, semantischem Namen und Version.
+        Der `name` wird aus der Submodell-Whitelist in `APIUtilsDPP.extractAndFilterSubmodels()` bestimmt.
+
+        **[EN]** Referenced AAS submodel with URI, semantic name, and version.
+        The `name` is determined from the submodel whitelist in `APIUtilsDPP.extractAndFilterSubmodels()`.
+      properties:
+        reference:
+          type: string
+          description: |
+            **[DE]** URI des Submodells (AAS-Identifier, z. B. `urn:example:submodel:nameplate`).
+            **[EN]** URI of the submodel (AAS identifier, e.g. `urn:example:submodel:nameplate`).
+          example: "urn:example:submodel:nameplate"
+        name:
+          type: string
+          description: |
+            **[DE]** Normierter Submodell-Name aus der Whitelist (`APIUtilsDPP`).
+            **[EN]** Normalised submodel name from the whitelist (`APIUtilsDPP`).
+          enum:
+            - "NamePlate"
+            - "CarbonFootPrint"
+            - "HandoverDocumentation"
+            - "TechnicalData"
+            - "ProductCondition"
+            - "MaterialComposition"
+            - "DigitalNamePlate"
+          example: "NamePlate"
+        version:
+          type: string
+          example: "1.0"
+
+    AssetInformationWrapper:
+      type: object
+      description: |
+        **[DE]** Doppelt verschachteltes Objekt (Einschränkung #5).
+        Das äußere Feld `assetInformation` enthält ein gleichnamiges inneres Objekt mit den
+        tatsächlichen AAS-Daten aus `/shells/{productId}`.
+
+        Empfehlung: Response-Mapping in `readDppById()` korrigieren, um eine Ebene zu entfernen.
+
+        **[EN]** Double-nested object (limitation #5).
+        The outer field `assetInformation` contains an inner object of the same name with the
+        actual AAS data from `/shells/{productId}`.
+
+        Recommendation: Fix the response mapping in `readDppById()` to remove one nesting level.
+      properties:
+        assetInformation:
+          type: object
+          additionalProperties: true
+          example:
+            assetKind: "Instance"
+            globalAssetId: "urn:example:asset:001"
+
+    AdministrationWrapper:
+      type: object
+      description: |
+        **[DE]** Doppelt verschachteltes Objekt (Einschränkung #5).
+        Das äußere Feld `administration` enthält ein gleichnamiges inneres Objekt mit den
+        tatsächlichen AAS-Verwaltungsdaten aus `/shells/{productId}`.
+
+        **[EN]** Double-nested object (limitation #5).
+        The outer field `administration` contains an inner object of the same name with the
+        actual AAS administration data from `/shells/{productId}`.
+      properties:
+        administration:
+          type: object
+          additionalProperties: true
+          example:
+            version: "1"
+            revision: "0"
+
+    SubmodelsValues:
+      type: object
+      description: |
+        **[DE]** Submodell-Inhalte vom externen AAS-Server, gruppiert nach Submodell-Name.
+        Schlüssel: Submodell-Name (z. B. `NamePlate`).
+        Wert: Array von Submodell-Elementen (`result`-Array aus `/submodels/{id}/submodel-elements`).
+
+        **[EN]** Submodel contents from the external AAS server, grouped by submodel name.
+        Key: submodel name (e.g. `NamePlate).
+        Value: array of submodel elements (`result` array from `/submodels/{id}/submodel-elements`).
+      additionalProperties:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      example:
+        NamePlate:
+          - idShort: "ManufacturerName"
+            value: "Example Corp"
+
+    DppIdsByProductIdsResponse:
+      type: object
+      description: |
+        **[DE]** Antwort auf `ReadDPPIdsByProductIds`. Entspricht prEN 18222:2025 Tabelle 4
+        (Nutzlast: DPP-Kennungen, gruppiert nach Produkt-ID).
+
+        **[EN]** Response to `ReadDPPIdsByProductIds`. Corresponds to prEN 18222:2025 Table 4
+        (payload: DPP identifiers grouped by product ID).
+      properties:
+        status:
+          type: string
+          example: "success"
+        results:
+          type: object
+          description: |
+            **[DE]** Schlüssel: `productId` (Base64-URL-kodiert), Wert: Liste der zugehörigen `dppId`s.
+            **[EN]** Key: `productId` (Base64-URL-encoded), value: list of associated `dppId`s.
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              properties:
+                dppId:
+                  $ref: "#/components/schemas/Identifier"
+
+    CollectionReadResponse:
+      type: object
+      description: |
+        **[DE]** Antwort des AAS-Servers für `ReadDataElementCollection`.
+        Enthält das `result`-Array aus `/shells/{elementId}/submodel-refs`.
+
+        **[EN]** AAS server response for `ReadDataElementCollection`.
+        Contains the `result` array from `/shells/{elementId}/submodel-refs`.
+      properties:
+        status:
+          type: string
+          example: "success"
+        result:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+
+    ElementReadResponse:
+      type: object
+      description: |
+        **[DE]** Antwort für `ReadDataElement`. Enthält das Datenelement vom AAS-Server.
+        Entspricht prEN 18222:2025 Tabelle 10 (Nutzlast: Eigenschaft).
+
+        **[EN]** Response for `ReadDataElement`. Contains the data element from the AAS server.
+        Corresponds to prEN 18222:2025 Table 10 (payload: Property).
+      properties:
+        status:
+          type: string
+          example: "success"
+        payload:
+          type: object
+          additionalProperties: true
+
+    ElementUpdateResponse:
+      type: object
+      description: |
+        **[DE]** Antwort für Update-Operationen auf Elementebene.
+        **[EN]** Response for element-level update operations.
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          description: |
+            **[DE]** Optionale Statusmeldung.
+            **[EN]** Optional status message.
+          example: "Element updated successfully"
+        payload:
+          type: object
+          additionalProperties: true
+          description: |
+            **[DE]** Optionale Rückgabe des aktualisierten Elements (bei Collection-Updates).
+            **[EN]** Optional return of the updated element (for collection updates).
+
+    # ── Fehlerformat / Error format (prEN 18222:2025, Tabelle 13–16) ──────────
+    ErrorResult:
+      type: object
+      description: |
+        **[DE]** Normiertes Fehlerobjekt gemäß **prEN 18222:2025, Tabelle 13** (Allgemeines Ergebnisobjekt).
+        Generiert durch `APIUtilsDPP.create_generic_response()`.
+        `semanticId: https://jtc24/dpp/API/DataTypes/Result`
+
+        **[EN]** Standardised error object per **prEN 18222:2025, Table 13** (General Result Object).
+        Generated by `APIUtilsDPP.create_generic_response()`.
+        `semanticId: https://jtc24/dpp/API/DataTypes/Result`
+      properties:
+        message:
+          type: array
+          description: |
+            **[DE]** Liste von Nachrichten (Kardinalität 0..*).
+            **[EN]** List of messages (cardinality 0..*).
+          items:
+            $ref: "#/components/schemas/Message"
+
+    Message:
+      type: object
+      description: |
+        **[DE]** Nachrichtenstruktur gemäß **prEN 18222:2025, Tabelle 14**.
+        `semanticId: https://jtc24/dpp/API/DataTypes/Message`
+
+        **[EN]** Message structure per **prEN 18222:2025, Table 14**.
+        `semanticId: https://jtc24/dpp/API/DataTypes/Message`
+      required:
+        - messageType
+        - text
+      properties:
+        messageType:
+          $ref: "#/components/schemas/MessageTypeEnum"
+        text:
+          type: string
+          description: |
+            **[DE]** Menschenlesbare Fehlerbeschreibung (Pflichtfeld laut Tabelle 14).
+            **[EN]** Human-readable error description (mandatory per Table 14).
+          example: "DPP not found"
+        code:
+          type: integer
+          description: |
+            **[DE]** Technologieabhängiger HTTP-Statuscode (optional laut Tabelle 14, Kardinalität 0..1).
+            **[EN]** Technology-dependent HTTP status code (optional per Table 14, cardinality 0..1).
+          example: 404
+        correlationId:
+          type: string
+          description: |
+            **[DE]** Generischer Statuscode gemäß **prEN 18222:2025, Tabelle 16** (optional, Kardinalität 0..1).
+            Dient zur systemübergreifenden Verknüpfung von Ergebnisnachrichten.
+
+            **[EN]** Generic status code per **prEN 18222:2025, Table 16** (optional, cardinality 0..1).
+            Used to correlate result messages across systems.
+          enum:
+            - "Success"
+            - "SuccessCreated"
+            - "SuccessAccepted"
+            - "SuccessNoContent"
+            - "ClientErrorBadRequest"
+            - "ClientNotAuthorized"
+            - "ClientForbidden"
+            - "ClientMethodNotAllowed"
+            - "ClientErrorResourceNotFound"
+            - "ClientResourceConflict"
+            - "ServerInternalError"
+            - "ServerErrorBadGateway"
+          example: "ClientErrorResourceNotFound"
+        timestamp:
+          type: string
+          format: date-time
+          description: |
+            **[DE]** ISO-8601-Timestamp (`Instant.now().toString()` im Backend, optional laut Tabelle 14).
+            **[EN]** ISO-8601 timestamp (`Instant.now().toString()` in the backend, optional per Table 14).
+          example: "2026-05-08T10:00:00.000Z"
+
+    MessageTypeEnum:
+      type: string
+      description: |
+        **[DE]** Nachrichtentyp gemäß **prEN 18222:2025, Tabelle 15** (`MessageTypeEnum`).
+        `semanticId: https://jtc24/dpp/API/DataTypes/MessageTypeEnum`
+
+        | Wert / Value | Bedeutung (DE) | Meaning (EN) |
+        |---|---|---|
+        | `Info` | Informiert den Benutzer über eine Tatsache | Informs the user about a fact |
+        | `Warning` | Warnung; kann zu Fehlern führen | Warning; may lead to subsequent errors |
+        | `Error` | Fehlerbehandlung | Error handling |
+        | `Exception` | Interne/unbehandelte Ausnahme | Internal/unhandled exception |
+
+        **[EN]** Message type per **prEN 18222:2025, Table 15** (`MessageTypeEnum`).
+      enum:
+        - "Info"
+        - "Warning"
+        - "Error"
+        - "Exception"
+      example: "Error"
 
   responses:
-    BadRequest:
-      description: |
-        **[DE]** Fehlerhafte Anfrage (z. B. falsche Syntax oder ungültige Parameter).
-
-        ---
-        **[EN]** Bad request (e.g. incorrect syntax or invalid parameters).
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResult"
-
-    Forbidden:
-      description: |
-        **[DE]** Zugriff verweigert. Der Client hat nicht die erforderlichen Berechtigungen für die Ressource.
-
-        ---
-        **[EN]** Access denied. The client does not have the required permissions for the resource.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResult"
-
     NotFound:
       description: |
-        **[DE]** Die angeforderte Ressource wurde nicht gefunden.
-
-        ---
-        **[EN]** The requested resource was not found.
+        **[DE]** DPP nicht gefunden. / **[EN]** DPP not found.
+        prEN 18222:2025 – `ClientErrorResourceNotFound` (Tabelle 16 / Table 16)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResult"
+          example:
+            message:
+              - code: 404
+                messageType: "Error"
+                correlationId: "ClientErrorResourceNotFound"
+                text: "DPP not found"
+                timestamp: "2026-05-08T09:54:17.947061557Z"
+
+    InternalServerError:
+      description: |
+        **[DE]** Interner Serverfehler. Alle Exceptions werden im Controller mit `catch (Exception e)`
+        abgefangen und als 500 zurückgegeben.
+
+        **[EN]** Internal server error. All exceptions are caught in the controller with
+        `catch (Exception e)` and returned as 500.
+        prEN 18222:2025 – `ServerInternalError` (Tabelle 16 / Table 16)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResult"
+          example:
+            message:
+              - code: 500
+                messageType: "Exception"
+                correlationId: "ServerInternalError"
+                text: "An unexpected error occurred"
+                timestamp: "2026-05-08T10:00:00.000Z"
