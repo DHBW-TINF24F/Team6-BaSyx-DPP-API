@@ -41,7 +41,7 @@
 
 This project implements a REST API for the Digital Product Passport (DPP) according to the [**DIN EN 18222**](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) draft standard, integrated into the Eclipse BaSyx framework.
 
-Our main task is to define an API according to the DIN standard and provide it through a backend service. As a potential release, we plan to offer a new DPP "BaSyx" Docker container. The core idea is to call existing BaSyx APIs — particularly the "Asset Administration Shell Repository API" — and map their responses to the required DIN-compliant output format.
+Our main task is to define an API according to the DIN standard and provide it through a backend service. As a potential release, we plan to offer a new DPP "BaSyx" Docker container. The core idea is to call existing BaSyx APIs - particularly the "Asset Administration Shell Repository API" - and map their responses to the required DIN-compliant output format.
 
 In addition, we developed a completely independent frontend that is not directly connected to BaSyx. This frontend displays the DPPs of uploaded shells (AASX, JSON, etc.) in a well-structured and user-friendly way, accessible via the "AAS DPP Viewer" entry in the BaSyx Web UI.
 
@@ -141,7 +141,7 @@ For the full architectural specification, see the [SAS (Software Architecture Sp
 | **Infrastructure** | Eclipse BaSyx Framework |
 | **API Definition** | OpenAPI 3.0 / Swagger |
 | **Data Model** | Asset Administration Shell (AAS) |
-| **Hosting** | Traefik (Reverse Proxy) & Docker — [Swagger](https://srv01.noah-becker.de/uni/swe/swagger/) · [BaSyx WebUI](https://srv01.noah-becker.de/uni/swe/basyx/) |
+| **Hosting** | Traefik (Reverse Proxy) & Docker - [Swagger](https://srv01.noah-becker.de/uni/swe/swagger/) · [BaSyx WebUI](https://srv01.noah-becker.de/uni/swe/basyx/) |
 | **Documentation** | Markdown, GitHub Wiki, Swagger UI |
 
 ---
@@ -152,10 +152,12 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 
 | Document | Description | Link |
 |----------|-------------|------|
-| **SRS** — Software Requirements Specification | Functional & non-functional requirements | [SRS](./PROJECT/SRS/SRS.md) |
-| **SAS** — Software Architecture Specification | System architecture, diagrams, technical concepts | [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md) |
-| **CRS** — Customer Requirements Specification | Customer requirements & use cases | [CRS](./PROJECT/CRS/crs.md) |
-| **MOD** — Module Documentation | Module descriptions & interfaces | [MOD](./PROJECT/MOD/) |
+| **SRS** - Software Requirements Specification | Functional & non-functional requirements | [SRS](./PROJECT/SRS/SRS.md) |
+| **SAS** - Software Architecture Specification | System architecture, diagrams, technical concepts | [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md) |
+| **CRS** - Customer Requirements Specification | Customer requirements & use cases | [CRS](./PROJECT/CRS/crs.md) |
+| **MOD** - Module Documentation | Module descriptions & interfaces | [MOD](./PROJECT/MOD/) |
+| **BC** -  Businesscase | Businesscase for project | [BC](./PROJECT/BC/TINF24F_BC_Team_6_1v3.md) |
+| **PM** -  Project Management | Project structure plan | [PM](./PROJECT/PM/TINF24F_PSP_Team_6_1v5.md) |
 | **User Manual** | End-user guide for the DPP Viewer | [User Manual](./PROJECT/USER_MANUAL/usermanual.md) |
 | **Developer README** | Setup, local development, backend & frontend | [dev README](./README.dev.md) |
 | **Meeting Protocols** | All project meeting minutes | [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/) |
@@ -166,7 +168,7 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 
 ## Useful Links
 
-- [BaSyx Hack — Useful API information](https://basyxhack.iese.de/docs.html#gettingstarted)
+- [BaSyx Hack - Useful API information](https://basyxhack.iese.de/docs.html#gettingstarted)
 - [AAS Web UI overview](https://wiki.basyx.org/en/latest/content/user_documentation/basyx_components/web_ui/index.html)
 - [DIN EN 18222](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021)
 - [Tutorials & Resources](https://github.com/DHBW-TINF24F/.github/blob/main/Tutorials.md)
