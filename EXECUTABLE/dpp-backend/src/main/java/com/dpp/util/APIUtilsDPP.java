@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 
 import com.dpp.MongoDppTemplate;
@@ -16,10 +20,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.http.ResponseEntity;
-import org.slf4j.Logger;
 
 public class APIUtilsDPP {
 
@@ -43,6 +43,47 @@ public class APIUtilsDPP {
         return mongoTemplate.getConverter().read(
                 MongoDppTemplate.class,
                 results.get(0));
+
+    }
+
+    public static ObjectNode collectAASNameAndDescription(RestClient restClient, Logger logger, ObjectMapper mapper, MongoDppTemplate dpp) {
+            ObjectNode response = mapper.createObjectNode();
+           try {
+            String externalApiBase = System.getenv("EXTERNAL_AAS_API_URL");
+            if (externalApiBase == null || externalApiBase.isEmpty()) {
+                externalApiBase = "http://localhost:8081";
+            }
+
+            String externalUrl = externalApiBase + "/shells";
+
+            // Using RestClient (Blocking/Synchronous)
+            JsonNode externalPayload = restClient.get()
+                    .uri(externalUrl)
+                    .retrieve()
+                    .body(JsonNode.class);
+
+
+            if (externalPayload == null || !externalPayload.has("result")) {
+            logger.info("External API call failed for /shells");
+                return null;
+            }
+            logger.info("External API call successful for /shells");
+
+            for(JsonNode entry : externalPayload.get("result")) {
+                String entryID = Base64DPP.ensureEncoding(entry.get("id").asText());
+                if (entryID.equals(Base64DPP.ensureEncoding(dpp.getProductId()))) {
+                    response.putPOJO("name", entry.get("idShort"));
+                    response.putPOJO("description", entry.get("description"));
+                    return response;
+                }
+            }
+            logger.info("Did not find aasIdentifyer {}",dpp.getProductId());
+
+
+        } catch (Exception apiEx) {
+            logger.warn("External API call to :8081 failed: {}", apiEx.getMessage());
+        }
+        return null;
 
     }
 

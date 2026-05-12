@@ -173,9 +173,11 @@ public class APIController {
             ObjectNode collctedSubmodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
+            ObjectNode collectedShell = APIUtilsDPP.collectAASNameAndDescription(restClient, logger, mapper, dpp);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("shell", collectedShell);
             response.putPOJO("assetInformation", collectedAssetInformation);
             response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", collctedSubmodels);
@@ -385,9 +387,11 @@ public class APIController {
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
+            ObjectNode collectedShell = APIUtilsDPP.collectAASNameAndDescription(restClient, logger, mapper, dpp);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("shell", collectedShell);
             response.putPOJO("assetInformation", collectedAssetInformation);
             response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", submodels);
@@ -428,9 +432,11 @@ public class APIController {
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
+            ObjectNode collectedShell = APIUtilsDPP.collectAASNameAndDescription(restClient, logger, mapper, dpp);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("shell", collectedShell);
             response.putPOJO("assetInformation", collectedAssetInformation);
             response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", submodels);
