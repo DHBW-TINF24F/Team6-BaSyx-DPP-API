@@ -17,7 +17,7 @@ public class MongoDppTemplate {
     @JsonProperty("productId")
     private String productId;
 
-    @JsonProperty
+    @JsonProperty("globalAssetId")
     private String globalAssetId;
 
     @JsonProperty("createdAt")
