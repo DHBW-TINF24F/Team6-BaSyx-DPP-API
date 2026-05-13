@@ -17,6 +17,9 @@ public class MongoDppTemplate {
     @JsonProperty("productId")
     private String productId;
 
+    @JsonProperty
+    private String globalAssetId;
+
     @JsonProperty("createdAt")
     private String createdAt;
 
@@ -40,6 +43,14 @@ public class MongoDppTemplate {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+ public String getGlobalAssetId() {
+        return globalAssetId;
+    }
+
+    public void setGlobalAssetId(String globalAssestId) {
+        this.globalAssetId = globalAssestId;
     }
 
     public String getCreatedAt() {
