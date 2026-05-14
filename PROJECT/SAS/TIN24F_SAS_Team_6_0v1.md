@@ -327,25 +327,31 @@ This view is architecturally relevant because the system relies on external data
 
 ### 5.2. Data Model and Data Flow
 
-> THIS PART NEEDS REWORK! (noahdbecker – 2026-05-08)
+The DPP backend maintains its own dedicated collection (`dpp-repo`) within the shared MongoDB instance. This store holds DPP records — but it does **not** duplicate AAS data. Instead, each record contains only the identifiers and references necessary to locate the corresponding AAS resources, keeping the DPP store lean and the AAS infrastructure as the single source of truth for product data.
 
-The system does not maintain its own persistent storage. Instead, it retrieves product-related information from the BaSyx AAS infrastructure and converts this data into a DPP-specific format. The conceptual model is centred around four core entities:
+**DPP Record Structure:**
 
-- **Asset Administration Shell (AAS):** Digital representation of a product and anchor point for related data.
-- **Submodels:** Semantically grouped data sets under the AAS (e.g., product characteristics, identification, lifecycle).
-- **DPP Data Object:** A structured representation derived from one or more Submodels, shaped into a DPP-aligned model for presentation and API exposure.
-- **Product:** Logical domain reference used to request and interpret DPP information for a specific product instance.
+| **Field**       | **Description**                                                                 |
+|-----------------|---------------------------------------------------------------------------------|
+| `dppId`         | Unique DPP identifier, derived from `productId` + creation timestamp            |
+| `productId`     | Base64-encoded AAS identifier (`aasIdentifier`) referencing the AAS shell       |
+| `globalAssetId` | Base64-encoded global asset ID referencing the physical or logical asset        |
+| `createdAt`     | Unix millisecond timestamp of DPP creation                                      |
+| `version`       | DPP schema version                                                              |
+| `submodels`     | List of submodel references — each entry holds the submodel URI, its semantic name, and version; **no submodel content is stored** |
+
+A single shell document may contain multiple DPP entries in an array, representing different versions or lifecycle states of the same product's passport.
 
 <br>
 
-**Data Flow Overview:**  
+**Data Flow Overview:**
 
-**1.** The DPP frontend requests DPP data from the backend.  
-**2.** The DPP backend queries the BaSyx Environment API endpoints for AAS and Submodel data.  
-**3.** The DPP backend validates and maps this data into a unified DPP schema.  
-**4.** The processed result is returned as JSON to the DPP frontend (and optionally external API consumers).  
+**1.** The DPP frontend or an external consumer requests DPP data from the backend.  
+**2.** The DPP backend retrieves the DPP record from `dpp-repo` (identifiers and submodel references only).  
+**3.** For each submodel reference, the backend issues API calls to the BaSyx Environment API to fetch the actual submodel element data.  
+**4.** The backend assembles the full DPP response — combining the stored metadata with the retrieved AAS content — and returns it as a unified JSON payload.  
 
-The DPP backend acts as the sole integration and transformation point to ensure a consistent interpretation of data. No data modification or persistence occurs beyond runtime transformation for display or API output.
+This separation ensures that AAS data is never redundantly stored: the DPP record acts as a reference index, and all product content is sourced live from the BaSyx Environment API at request time.
 
 <br><br>
 
