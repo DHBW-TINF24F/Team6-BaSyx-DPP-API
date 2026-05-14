@@ -63,7 +63,7 @@ The goal of the project is to develop a complete, two-sided REST API solution fo
 
 The outcome of this project lies in the establishment of standardized lifecycle management. The implementation of the solution is intended to improve the searchability of the DPP and increase overall service efficiency.
 
-The main tasks include the phases of analysis, design, coding, documentation, and testing. The budget for this project is specified in detail in the business case (<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_0v3.md">BC</a>). The project will officially begin with the introductory lecture on September 19, 2025, and end with the final presentation and project submission in 2026 (exact end date to be determined).
+The main tasks include the phases of analysis, design, coding, documentation, and testing. The budget for this project is specified in detail in the business case (<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_1v3.md">BC</a>). The project will officially begin with the introductory lecture on September 19, 2025, and end with the final presentation and project submission in 2026 (exact end date to be determined).
 
 ---
 
@@ -158,7 +158,7 @@ Time frame and phases:
 <p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase III - Development)</i> </p>  
 
 
-![Gantt chart](images/Gantt_testing.jpg)
+![Gantt chart](images/Gantt_testing.png)
 <p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase IV - Testing)</i> </p> 
 
 ---
@@ -171,28 +171,31 @@ Time frame and phases:
 | Rolle: Project manager|  - Planning & control |
 | *E-mail: inf24271@lehre.dhbw-stuttgart.de* |  - PSP (Project structure plan) |
 | *MatrikelNr: 6401719* |  - BC (Business Case) |
-| |  - Usability Concept |
-| |  - Coding (Frontend)|
-| |  - Presentation |
-| |  - PowerPoint |
+| | - Usability Concept |
+| | - Coding (Frontend)|
+| | - Presentation |
 | | - Meetings Minutes (12-21 Weeks)
 | **Magnus Lörcher** |
 | Role: Product manager |  - CRS (Customer Requirements Specification) |
 | *E-mail: inf24155@lehre.dhbw-stuttgart.de* | - Market and demand analysis|
 | *MatrikelNr: 6699202* | - Coding (Backend) |
 | |- Usability concept |
+| | - MOD: DPP Backend |
+| |  - PowerPoint II |
 | | - Presentation |
 | **Luca Schmoll** | |
 | Role: Product manager |- SRS (System Requirements Specification) |
 | *E-mail: inf24137@lehre.dhbw-stuttgart.de* | -  Usability concept |
 | *MatrikelNr: 5919706* | - Coding (Backend) |
 | | - Market and demand analysis|
+| | - MOD: DPP Backend |
 | | - Presentation |
+| | - PowerPoint II |
 | **Fabian Steiß** | |
 | Role: Technical writer | - Meetings Minutes (1-11 Weeks)|
 | *E-mail: inf24138@lehre.dhbw-stuttgart.de* |  - Usability concept |
 | *MatrikelNr: 5934347* |  - User Manual |
-| | - MOD    |
+| | - MOD: DPP API |
 | | - Readme |
 | | - Wiki   |
 | | - Coding (Backend)|
@@ -213,16 +216,16 @@ Time frame and phases:
 | *MatrikelNr: 1871817* | - Infrastructure setup |
 | | - Usability concept |
 | | - Coding (Full stack) |
+| | - MOD: DPP Routing Spezification |
 | | - Presentation |
 | **Felix Schulz** | |
 | Role: UI-Designer | - UI-implementation |
 | *E-mail: inf24075@lehre.dhbw-stuttgart.de* | - Prototyping |
 | *MatrikelNr: 3954527* |  - BaSyx analysis |
-| | - Executable|
-| | - MOD (Web-Interface) |
+| | - Executable |
+| | - MOD: DPP Frontend |
 | | - Coding (Frontend) |
 | | - Presentation |
-| | - PowerPoint I |
 
 ---
 
@@ -283,17 +286,17 @@ The project´s deadline is officially set on 22.05.2026.
 Officially, the following tasks must be completed in the project:
 * **GitHub:** The GitHub repository needs to be cleaned up, and its wiki has to be updated.
 * **Documentation:** The complete set of documents must be delivered:
-    * CRS (Customer Requirement Specification)
-    * BC (Business Case)
-    * SRS (Software Requirement Specification)
-    * SAS (Software Architecture Specification)
-    * PSP (Project structure plan - PM)
-    * Protokolle (Protocols/Meeting Minutes)
-    * Mockups
-    * Meetings Minutes
-    * MODs
-    * STR (System Test Report)
-    * STP (Software Test Plan)
-    * User Documentation
-* **Product presentation I&II**
+    * Project structure plan 
+    * Customer Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/CRS/crs.md">CRS</a>
+    * Business Case <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_1v3.md">BC</a>
+    * Software Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SRS/SRS.md">SRS</a>
+    * Software Architecture Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md">SAS</a>
+    * Protocols/Meeting Minutes <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MEETING_PROTOCOLS/README.md">Meeting Minutes</a>
+    * User Manual <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/USER_MANUAL/usermanual.md">User Manual</a> 
+    * Developer README (Setup, local development, backend & frontend) <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/README.dev.md">DevReadme</a>
+    * Mockups <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PM/Mockups%20%26%20Wireframes">Mockups</a>
+    * Module documentation <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/MOD">MODs</a>
+    * System Test Report <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STP/TINF24F_STP_Team_6_0v1.md">STr</a>
+    * Software Test Plan <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STR/TINF24F_STR_Team_6_0v1.md">STP</a>
+* **Product presentation I&II** <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PRESENTATION">PowerPoint</a>
 * **Code: The source code and an executable version has to be published on GitHub Repository**
