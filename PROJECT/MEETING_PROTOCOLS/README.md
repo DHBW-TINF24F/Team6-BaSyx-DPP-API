@@ -1,7 +1,10 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
-- [Meeting 30.04.2026 - UI Logic & AAS-DPP Mapping](#status3)
+- [Meeting 13.05.2026 - Final Sprint & Document Sync](#status4)
+- [Meeting 08.05.2026 - Feedback Review](#feedback)
+- [Meeting 07.05.2026 - Backend/Frontend & Modules & Testing Integration](#status3)
+- [Meeting 30.04.2026 - UI Logic & AAS-DPP Mapping](#uiDPP)
 - [Meeting 21.04.2026 - Quick Update](#quickUpdate)
 - [Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild](#backendRebuild)
 - [Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration](#bigMeeting)
@@ -22,7 +25,201 @@
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
 
+
+---
+
+<a id="status4">
+
+## Meeting 13.05.2026 - "Final Sprint & Document Sync"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Documentation & README Update | Fabian Steiß | 5 min|
+| 2 | Frontend Progress & UI State | FrontendTeam | 20 min |
+| 3 | Testing| Manuel Lutz | 10 min |
+| 4 | MODs | Team | 10 min|
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 13.05.2026  
+**Time:** 12:45 – 13:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Current Project Status
+1. Documentation: Fabian has updated the main README to reflect the new requirements (based on feedback from Rentschler).
+2. Modules: The team has completed all technical module descriptions (MODs).
+3. Quality assurance:
+  - The Software Test Report (STR) and the Software Test Plan (STP) were finalized by Manuel.
+  - All automated tests are running successfully and cover the current implementation.
+
+### II. Frontend Progress
+The user interface has seen significant progress:
+  - Components: Noah has successfully added the main DPP tabs for DPPList, DPPView, and DPPEditor.
+  - Overview: Nataliia has completed the basic structure of the DPPListView page.
+  - Details: Felix has finalized the DppDetailPage.
+
+### IV. Special Notes
+The division of the list view into “existing passes” and “available AAS without a pass” is crucial for the usability of the demonstrator (pop-up logic).
+Luca and Magnus will ensure that all technical updates from last week are correctly displayed in the presentation.
+
+### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| AAS-Liste finalise | Nataliia Chubak | 15.05.2026 | 
+| Finalizing the Editor | Nataliia Chubak + Noah Becker| 15.05.2026 | 
+| Presentation | Luca Schmoll + Magnus Lörcher  | 15.05.2026 |
+| Finalizing of documentation | Team | 15.05.2026 |
+||||
+
+### IV. Future meeting
+The next meeting is planned for 15.05.2026
+
+---
+<a id="feedback">
+  
+## Meeting 08.05.2026 - "Feedback Review"
+  
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | General Project Requirements | Nataliia Chubak | 10 min|
+| 2 | Swagger & API Documentation | BackendTeam | 20 min |
+| 3 | SRS & SAS Refinement | Luca Schmoll + Noah Becker | 15 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart/Teams
+**Date:** 08.05.2026  
+**Time:** 11:00 – 11:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Feedback  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. General Requirements
+- Visualization: Screenshots of the frontend must be included in the README.
+- Hosting: The REST API must be hosted (demonstration-ready).
+- Interlinking: All documents must be linked to one another.
+- Open Source Contribution: Contact Aaron (BaSyx). Submit a pull request to the BaSyx repository with:
+- Screenshots of frontend and backend sections.
+- Brief description & communication diagram (from the SAS).
+
+### II. Documentation & Specifications
+1. Swagger (API Specification)
+- Delete any unnecessary .yaml files.
+- Error Handling: Clearly define error scenarios and distinguish between cases.
+-  Specify message texts and status messages from the backend.
+2. SRS (Software Requirements Specification)
+- Wording: Use “Display/Visualize” instead of “Load”.
+- Navigation: Replace “clickable navigation” with “show/hide information.”
+- Terminology: Use “Main Menu” (analogous to AAS Web UI).
+- Structure: Include all Functional Requirements (FR) in the table of contents; incorporate/link sources & references from the SAS.
+3. SAS (Software Architecture Specification)
+- Naming: Use “DPP Front-End/Back-End” consistently throughout instead of just “Front-End/Back-End”.
+- Diagrams: Adjust Figure 3.1; move architecture principles to the beginning (top-down approach).
+- Structure: Rename the “White-Box” chapter to “Architecture Diagram [Backend/Frontend]” for better readability.
+- Details: List Traefik as a technology and under the term “Routing.”
+
+### *Notes*
+More -> WhatsApp group -> "Feedback_08_05_2026.txt"
+
+---
+
 <a id="status3">
+
+## Meeting 07.05.2026 - "Backend/Frontend & Modules & Testing Integration"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Completion | BackendTeam | 10 min|
+| 2 | Frontend: UI Components & Logic | FrontendTeam | 20 min |
+| 3 | Testing: CI/CD & Mockups | Manuel Lutz | 15 min |
+| 4 | Module Definition (MOD DPP) | Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 07.05.2026  
+**Time:** 13:00 – 13:55
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Backend: The backend is fully complete. All core functions have been implemented and are stable.
+2. Testing:
+  - The Software Test Reports (STR) are up to date with the tests performed so far.
+  - CI/CD: Test cases have been integrated via GitHub Actions and are now a mandatory requirement for pull requests (PRs).
+  - Methodology: Mockup tests are complete; some tests against the “production” backend are already running. Due to the latest backend changes, a refactoring of the test suites is necessary this week.
+
+### II. Discussion Points
+1. Frontend Structure:
+  - DPP General: Focus on the AAS list (API integration) and the registration workflow (pop-up).
+  - DPP Details: Design of the dashboard and the editor (including the edit button).
+
+  - ### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| AAS-Liste (API Integration) finalise | Nataliia Chubak | 15.05.2026 | 
+| Editor (Framework + Button) | Nataliia Chubak | 15.05.2026 | 
+| Web Interface & Dashboard Setup | Felix Schulz | 15.05.2026  |
+| Editor (API-Connection) | Noah Becker | 15.05.2026  |
+| MOD: DPP Backend | Luca Schmoll + Magnus Lörcher  | 15.05.2026 |
+| MOD: DPP API | Fabian Steiß | 15.05.2026 |
+| MOD: DPP Routing-Spezifikation | Noah Becker | 15.05.2026 |
+| MOD: DPP Frontend | Felix Schulz | 15.05.2026 |
+||||
+
+
+### IV. Future meeting
+The next meeting is planned for 15.05.2026
+
+---
+
+<a id="uiDPP">
 
 ## Meeting 30.04.2026 - "UI Logic & AAS-DPP Mapping"
 
@@ -83,12 +280,9 @@ II. Discussion Points
 
 ### IV. Future meeting
 The next meeting is planned for 07.05.2026. Focus: Review the implemented list and test the registration pop-up.
----
-
-
-
 
 ---
+
 <a id="quickUpdate">
 
 ## Meeting 21.04.2026 - Quick Update
@@ -145,6 +339,8 @@ Rentschler Meeting: Preparation of the to-do list for the upcoming meeting with 
 
 ### IV. Future meeting
 The next meeting is planned for 30.04.2026
+
+
 ---
 
 <a id="backendRebuild">
@@ -344,7 +540,6 @@ Details: The basic structure is already in place but is not yet 100% complete. T
 | Finalization of the /dpp/{productId} logic (DIN-compliant) | Backend Team | 10.04.2026 |
 | Documentation of endpoints in Swagger/OpenAPI | Backend team | 15.04.2026 |
 
----
 
 ### IV. Future meeting
 The next meeting is planned for 10.04.2026

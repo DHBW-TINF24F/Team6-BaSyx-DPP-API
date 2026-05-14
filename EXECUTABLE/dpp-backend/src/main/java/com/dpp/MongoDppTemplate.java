@@ -17,6 +17,9 @@ public class MongoDppTemplate {
     @JsonProperty("productId")
     private String productId;
 
+    @JsonProperty("globalAssetId")
+    private String globalAssetId;
+
     @JsonProperty("createdAt")
     private String createdAt;
 
@@ -26,7 +29,6 @@ public class MongoDppTemplate {
     @JsonProperty("submodels")
     private List<Submodels> submodels = new ArrayList<>();
 
-    // Corrected Getters and Setters to match field name "dppId" [cite: 211, 212]
     public String getDppId() {
         return dppId;
     }
@@ -41,6 +43,14 @@ public class MongoDppTemplate {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+ public String getGlobalAssetId() {
+        return globalAssetId;
+    }
+
+    public void setGlobalAssetId(String globalAssestId) {
+        this.globalAssetId = globalAssestId;
     }
 
     public String getCreatedAt() {
