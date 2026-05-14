@@ -13,14 +13,11 @@ Das Modul **DPP & AAS Web Interface** stellt eine webbasierte Benutzeroberfläch
 ```
 src/
 ├── pages/
-│   ├── AASList.vue            # Listenansicht aller AAS-Einträge
+│   ├── DPPListView.vue            # Listenansicht aller AAS-Einträge
 │   └── DPPDetailPage.vue      # Detailansicht eines digitalen Produktpasses
-├── router/
-│   └── index.ts               # Zentrale Router-Konfiguration
-├── stores/
+├── store/
 │   └── aasStore.ts            # Pinia-Store für AAS-Zustandsverwaltung
-└── components/
-    └── ValueTree.vue          # Rekursive Render-Komponente für Submodel-Daten
+├── router.ts               # Zentrale Router-Konfiguration
 ```
 
 ### 2.2 Technologie-Stack
@@ -209,12 +206,6 @@ interface SemanticId {
 - Timeout-Handling für langsame Backend-Antworten
 - CORS-Header müssen serverseitig korrekt gesetzt sein
 
-### 5.3 Authentifizierung
-
-- OAuth2-basierte Autorisierung
-- Token wird im Authorization-Header mitgesendet
-- Callback-Route für Token-Austausch nach Login-Redirect
-
 ---
 
 ## 6. State Management
@@ -384,7 +375,6 @@ export const dppModuleManifest: ModuleManifest = {
 
 - Export des DPP als PDF oder JSON-LD
 - Vergleichsansicht für mehrere Produktpässe
-- Editiermodus für berechtigte Benutzer
 - Caching-Strategie für häufig abgerufene Submodels
 - WebSocket-basierte Echtzeit-Aktualisierung bei Datenänderungen
 - Internationalisierung (i18n) der Benutzeroberfläche
