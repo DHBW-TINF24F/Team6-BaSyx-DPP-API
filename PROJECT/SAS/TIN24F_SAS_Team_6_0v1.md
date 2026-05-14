@@ -240,7 +240,7 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 <img src="./diagrams/white-box-view/TINF24F_SAS_Team_6_White-Box-View_UML_R10.drawio.svg" alt="BaSyx DPP API – White-Box View / UML" width="100%" height="100%">
 
-*Figure 3-2 &mdash; White-Box View / UML diagram for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Fabian Steiss)*
+*Figure 3-2 &mdash; White-Box View / UML diagram / Architectural structure for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Fabian Steiss)*
 
 <br><br>
 
@@ -403,38 +403,11 @@ The namings of the parameters in the DIN EN 18222 differ from the specifications
 
 | **Parameter (DIN EN 18222)** | **Alias (BaSyx)** | **Purpose**            | **Format** | **Example^\*^** |
 |------------------------------|-------------------|------------------------|------------|-----------------|
-| dppId                        | aasIdentifier     | Identify the AAS-Shell | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==* |
+| dppId                        | aasIdentifier + UNIX-Timestamp    | Identify the AAS-Shell and its corresponding DPP | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN11778792078> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMTE3Nzg3OTIwNzg* |
 | productId                    | *Global Asset ID* | Identify the product <br> *Implementation remains to be discussed* | Input needs to be base64-encoded | <https://pk.harting.com/?.20P=ZSN1> <br> *aHR0cHM6Ly9way5oYXJ0aW5nLmNvbS8/LjIwUD1aU04x* |
-| elementId                    | submodelIdentifier | Identify a specific submodel | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==* |
-| elementPath                  | idShortPath <br> *+ addition* | Take a specified path to an element in a submodel (dot-separated) <br> **Implementation:** {submodelIdentifier}.idShortPath | submodelIdentifier needs to be base64-encoded <br> Rest of idShortPath is "normal" | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9.ProductCarbonFootprint.PublicationDate> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ==.ProductCarbonFootprint.PublicationDate* |
+| elementId                    | submodelIdentifier | Identify a specific submodel | Input needs to be base64-encoded | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ* |
+| elementPath                  | idShortPath <br> *+ addition* | Take a specified path to an element in a submodel (dot-separated) <br> **Implementation:** {submodelIdentifier}.idShortPath | submodelIdentifier needs to be base64-encoded <br> Rest of idShortPath is "normal" | <https://dpp40.harting.com/shells/ZSN1/submodels/CarbonFootprint/0/9.ProductCarbonFootprint.PublicationDate> <br> *aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMS9zdWJtb2RlbHMvQ2FyYm9uRm9vdHByaW50LzAvOQ.ProductCarbonFootprint.PublicationDate* |
 
 <br>
 
 *\* [This](https://dpp40.harting.com:3000/?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==) HARTING AAS-Shell is used for example data.*
-
-<br>
-
-**Ambiguities and further outlook:**  
-
-- **Versioning of DPPs:** Having a look in the DIN, there is noted that explicit versions are expected. The dppId, like defined, describes an AAS-Shell, but should also include a version to statisfy the DIN needs.
-- **productId parameter:** The productId parameter, like defined, can not solely be used to make an API-Call to the Environment API. *This remains to be dicussed with the stakeholders*
-
-
-<br><br>
-
-## 7. References
-
-| **NR.** | **Referenz** | **Titel** | **Version** | **Link** |
-|---------|--------------|-----------|-------------|----------|
-| 1       | DIN EN 18222 | Digital Product Passport - Application Programming Interfaces (APIs) for the product passport lifecycle management and searchability | 2025 | [Link](/PROJECT/SAS/files/DIN_EN_18222_Draft.pdf) |
-| 2       | IDTA-02035-1 | Digital Battery Passport - Part 1 | 2025 | [Link](./files/IDTA-02035-1_Battery_Digital_Nameplate_1_0.pdf) |
-| 3       | IDTA-02035-2 | Digital Battery Passport - Part 2 | 2025 | [Link](./files/IDTA-02035-2_Battery_Handover_Documentation_1_0.pdf) |
-| 4       | IDTA-02035-3 | Digital Battery Passport - Part 3 | 2025 | [Link](./files/IDTA-02035-3_Battery_CarbonFootprint_1_0.pdf) |
-| 5       | IDTA-02035-4 | Digital Battery Passport - Part 4 | 2025 | [Link](./files/IDTA-02035-4_Battery_TechnicalData_1_0.pdf) |
-| 6       | IDTA-02035-5 | Digital Battery Passport - Part 5 | 2025 | [Link](./files/IDTA-02035-5_Product_Condition_1_0.pdf) |
-| 7       | IDTA-02035-6 | Digital Battery Passport - Part 6 | 2025 | [Link](./files/IDTA-02035-6_Material_Composition_1_0.pdf) |
-| 8       | IDTA-02035-7 | Digital Battery Passport - Part 7 | 2025 | [Link](./files/IDTA-02035-7_Circularity_1_0.pdf) |
-| 9       | HARTING AAS  | HARTING Han 24B Assembly ZSN1 - AAS | - | [Link](https://dpp40.harting.com:3000/?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==) |
-| 10      | HARTING DPP  | HARTING Han 24B Assembly ZSN1 - AAS displayed in DPP structure | - | [Link](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ) |
-| 11      | SRS          | Software Requirement Specification | 2025 | [Link](/PROJECT/SRS/SRS.md) |
-| 12      | Aufgabenstellung | Team 6: BaSyx API Aufgabenstellung | 2025 | [Link](https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md) |

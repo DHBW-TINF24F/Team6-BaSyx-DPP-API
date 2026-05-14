@@ -90,7 +90,7 @@
         <mxCell id="JikjJ0p1adLa2uhM40UA-30" value="(4) Return Submodel Data" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="JikjJ0p1adLa2uhM40UA-29" connectable="0" vertex="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="JikjJ0p1adLa2uhM40UA-31" value="&lt;font color=&quot;#04b1ef&quot;&gt;DPP Backend&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#04B1EF;" parent="1" vertex="1">
+        <mxCell id="JikjJ0p1adLa2uhM40UA-31" value="&lt;font style=&quot;color: rgb(4, 177, 239);&quot;&gt;Backend&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(4, 177, 239);&quot;&gt;(DPP API)&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#04B1EF;" parent="1" vertex="1">
           <mxGeometry x="190" y="560" width="130" height="37" as="geometry" />
         </mxCell>
         <mxCell id="JikjJ0p1adLa2uhM40UA-32" value="" style="endArrow=classic;html=1;rounded=0;startArrow=none;startFill=0;endFill=1;" parent="1" edge="1">
