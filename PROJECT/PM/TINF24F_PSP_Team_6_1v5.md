@@ -158,7 +158,7 @@ Time frame and phases:
 <p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase III - Development)</i> </p>  
 
 
-![Gantt chart](images/Gantt_testing.jpg)
+![Gantt chart](images/Gantt_testing.png)
 <p align="center"> <i>Figur.5 Gantt chart 4th Semester (Phase IV - Testing)</i> </p> 
 
 ---
@@ -171,28 +171,31 @@ Time frame and phases:
 | Rolle: Project manager|  - Planning & control |
 | *E-mail: inf24271@lehre.dhbw-stuttgart.de* |  - PSP (Project structure plan) |
 | *MatrikelNr: 6401719* |  - BC (Business Case) |
-| |  - Usability Concept |
-| |  - Coding (Frontend)|
-| |  - Presentation |
-| |  - PowerPoint |
+| | - Usability Concept |
+| | - Coding (Frontend)|
+| | - Presentation |
 | | - Meetings Minutes (12-21 Weeks)
 | **Magnus Lörcher** |
 | Role: Product manager |  - CRS (Customer Requirements Specification) |
 | *E-mail: inf24155@lehre.dhbw-stuttgart.de* | - Market and demand analysis|
 | *MatrikelNr: 6699202* | - Coding (Backend) |
 | |- Usability concept |
+| | - MOD: DPP Backend |
+| |  - PowerPoint II |
 | | - Presentation |
 | **Luca Schmoll** | |
 | Role: Product manager |- SRS (System Requirements Specification) |
 | *E-mail: inf24137@lehre.dhbw-stuttgart.de* | -  Usability concept |
 | *MatrikelNr: 5919706* | - Coding (Backend) |
 | | - Market and demand analysis|
+| | - MOD: DPP Backend |
 | | - Presentation |
+| | - PowerPoint II |
 | **Fabian Steiß** | |
 | Role: Technical writer | - Meetings Minutes (1-11 Weeks)|
 | *E-mail: inf24138@lehre.dhbw-stuttgart.de* |  - Usability concept |
 | *MatrikelNr: 5934347* |  - User Manual |
-| | - MOD    |
+| | - MOD: DPP API |
 | | - Readme |
 | | - Wiki   |
 | | - Coding (Backend)|
@@ -213,16 +216,16 @@ Time frame and phases:
 | *MatrikelNr: 1871817* | - Infrastructure setup |
 | | - Usability concept |
 | | - Coding (Full stack) |
+| | - MOD: DPP Routing Spezification |
 | | - Presentation |
 | **Felix Schulz** | |
 | Role: UI-Designer | - UI-implementation |
 | *E-mail: inf24075@lehre.dhbw-stuttgart.de* | - Prototyping |
 | *MatrikelNr: 3954527* |  - BaSyx analysis |
-| | - Executable|
-| | - MOD (Web-Interface) |
+| | - Executable |
+| | - MOD: DPP Frontend |
 | | - Coding (Frontend) |
 | | - Presentation |
-| | - PowerPoint I |
 
 ---
 
@@ -283,17 +286,17 @@ The project´s deadline is officially set on 22.05.2026.
 Officially, the following tasks must be completed in the project:
 * **GitHub:** The GitHub repository needs to be cleaned up, and its wiki has to be updated.
 * **Documentation:** The complete set of documents must be delivered:
-    * CRS (Customer Requirement Specification)
-    * BC (Business Case)
-    * SRS (Software Requirement Specification)
-    * SAS (Software Architecture Specification)
-    * PSP (Project structure plan - PM)
-    * Protokolle (Protocols/Meeting Minutes)
-    * Mockups
-    * Meetings Minutes
-    * MODs
-    * STR (System Test Report)
-    * STP (Software Test Plan)
-    * User Documentation
-* **Product presentation I&II**
+    * Customer Requirement Specification [CRS](./PROJECT/CRS/crs.md) 
+    * Business Case  [BC](./PROJECT/BC/TINF24F_BC_Team_6_1v3.md)
+    * Software Requirement Specification [SRS](./PROJECT/SRS/SRS.md)
+    * Software Architecture Specification [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md)
+    * Project structure plan  [PSP](./PROJECT/PM/TINF24F_PM_Team_6_1v5.md)
+    * Protocols/Meeting Minutes [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/)
+    * User Manual [User Manual](./PROJECT/USER_MANUAL/usermanual.md) 
+    * Developer README (Setup, local development, backend & frontend) [dev README](./README.dev.md) 
+    * Mockups [Mockups](./PROJECT/PM/Mockups&Wireframes) 
+    * Module documentation [MOD](./PROJECT/MOD/) 
+    * System Test Report [STP](./PROJECT/STP/TINF24F_STP_Team_6_0v1.md)
+    * Software Test Plan [STR](./PROJECT/STR/TINF24F_STR_Team_6_0v1.md)
+* **Product presentation I&II**  [PowerPoint](./PROJECT/PRESENTATION/) 
 * **Code: The source code and an executable version has to be published on GitHub Repository**
