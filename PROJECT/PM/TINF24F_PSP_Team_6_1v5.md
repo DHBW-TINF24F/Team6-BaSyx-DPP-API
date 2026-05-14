@@ -63,7 +63,7 @@ The goal of the project is to develop a complete, two-sided REST API solution fo
 
 The outcome of this project lies in the establishment of standardized lifecycle management. The implementation of the solution is intended to improve the searchability of the DPP and increase overall service efficiency.
 
-The main tasks include the phases of analysis, design, coding, documentation, and testing. The budget for this project is specified in detail in the business case (<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_0v3.md">BC</a>). The project will officially begin with the introductory lecture on September 19, 2025, and end with the final presentation and project submission in 2026 (exact end date to be determined).
+The main tasks include the phases of analysis, design, coding, documentation, and testing. The budget for this project is specified in detail in the business case (<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_1v3.md">BC</a>). The project will officially begin with the introductory lecture on September 19, 2025, and end with the final presentation and project submission in 2026 (exact end date to be determined).
 
 ---
 
@@ -286,17 +286,17 @@ The project´s deadline is officially set on 22.05.2026.
 Officially, the following tasks must be completed in the project:
 * **GitHub:** The GitHub repository needs to be cleaned up, and its wiki has to be updated.
 * **Documentation:** The complete set of documents must be delivered:
-    * Customer Requirement Specification [CRS](./PROJECT/CRS/crs.md) 
-    * Business Case  [BC](./PROJECT/BC/TINF24F_BC_Team_6_1v3.md)
-    * Software Requirement Specification [SRS](./PROJECT/SRS/SRS.md)
-    * Software Architecture Specification [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md)
-    * Project structure plan  [PSP](./PROJECT/PM/TINF24F_PM_Team_6_1v5.md)
-    * Protocols/Meeting Minutes [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/)
-    * User Manual [User Manual](./PROJECT/USER_MANUAL/usermanual.md) 
-    * Developer README (Setup, local development, backend & frontend) [dev README](./README.dev.md) 
-    * Mockups [Mockups](./PROJECT/PM/Mockups&Wireframes) 
-    * Module documentation [MOD](./PROJECT/MOD/) 
-    * System Test Report [STP](./PROJECT/STP/TINF24F_STP_Team_6_0v1.md)
-    * Software Test Plan [STR](./PROJECT/STR/TINF24F_STR_Team_6_0v1.md)
-* **Product presentation I&II**  [PowerPoint](./PROJECT/PRESENTATION/) 
+    * Project structure plan 
+    * Customer Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/CRS/crs.md">CRS</a>
+    * Business Case <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_1v3.md">BC</a>
+    * Software Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SRS/SRS.md">SRS</a>
+    * Software Architecture Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md">SAS</a>
+    * Protocols/Meeting Minutes <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MEETING_PROTOCOLS/README.md">Meeting Minutes</a>
+    * User Manual <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/USER_MANUAL/usermanual.md">User Manual</a> 
+    * Developer README (Setup, local development, backend & frontend) <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/README.dev.md">DevReadme</a>
+    * Mockups <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PM/Mockups%20%26%20Wireframes">Mockups</a>
+    * Module documentation <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/MOD">MODs</a>
+    * System Test Report <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STP/TINF24F_STP_Team_6_0v1.md">STr</a>
+    * Software Test Plan <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STR/TINF24F_STR_Team_6_0v1.md">STP</a>
+* **Product presentation I&II** <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PRESENTATION">PowerPoint</a>
 * **Code: The source code and an executable version has to be published on GitHub Repository**
