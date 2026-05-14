@@ -148,7 +148,7 @@ The given microservice architectural style emphasizes:
 |--------------------------|-----------------------------------------------------------|--------------------|
 | **Presentation Layer**   | Provides the user interface and handles client-side logic | Vue.js (JavaScript) |
 | **Application Layer**    | Implements the core business logic and RESTful API        | Spring Boot (Java) |
-| **Data Layer**           | Manages persistent data and ensures data integrity        | mongoDB *via existing BaSyx Infrastructure* |
+| **Data Layer**           | Manages persistent data and ensures data integrity        | mongoDB |
 | **Infrastructure Layer** | Handles routing, deployment, and orchestration            | Traefik Reverse Proxy, Docker, GitHub Actions CI/CD |
 
 <br>
