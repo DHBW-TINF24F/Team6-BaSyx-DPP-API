@@ -22,7 +22,8 @@
 | **Version** | **Date**   | **Author**  | **Comment**                         |
 |-------------|------------|-------------|-------------------------------------|
 | 1.0         | 2025-11-19 | Noah Becker | First architecture specifications   |
-| 1.0         | 2026-05-08 | Noah Becker | Substantive changes |
+| 1.1         | 2026-05-08 | Noah Becker | Substantive changes |
+| 1.2         | 2026-05-14 | Noah Becker | Implementation of proposed changes |
 
 ---
 
@@ -53,6 +54,10 @@
 ## 1. Introduction
 
 ### 1.1. Purpose and Scope
+
+A **Digital Product Passport (DPP)** is a standardized, machine-readable record that captures a product's lifecycle data — its materials, carbon footprint, technical specifications, and condition. International standards such as **DIN EN 18222** define the APIs required to create, query, and manage these passports across systems and organizations.
+
+This project implements those standards within **BaSyx** — an open-source platform built around the Asset Administration Shell (AAS) model, which provides the underlying data representation for DPPs. The result is a REST API and an accompanying frontend view that make DPP data accessible to both end users and integrating systems, hosted as independent microservices alongside the existing BaSyx infrastructure.
 
 This SAS defines the architectural design of the Digital Product Passport (DPP  &ndash; dt. *Digitaler Produkt Pass*) software, including API endpoint specifications, frontend integration within the BaSyx WebUI, component responsibilities, and deployment considerations.
 
@@ -212,6 +217,14 @@ This decomposition enables parallel development, reduces coupling, and allows in
 
 <br>
 
+> [!NOTE]
+> The DPP Frontend is detailed further in the [Frontend MOD](../MOD/TINF24F_6-MOD-FRONTEND-0v1.md).
+
+> [!NOTE]
+> Routing configuration, SSL termination, and Traefik setup are covered in the [Routing MOD](../MOD/TINF24F_6-MOD-ROUTING-0v1.md).
+
+<br>
+
 **Subsystem Collaboration**  
 
 The DPP Frontend communicates with the Backend through RESTful HTTP requests routed via the Docker internal networking. 
@@ -220,7 +233,7 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 
 <br>
 
-**Subsystem Boundaries**  
+**Responsibility Boundaries**  
 
 - Presentation concerns are strictly contained within the DPP Frontend.  
 - Domain logic, schema mapping, and validation remain inside the DPP Backend.  
@@ -241,6 +254,11 @@ Traefik dynamically routes traffic based on container labels, ensuring request i
 <img src="./diagrams/white-box-view/TINF24F_SAS_Team_6_White-Box-View_UML_R10.drawio.svg" alt="BaSyx DPP API – White-Box View / UML" width="100%" height="100%">
 
 *Figure 3-2 &mdash; White-Box View / UML diagram / Architectural structure for the DPP API Backend &ndash; Providing information about necessary classes and dependencies which will be included throughout the development. (Authors: Luca Schmoll & Fabian Steiss)*
+
+<br>
+
+> [!NOTE]
+> The backend implementation — including all controllers, data models, utility classes, and API endpoints — is documented in detail in the [Backend MOD](../MOD/TINF24F_6-MOD-BACKEND-0v1.md).
 
 <br><br>
 
@@ -334,6 +352,9 @@ The DPP backend acts as the sole integration and transformation point to ensure 
 ## 6. Technical Concept
 
 ### 6.1. DPP API Specification
+
+> [!NOTE]
+> The complete OpenAPI/Swagger specification for the DPP API is maintained in the [API MOD](../MOD/TINF24F_6-MOD-API-0v1.md).
 
 The [DIN EN 18222 (2025-08 Draft)](https://www.dinmedia.de/en/draft-standard/din-en-18222/393321021) specifies the necessary API-endpoints to enhance the searchability of DPPs and to support interactions throughout the lifecycle of a product's DPP. &mdash; It divides the DPP endpoints into 3 methods:  
 
