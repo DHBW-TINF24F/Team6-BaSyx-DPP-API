@@ -1,8 +1,9 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
+- [Meeting 13.05.2026 - Final Sprint & Document Sync](#status4)
 - [Meeting 08.05.2026 - Feedback Review](#feedback)
-- [Meeting 07.05.2026 - Status](#status3)
+- [Meeting 07.05.2026 - Backend/Frontend & Modules & Testing Integration](#status3)
 - [Meeting 30.04.2026 - UI Logic & AAS-DPP Mapping](#uiDPP)
 - [Meeting 21.04.2026 - Quick Update](#quickUpdate)
 - [Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild](#backendRebuild)
@@ -24,6 +25,73 @@
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
 
+
+---
+
+<a id="status4">
+
+## Meeting 13.05.2026 - "Final Sprint & Document Sync"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Documentation & README Update | Fabian Steiß | 5 min|
+| 2 | Frontend Progress & UI State | FrontendTeam | 20 min |
+| 3 | Testing| Manuel Lutz | 10 min |
+| 4 | MODs | Team | 10 min|
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 13.05.2026  
+**Time:** 12:45 – 13:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Current Project Status
+1. Documentation: Fabian has updated the main README to reflect the new requirements (based on feedback from Rentschler).
+2. Modules: The team has completed all technical module descriptions (MODs).
+3. Quality assurance:
+  - The Software Test Report (STR) and the Software Test Plan (STP) were finalized by Manuel.
+  - All automated tests are running successfully and cover the current implementation.
+
+### II. Frontend Progress
+The user interface has seen significant progress:
+  - Components: Noah has successfully added the main DPP tabs for DPPList, DPPView, and DPPEditor.
+  - Overview: Nataliia has completed the basic structure of the DPPListView page.
+  - Details: Felix has finalized the DppDetailPage.
+
+### IV. Special Notes
+The division of the list view into “existing passes” and “available AAS without a pass” is crucial for the usability of the demonstrator (pop-up logic).
+Luca and Magnus will ensure that all technical updates from last week are correctly displayed in the presentation.
+
+### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| AAS-Liste finalise | Nataliia Chubak | 15.05.2026 | 
+| Finalizing the Editor | Nataliia Chubak + Noah Becker| 15.05.2026 | 
+| Presentation | Luca Schmoll + Magnus Lörcher  | 15.05.2026 |
+| Finalizing of documentation | Team | 15.05.2026 |
+||||
+
+### IV. Future meeting
+The next meeting is planned for 15.05.2026
+
+---
 <a id="feedback">
   
 ## Meeting 08.05.2026 - "Feedback Review"
