@@ -67,6 +67,12 @@ graph LR
     Traefik -->|"/uni/swe/swagger"| Swagger
 
     DPPAPI -->|"Docker-intern"| MongoDB
+    BaSyxEnv -->|"Docker-intern"| MongoDB
+    BaSyxAASReg -->|"Docker-intern"| MongoDB
+    BaSyxSMReg -->|"Docker-intern"| MongoDB
+    BaSyxDisc -->|"Docker-intern"| MongoDB
+
+    Swagger --> DPPAPI
 ```
 
 Alle Dienste befinden sich im gemeinsamen Docker-Netzwerk `traefik`, über welches Traefik die Container direkt per Container-Name erreicht. MongoDB ist ausschließlich über dieses interne Netzwerk erreichbar und besitzt keinen öffentlichen Routing-Eintrag.
