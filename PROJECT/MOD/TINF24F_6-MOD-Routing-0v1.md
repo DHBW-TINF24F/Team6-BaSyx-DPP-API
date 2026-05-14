@@ -277,4 +277,4 @@ flowchart LR
 
 Die BaSyx-Dienste (AAS Environment, AAS Registry, Submodel Registry, AAS Discovery) implementieren die standardisierten **AAS API-Spezifikationen** gemäß der Asset Administration Shell Part 2-Norm (IDTA). Die konkreten Endpunkte dieser Dienste sind daher nicht projektspezifisch und werden in der offiziellen BaSyx-Dokumentation beschrieben.
 
-Das endpunkt-spezifische Routing der **DPP API** – alle REST-Endpunkte, HTTP-Methoden, Request-/Response-Strukturen und deren fachliche Bedeutung – wird in einem separaten MOD-Dokument behandelt. *(Verlinkung folgt.)*
+Das endpunkt-spezifische Routing der **DPP API** – alle REST-Endpunkte, HTTP-Methoden, Request-/Response-Strukturen und deren fachliche Bedeutung – wird in der [Moduldokumentation Backend](./TINF24F_6-MOD-BACKEND-0v1.md#6-apicontroller--endpunkte-im-detail) im Unterpunkt *"6. APIController – Endpunkte im Detail"* behandelt.
