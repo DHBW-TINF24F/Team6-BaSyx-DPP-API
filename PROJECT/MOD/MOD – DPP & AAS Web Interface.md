@@ -394,3 +394,5 @@ export const dppModuleManifest: ModuleManifest = {
 ## 14. Zusammenfassung
 
 Das DPP & AAS Web Interface Modul bietet eine vollständige, typsichere und erweiterbare Lösung zur Visualisierung digitaler Produktpässe auf Basis der Asset Administration Shell. Durch die modulare Architektur mit Vue 3, TypeScript und Pinia ist eine einfache Integration in bestehende Anwendungslandschaften sowie eine unabhängige Weiterentwicklung einzelner Teilkomponenten gewährleistet.
+
+> **Hinweis:** Dieses Dokument wurde mithilfe von Künstlicher Intelligenz (Claude Opus 4.7) erstellt.
