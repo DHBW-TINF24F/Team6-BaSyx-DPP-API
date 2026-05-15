@@ -155,12 +155,12 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 | Document | Description | Link |
 |----------|-------------|------|
 | **SRS** - Software Requirements Specification | Functional & non-functional requirements | [SRS](./PROJECT/SRS/TINF24F_6-SRS-0v1.md) |
-| **SAS** - Software Architecture Specification | System architecture, diagrams, technical concepts | [SAS](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md) |
-| **CRS** - Customer Requirements Specification | Customer requirements & use cases | [CRS](./PROJECT/CRS/TIN24F_CRS_Team_6_0v1.md) |
+| **SAS** - Software Architecture Specification | System architecture, diagrams, technical concepts | [SAS](./PROJECT/SAS/TIN24F_6-SAS-0v1.md) |
+| **CRS** - Customer Requirements Specification | Customer requirements & use cases | [CRS](./PROJECT/CRS/TIN24F_6-CRS-0v1.md) |
 | **MOD** - Module Documentation | Module descriptions & interfaces | [MOD](./PROJECT/MOD/) |
 | **User Manual** | End-user guide for the DPP Viewer | [User Manual](./PROJECT/USER_MANUAL/TINF24F_6-USERMANUAL-v1.md) |
 | **Developer README** | Setup, local development, backend & frontend | [dev README](./README.dev.md) |
-| **Meeting Protocols** | All project meeting minutes | [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/TIN24F_Meeting_Minutes_Team_6_0v1.md) |
+| **Meeting Protocols** | All project meeting minutes | [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/TIN24F_6-Meeting-Minutes-0v1.md) |
 | **Presentation** | Final project presentation | [PowerPoint](./PROJECT/PRESENTATION/Team%206%20BaSyx%20DPP%20API.pptx) |
 | **Swagger / OpenAPI** | Live API documentation (DIN EN 18222) | [Swagger UI](https://srv01.noah-becker.de/uni/swe/swagger/) |
 
