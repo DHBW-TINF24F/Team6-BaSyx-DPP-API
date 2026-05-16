@@ -1,6 +1,7 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
+- [Meeting 15.05.2026 - Final Meeting and Feedback with Herr Rentschler](#final)
 - [Meeting 13.05.2026 - Final Sprint & Document Sync](#status4)
 - [Meeting 08.05.2026 - Feedback Review](#feedback)
 - [Meeting 07.05.2026 - Backend/Frontend & Modules & Testing Integration](#status3)
@@ -24,6 +25,85 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+
+
+---
+
+# Meeting Minutes
+
+<a id="final">
+
+## Meeting 15.05.2026 - "Final Meeting and Feedback with Herr Rentschler"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Discussion of frontend | Herr Rentschler, Noah Becker, Nataliia Chubak, Felix Schulz | 45 min|
+| 2 | Extras (submission dates, basyx implementation)| All | 15 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 15.05.2026  
+**Time:** 09:45 – 10:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly and feedback supervisor
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz, Herr Rentschler
+
+---
+## I. Feedback from Herr Rentschler – DPP Section
+
+### DPP List
+- The existing DPP list is generally understandable.
+- A clearer explanation should be added below the list.
+- **Only one sub-item (DPP List)** should be present to fulfill the requirements.
+- **Important:** A DPP is not the same as an AAS. Only the DPP ID is stored. This must be clearly communicated to the user – the two concepts are strictly separated.
+
+### DPP Viewer
+- The Viewer should be kept. Supplementary label: *"View the selected AAS as DPP"*.
+- The selected object must remain consistently recognizable between the AAS Viewer and DPP Viewer.
+- **Goal:** Display the contents of the submodels – similar to the [Harting DPP Viewer](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvMDIwMTE2MDgxMDE).
+- The submodel "Nameplate" should **not** appear in the right-hand selection, as it is already displayed on the board.
+- QR code and image should be displayed.
+- The right-hand submodel selection panel should be removed → focus on **content** of the submodels instead.
+- Representation should be one abstraction level above raw XML (not loaded directly from XML).
+- Orientation towards the BaSyx DPP demo; community acceptance should be considered.
+- Reference: `Tutorials.md` + digital nameplate from the presentation.
+
+### DPP Editor
+- The term "Editor" requires explanation: this is **not** an AAS editor, but a tool for managing the DPP registry.
+- Functions: add a new DPP (`registerNewDPP` or similar), delete existing entries, update via PATCH.
+- All buttons must be clearly and intuitively labeled.
+- Creating DPPs from scratch is explicitly desired.
+- Mr. Rentschler questioned whether an editor makes sense → tendency towards a **pure DPP Viewer**.
+
+### Hosting / Swagger
+- Only a Docker container with access is needed for Swagger hosting.
+- Deployment on the Arena server: decision pending until end of project.
+
+
+## IV. Open Action Items
+
+| Task | Responsible | Due |
+|------|------------|-----|
+| Finalize AAS list | Nataliia Chubak | 15.05.2026 |
+| Finalize Editor | Nataliia Chubak + Noah Becker | 15.05.2026 |
+| Presentation | Luca Schmoll + Magnus Lörcher | 15.05.2026 |
+| Finalize documentation | Team | 15.05.2026 |
+| Complete all documents | Team | Tonight |
+
+> **Note:** Implementation of any outstanding items may also take place after today's deadline.
 
 
 ---
