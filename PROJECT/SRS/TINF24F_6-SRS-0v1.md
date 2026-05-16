@@ -424,5 +424,5 @@ Mockups und Wireframes können <a href="https://github.com/DHBW-TINF24F/Team6-Ba
 | 8       | IDTA-02035-7 | Digital Battery Passport - Part 7 | 2025 | [Link](./files/IDTA-02035-7_Circularity_1_0.pdf) |
 | 9       | HARTING AAS  | HARTING Han 24B Assembly ZSN1 - AAS | - | [Link](https://dpp40.harting.com:3000/?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ==) |
 | 10      | HARTING DPP  | HARTING Han 24B Assembly ZSN1 - AAS displayed in DPP structure | - | [Link](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvWlNOMQ) |
-| 11      | CRS          | Customer Requirement Specification | 2025 | [Link](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/CRS) |
+| 11      | CRS          | Customer Requirement Specification | 2025 | [Link](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/CRS/TIN24F_6-CRS-0v1.md) |
 | 12      | Aufgabenstellung | Team 6: BaSyx API Aufgabenstellung | 2025 | [Link](https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md) |

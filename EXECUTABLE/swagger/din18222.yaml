@@ -383,33 +383,21 @@ paths:
 
         **Norm-Referenz:** prEN 18222:2025, Tabelle 2, Tabelle 17
         `semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0`
-
-        ---
-
-        **[EN]** Returns the currently active DPP (latest version) for a given `productId` **or** `globalAssetID`
-        (prEN 18222:2025, Table 2). The endpoint now supports both identifiers since the extension of the DPP structure.
-
-        Response structure identical to `ReadDPPById`.
-
-        **Norm reference:** prEN 18222:2025, Table 2, Table 17
-        `semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0`
       x-norm-ref: "prEN 18222:2025 Table 2, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPByProductId/1/0"
       parameters:
-        - $ref: "#/components/parameters/productId"
-          # Optional: Beschreibung erweitern
         - name: productId
           in: path
           required: true
           description: |
-            **[DE]** `productId` **oder** `globalAssetID` des Produkts (Base64-kodiert).
-            **[EN]** `productId` **or** `globalAssetID` of the product (Base64-encoded).
+            **[DE]** Base64-kodierte `productId` **oder** `globalAssetID` des Produkts.<br>
+            Wird intern sowohl gegen `dpps.productId` als auch `dpps.globalAssetId` geprüft.
+            **[EN]** Base64-encoded `productId` **or** `globalAssetID` of the product.
           schema:
             type: string
+            example: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM"
       responses:
         "200":
-          description: |
-            **[DE]** DPP erfolgreich gelesen. / **[EN]** DPP successfully retrieved.
-            prEN 18222:2025 – `Success`
+          description: DPP erfolgreich gelesen
           content:
             application/json:
               schema:
@@ -418,11 +406,12 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
     # ─────────────────────────────────────────────────────────────────────────────
-  # GET /dppsByProductIdAndDate/{productId} – ReadDPPVersionByProductIdAndDate
-  # prEN 18222:2025 Tabelle 3 / Table 3 + Tabelle 17 / Table 17
-  # semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0
-  # ─────────────────────────────────────────────────────────────────────────────
+    # GET /dppsByProductIdAndDate/{productId} – ReadDPPVersionByProductIdAndDate
+    # prEN 18222:2025 Tabelle 3 / Table 3 + Tabelle 17 / Table 17
+    # semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0
+    # ─────────────────────────────────────────────────────────────────────────────
   /dppsByProductIdAndDate/{productId}:
     get:
       tags: ["DPP Life Cycle API"]
@@ -430,55 +419,33 @@ paths:
       operationId: "readDPPVersionByProductIdAndDate"
       description: |
         **[DE]** Gibt eine DPP-Version anhand der `productId` **oder** `globalAssetID` und eines exakten 
-        `createdAt`-Timestamps zurück (prEN 18222:2025, Tabelle 3). Der Timestamp muss als Unix-Millisekunden-Wert 
-        übergeben werden.
+        `createdAt`-Timestamps zurück (prEN 18222:2025, Tabelle 3).
 
-        Seit der Erweiterung der DPP-Struktur wird sowohl die `productId` als auch die `globalAssetID` unterstützt.
-
-        **Hinweis:** Der Client muss den exakten Timestamp kennen.
-        Laut Norm ist diese Methode optional für den Wirtschaftsteilnehmer.
-
-        **Norm-Referenz:** prEN 18222:2025, Tabelle 3, Tabelle 17
-        `semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0`
-
-        ---
-
-        **[EN]** Returns a DPP version based on its `productId` **or** `globalAssetID` and an exact `createdAt` timestamp
-        (prEN 18222:2025, Table 3). The timestamp must be provided as a Unix milliseconds value.
-
-        The endpoint now supports both `productId` and `globalAssetID`.
-
-        **Note:** The client must know the exact timestamp.
-        According to the standard, this method is optional for the economic operator.
-
-        **Norm reference:** prEN 18222:2025, Table 3, Table 17
-        `semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0`
+        Der Timestamp muss als String (Unix-Millisekunden) übergeben werden.
       x-norm-ref: "prEN 18222:2025 Table 3, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPVersionByProductIdAndDate/1/0"
       parameters:
-        - $ref: "#/components/parameters/productId"
         - name: productId
           in: path
           required: true
           description: |
-            **[DE]** `productId` **oder** `globalAssetID` des Produkts (Base64-kodiert).
-            **[EN]** `productId` **or** `globalAssetID` of the product (Base64-encoded).
+            Base64-kodierte `productId` **oder** `globalAssetID`.
           schema:
             type: string
+            example: "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM"
         - name: date
           in: query
           required: true
           description: |
-            **[DE]** Exakter Unix-Millisekunden-Timestamp (`createdAt`-Wert des gesuchten DPPs).
-            **[EN]** Exact Unix milliseconds timestamp (`createdAt` value of the requested DPP).
+            **[DE]** Exakter `createdAt`-Timestamp als Unix-Millisekunden-String.<br>
+            Beispiel: `1714567890123`
+            **[EN]** Exact `createdAt` timestamp as Unix milliseconds string.
           schema:
-            type: integer
-            format: int64
-            example: 1714567890123
+            type: string
+            example: "1714567890123"
+          # Hinweis: Im Code ist es als String deklariert, nicht als integer
       responses:
         "200":
-          description: |
-            **[DE]** DPP für den angegebenen Zeitpunkt gefunden. / **[EN]** DPP found for the given timestamp.
-            prEN 18222:2025 – `Success`
+          description: DPP für den angegebenen Zeitpunkt gefunden
           content:
             application/json:
               schema:
@@ -487,11 +454,12 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
     # ─────────────────────────────────────────────────────────────────────────────
-  # POST /dppsByProductIds – ReadDPPIdsByProductIds
-  # prEN 18222:2025 Tabelle 4 / Table 4 + Tabelle 17 / Table 17
-  # semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0
-  # ─────────────────────────────────────────────────────────────────────────────
+    # POST /dppsByProductIds – ReadDPPIdsByProductIds
+    # prEN 18222:2025 Tabelle 4 / Table 4 + Tabelle 17 / Table 17
+    # semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0
+    # ─────────────────────────────────────────────────────────────────────────────
   /dppsByProductIds:
     post:
       tags: ["DPP Life Cycle API"]
@@ -500,50 +468,29 @@ paths:
       description: |
         **[DE]** Batch-Abfrage: Liefert alle `dppId`s für eine Liste von `productId`s **oder** `globalAssetID`s 
         (prEN 18222:2025, Tabelle 4). Ergebnis ist nach Identifier gruppiert.
-
-        Seit der Erweiterung der DPP-Struktur werden sowohl `productId` als auch `globalAssetID` akzeptiert.
-
-        MongoDB-Aggregation: `match → unwind → match → project(...)`.
-
-        **Norm-Referenz:** prEN 18222:2025, Tabelle 4, Tabelle 17
-        `semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0`
-
-        ---
-
-        **[EN]** Batch query: returns all `dppId`s for a list of `productId`s **or** `globalAssetID`s 
-        (prEN 18222:2025, Table 4). Results are grouped by identifier.
-
-        The endpoint now supports both identifier types.
-
-        **Norm reference:** prEN 18222:2025, Table 4, Table 17
-        `semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0`
       x-norm-ref: "prEN 18222:2025 Table 4, Table 17 – semanticId: https://jtc24/dpp/API/ReadDPPIdsByProductIds/1/0"
       requestBody:
         required: true
         description: |
-          **[DE]** Liste von Base64-kodierten `productId`s **oder** `globalAssetID`s.
-          **[EN]** List of Base64-encoded `productId`s **or** `globalAssetID`s.
+          Liste von Base64-kodierten `productId`s **oder** `globalAssetID`s.
         content:
           application/json:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/Identifier"
-            example:
-              - "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM"
-              - "dXJuOmV4YW1wbGU6YXNzZXQ6Nzg5"   # Beispiel globalAssetID
+                type: string
+              example:
+                - "dXJuOmV4YW1wbGU6cHJvZHVjdDoxMjM"
+                - "dXJuOmV4YW1wbGU6YXNzZXQ6Nzg5"
       responses:
         "200":
-          description: |
-            **[DE]** DPP-IDs erfolgreich abgerufen. / **[EN]** DPP IDs successfully retrieved.
-            prEN 18222:2025 – `Success`
+          description: DPP-IDs erfolgreich abgerufen
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DppIdsByProductIdsResponse"
         "500":
           $ref: "#/components/responses/InternalServerError"
-
   # ─────────────────────────────────────────────────────────────────────────────
   # Fine-Granular – Collections
   # prEN 18222:2025 Tabelle 9, 11 / Table 9, 11 + Tabelle 19 / Table 19

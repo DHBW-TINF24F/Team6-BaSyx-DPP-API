@@ -1,46 +1,63 @@
-![GitHub](https://img.shields.io/github/license/eclipse-basyx/basyx-aas-web-ui) [![Deploy Web UI (WIP)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_webui.yml/badge.svg?branch=main)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_webui.yml) [![Deploy Swagger Specification](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml/badge.svg)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml)
+![GitHub](https://img.shields.io/github/license/eclipse-basyx/basyx-aas-web-ui) 
+[![Deploy Swagger Specification](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml/badge.svg)](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/actions/workflows/deploy_swagger.yml)
 
 # TINF24F_Team6_BaSyx_DPP_API – Developer README
 
-## Setup
+## Quick Start (Recommended)
 
-For basic startup, follow the procedure with the `startup.sh` script in the base folder of the repository.
+For a fast startup, run the script in the root directory of the repository:
 
-Run the script by typing `./startup.sh`
+```bash
+./startup.sh
+```
+>[!NOTE]
+If the script is not executable, run chmod +x ./startup.sh first (Linux/macOS).
 
-> [!INFO]
-> If the script is not executable, ensure you are in the correct folder and also (on Linux/MacOS) run `chmod +x ./startup.sh`.
+### Manual Frontend Development
 
-<br>
+Navigate to the frontend directory:
+```bash 
+cd SOURCE/frontend
+```
+Install dependencies and start the development server:
 
-## Manual frontend dev startup
+```bash
+yarn install
+yarn dev
+```
 
-Navigate to `/SOURCE/frontend`
+>[!WARNING]
+The first startup may take a while.
 
-> [!INFO]
-> Make sure you are in the correct folder!
+## Backend Development
+>[!IMPORTANT]
+Before starting the backend locally, stop the corresponding Docker container (if running) to free up port 8080.
+Option 1: Maven + java -jar (Recommended for Development)
+Bash# 1. Go to the backend directory
+cd EXECUTABLE/backend/dpp-backend
 
-1. Run `yarn install`
-2. Run `yarn dev`
+### Build backend
+```bash
+cd ./EXECUTABLE/dpp-backend
+mvn clean install
+```
 
-The startup process of the Vite Dev Setup should start.
+### Start the application
+```bash
+java -jar target/dpp-backend-0.0.1-SNAPSHOT.jar
+```
+Server runs at: http://localhost:8080
 
-> [!WARNING]
-> At first startup, this may take a while.
+## Run with Docker
+```bash
+cd ./EXECUTABLE/backend/dpp-backend/
+docker build -t dpp-backend .
+```
 
-<br>
+## Run the container
+```bash
+docker run --rm -p 8080:8080 dpp-backend
+```
+Server runs at: http://localhost:8080
 
-## Backend dev setup
-
-> [!IMPORTANT]
-> To work with the backend, ensure you are turning the corresponding docker container <span style="text-decoration: underline">**off**</span>, so the local Maven dev server can hop on the port.
-
-**Development Steps:**
-1. `git checkout backend_test`
-2. `cd EXECUTABLE/backend/dpp-backend/`
-3. `mvn clean install`
-4. `java -jar target/dpp-backend-0.0.1-SNAPSHOT.jar`
-
-**Server runs at:** `http://localhost:8080`
-
-**More information:** [Detailed README](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/backend_test/EXECUTABLE/backend/dpp-backend/README.md)
+Detailed Backend Documentation (endpoints, examples, configuration, etc.) can be found in the [Swagger](https://srv01.noah-becker.de/uni/swe/swagger/)
