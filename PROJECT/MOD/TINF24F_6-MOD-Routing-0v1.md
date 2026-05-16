@@ -216,7 +216,7 @@ labels:
   - "traefik.http.services.basyx-dpp-api.loadbalancer.server.port=8080"
 ```
 
-> **Hinweis:** Das endpunkt-spezifische Routing der DPP API – also die einzelnen REST-Endpunkte und deren Bedeutung – wird in einem separaten MOD-Dokument behandelt. Die Verlinkung folgt.
+> **Hinweis:** Das endpunkt-spezifische Routing der DPP API – also die einzelnen REST-Endpunkte und deren Bedeutung – wird im separaten [MOD-Dokument Backend](./TINF24F_6-MOD-BACKEND-0v1.md) behandelt.
 
 #### 2.2.6 MongoDB
 
