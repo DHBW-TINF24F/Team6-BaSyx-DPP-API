@@ -55,7 +55,7 @@
 
 ### 1.1. Purpose and Scope
 
-A **Digital Product Passport (DPP)** is a standardized, machine-readable record that captures a product's lifecycle data — its materials, carbon footprint, technical specifications, and condition. International standards such as **DIN EN 18222** define the APIs required to create, query, and manage these passports across systems and organizations.
+A **Digital Product Passport (DPP)** is a standardized, machine-readable record that captures a product's lifecycle data — its materials, carbon footprint, technical specifications, and condition. International standards such as **DIN EN 18222** define the APIs required to create, query, and manage these passports across systems and organizations. Content (Submodels) of the DPP is standardized by the **IDTA-02035-X**-Standard, which defines the 7 relevant Submodels for a DPP (**-1:** NamePlate; **-2:** HandoverDocumentation; **-3:** CarbonFootprint; **-4:** TechnicalData; **-5:** ProductCondition; **-6:** MaterialComposition; **-7:** Circularity).
 
 This project implements those standards within **BaSyx** — an open-source platform built around the Asset Administration Shell (AAS) model, which provides the underlying data representation for DPPs. The result is a REST API and an accompanying frontend view that make DPP data accessible to both end users and integrating systems, hosted as independent microservices alongside the existing BaSyx infrastructure.
 
@@ -72,10 +72,11 @@ The following areas are considered out of scope: general BaSyx software architec
 
 ### 1.2. System Overview
 
-The system comprises two primary components: the *DPP Viewer & Editor* and the *DPP API*.
+The system comprises two primary components: the *DPP Viewer* and the *DPP API*.
 
-- ***DPP Viewer & Editor*** &mdash; A web viewpoint that presents DPP-related AAS submodels in a clear, responsive UI. It emphasises usability and maintainability and integrates into the BaSyx WebUI.
+- ***DPP Viewer*** &mdash; A web viewpoint that presents DPP-related AAS submodels in a clear, responsive UI. It emphasises usability and maintainability and integrates into the BaSyx WebUI.
 - ***DPP API*** &mdash; RESTful API endpoints exposing DPP data and submodel elements to developers and integrators, working by its own (docker) container service. It offers JSON responses, query/filter endpoints, and machine-readable API documentation (OpenAPI/Swagger).
+- ***DPP Registry*** &mdash; An administrative web interface for managing DPP instances associated with Asset Administration Shells. It allows users to create and delete DPPs, review their metadata and submodel references, and navigate to the AAS Editor for modifying the underlying submodel content. It integrates into the BaSyx WebUI and targets administrative use cases rather than end-user product viewing.
 
 Key capabilities:
 
@@ -128,7 +129,7 @@ The system receives requests, processes this data through the exisiting AAS API,
 **Architectural Style**  
 The system integrates into the existing BaSyx infrastructure, working microservice-based:  
 
-- **DPP Viewer & Editor *(Frontend)*:** The frontend integrates into the BaSyx WebUI as a web view, based as a module.
+- **DPP Viewer *(Frontend)*:** The frontend integrates into the BaSyx WebUI as a web view, based as a module.
 - **DPP API *(Backend)*:** The backend works by its own independent docker container, providing new API endpoints.
 
 <br>
