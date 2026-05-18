@@ -163,7 +163,7 @@ interface SemanticId {
   meta: { name: 'DPP List', subtitle: 'All Digital Product Passports' }
 },
 {
-  path: '/dpp/detail/:productId?',
+  path: '/dpp/detail/:aas?',
   name: 'DPPDetailPage',
   component: DPPDetailPage,
   meta: { name: 'DPP Detail', subtitle: 'Detail view for DPP' }
