@@ -161,7 +161,6 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 | **User Manual** | End-user guide for the DPP Viewer | [User Manual](./PROJECT/USER_MANUAL/TINF24F_6-USERMANUAL-v1.md) |
 | **Developer README** | Setup, local development, backend & frontend | [dev README](./README.dev.md) |
 | **Meeting Protocols** | All project meeting minutes | [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/TIN24F_6-Meeting-Minutes-0v1.md) |
-
 | **Swagger / OpenAPI** | Live API documentation (DIN EN 18222) | [Swagger UI](https://srv01.noah-becker.de/uni/swe/swagger/) |
 
 
