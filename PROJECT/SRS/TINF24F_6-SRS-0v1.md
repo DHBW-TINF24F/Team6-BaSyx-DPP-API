@@ -11,7 +11,7 @@
 ---
 
 ### Aufgabenstellung
- > Die **DIN EN 18222** "Digitaler Produktpass -        Programmierschnittstellen (APIs) für das Lebenszyklusmanagement und die Durchsuchbarkeit vom Produktpass" beschreibt eine REST-API, welche im Rahmen dieser Aufgabe im BaSyx-Framework implementiert werden soll, sowohl Backend- als auch Frontendseitig. Die genaue Aufgabenstellung kann <a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">hier</a> gefunden werden.
+ > Die **DIN EN 18222** "Digitaler Produktpass -        Programmierschnittstellen (APIs) für das Lebenszyklusmanagement und die Durchsuchbarkeit vom Produktpass" beschreibt eine REST-API, welche im Rahmen dieser Aufgabe im BaSyx-Framework implementiert werden soll, sowohl Backend- als auch Frontendseitig. Die genaue Aufgabenstellung kann <a href="https://github.com/DHBW-TINF24F/.github/blob/main/project6_basyx_dpp_api.md">hier</a> gefunden werden. Das gesamte Projekt addressiert den hier verlinkten <a href="https://github.com/eclipse-basyx/basyx-java-server-sdk/issues/1008">Feature Issue</a> innerhalb des BaSyx-Projekts.
 
 ---
 
