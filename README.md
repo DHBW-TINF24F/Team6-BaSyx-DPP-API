@@ -19,7 +19,8 @@
 
 <br>
 
-<img src="./SOURCE/media/dpp_harting.png" alt="DPP Harting Example">
+<img src="./SOURCE/media/dpp_detail.jpeg" alt="DPP Detail Page">
+<img src="./SOURCE/media/dpp_list.jpeg" alt="DPP List Page">
 
 <br>
 
