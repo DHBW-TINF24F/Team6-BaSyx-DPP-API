@@ -4,12 +4,8 @@
 
 <p align="center">
   <a href="https://srv01.noah-becker.de/uni/swe/swagger/">Swagger</a> &bull;
-  <a href="https://srv01.noah-becker.de/uni/swe/basyx/">BaSyx Web UI</a> &bull;
-  <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/MEETING_PROTOCOLS/TIN24F_Meeting_Minutes_Team_6_0v1.md">Meeting Minutes</a> &bull;
-  <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/PRESENTATION/Team%206%20BaSyx%20DPP%20API.pptx">Presentation</a>
+  <a href="https://srv01.noah-becker.de/uni/swe/basyx/">BaSyx Web UI</a>
 </p>
-
-<hr>
 
 <p align="center">
   <img src="./SOURCE/media/basyx_logo.png" alt="BaSyx Logo" height="60" />
@@ -17,14 +13,7 @@
   <img src="./SOURCE/media/dhbw.png" alt="DHBW Logo" height="60" />
 </p>
 
-<br>
 
-<img src="./SOURCE/media/dpp_detail.jpeg" alt="DPP Detail Page">
-<img src="./SOURCE/media/dpp_list.jpeg" alt="DPP List Page">
-
-<br>
-
----
 
 ## Table of Contents
 1. [Project Description](#project-description)
@@ -36,13 +25,16 @@
 7. [Documentation](#documentation)
 8. [Useful Links](#useful-links)
 
----
+
 
 ## Project Description
 
-**Digital Product Passports (DPP)** are becoming a central requirement for transparent, sustainable and circular product lifecycles - driven by the EU Ecodesign for Sustainable Products Regulation (ESPR) and standardized through **DIN EN 18222**.
+**Digital Product Passports (DPP)** are becoming a central requirement for transparent, sustainable and circular product lifecycles - driven by the EU Ecodesign for Sustainable Products Regulation (ESPR) and standardized through [**DIN EN 18222**](https://www.dinmedia.de/de/norm-entwurf/din-en-18222/393321021).
 
 This project implements a **REST API for the Digital Product Passport** according to the DIN EN 18222 draft standard and integrates it into the **Eclipse BaSyx** framework.
+
+**Feature Request**  
+This implementation is tracked under the feature request **[Implement RestAPI for Digital Product Passport (DPP) according to DIN EN 18222](https://github.com/eclipse-basyx/basyx-java-server-sdk/issues/1008)**
 
 ### Why this solution exists
 
@@ -58,7 +50,18 @@ Our solution provides a clean, standardized REST API that:
 
 The result is a production-ready building block that can be packaged as a new “BaSyx DPP” Docker container for the community.
 
----
+
+<span style="color:red">
+
+## License
+
+**To clarify:**
+
+**This project is released under the MIT License. Everyone is free to use, modify, and do whatever they want with the code without any liability for the developers.**
+
+**As a team, we have decided not to sign the Eclipse Contributor Agreement. Nevertheless, we are happy to provide the code to the BaSyx community.**
+
+</span>
 
 ## Architecture
 
@@ -83,23 +86,22 @@ Frontend  DPP API (Backend)
           MongoDB
 ```
 
-text| Layer | Technology | Purpose |
-|-------|------------|---------|
-| Presentation | Vue.js | User interface, DPP Viewer |
-| Application | Spring Boot (Java) | Business logic, REST API |
-| Data | MongoDB via BaSyx | Persistent AAS/Submodel storage |
-| Infrastructure | Traefik, Docker, GitHub Actions | Routing, deployment, CI/CD |
+| Layer          | Technology                        | Purpose                                      |
+|----------------|-----------------------------------|----------------------------------------------|
+| Presentation   | Vue.js                            | User interface, DPP Viewer                   |
+| Application    | Spring Boot (Java)                | Business logic, REST API                     |
+| Data           | MongoDB via BaSyx                 | Persistent AAS/Submodel storage              |
+| Infrastructure | Traefik, Docker, GitHub Actions   | Routing, deployment, CI/CD                   |
 
 For the full architectural specification, see the [SAS (Software Architecture Specification)](./PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md).
 
----
+
 
 ## Frontend Screenshots
 
-<!-- TODO: Add screenshots -->
-> 📸 *Screenshots will be added here.*
+<img src="./SOURCE/media/dpp_detail.jpeg" alt="DPP Detail Page">
+<img src="./SOURCE/media/dpp_list.jpeg" alt="DPP List Page">
 
----
 
 ## Main Tasks
 
@@ -113,13 +115,12 @@ For the full architectural specification, see the [SAS (Software Architecture Sp
    - [x] Define designs for the API frontend
 4. **Development & Integration**
    - [x] Fork and modify required BaSyx repositories
-   - [ ] Implement and test DPP API and UI components
+   - [x] Implement and test DPP API and UI components
 5. **Deployment & Documentation**
    - [x] Host the DPP API and frontend on a public demo server
    - [x] Provide structured online documentation via GitHub Pages or BaSyx Wiki
    - [ ] Present the implementation for community acceptance in the BaSyx open-source project *(currently in discussion)*
 
----
 
 ## Team Members
 
@@ -133,7 +134,6 @@ For the full architectural specification, see the [SAS (Software Architecture Sp
 | UI Designer | Felix Schulz |
 | Developer | All |
 
----
 
 ## Technologies & Tools
 
@@ -147,7 +147,6 @@ For the full architectural specification, see the [SAS (Software Architecture Sp
 | **Hosting** | Traefik (Reverse Proxy) & Docker - [Swagger](https://srv01.noah-becker.de/uni/swe/swagger/) · [BaSyx WebUI](https://srv01.noah-becker.de/uni/swe/basyx/) |
 | **Documentation** | Markdown, GitHub Wiki, Swagger UI |
 
----
 
 ## Documentation
 
@@ -162,10 +161,10 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 | **User Manual** | End-user guide for the DPP Viewer | [User Manual](./PROJECT/USER_MANUAL/TINF24F_6-USERMANUAL-v1.md) |
 | **Developer README** | Setup, local development, backend & frontend | [dev README](./README.dev.md) |
 | **Meeting Protocols** | All project meeting minutes | [Meeting Protocols](./PROJECT/MEETING_PROTOCOLS/TIN24F_6-Meeting-Minutes-0v1.md) |
-| **Presentation** | Final project presentation | [PowerPoint](./PROJECT/PRESENTATION/Team%206%20BaSyx%20DPP%20API.pptx) |
+
 | **Swagger / OpenAPI** | Live API documentation (DIN EN 18222) | [Swagger UI](https://srv01.noah-becker.de/uni/swe/swagger/) |
 
----
+
 
 ## Useful Links
 
@@ -176,11 +175,12 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 - [Open Issues](https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/issues)
 - [Roadmap](https://github.com/orgs/DHBW-TINF24F/projects/9)
 
----
+
 
 ## Version History
 
-- **1.4** (current) - Link fixing for documents - *iFabse*
+- **1.5** (current) - Added frontend screenshots, issue link and licence disclaimer - *iFabse*
+- **1.4** - Link fixing for documents - *iFabse*
 - **1.3** - Landing README improvements and User Manual - *iFabse*
 - **1.2** (24.04.2026) - Updated WIP badge with build and deploy badges - *noahdbecker*
 - **1.1.1** (12.04.2026) - General README update - *mrentsch65*
