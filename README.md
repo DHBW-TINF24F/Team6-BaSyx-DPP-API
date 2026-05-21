@@ -36,7 +36,9 @@
 This project implements a **REST API for the Digital Product Passport** according to the DIN EN 18222 draft standard and integrates it into the **Eclipse BaSyx** framework.
 
 **Feature Request**  
-This implementation is tracked under the feature request **[Implement RestAPI for Digital Product Passport (DPP) according to DIN EN 18222](https://github.com/eclipse-basyx/basyx-java-server-sdk/issues/1008)**
+This implementation is tracked under the feature requests:
+- **Frontend (eclipse-basyx/basyx-aas-web-ui):** [[FEATURE] Digital Product Passport (DPP) UI Integration](https://github.com/eclipse-basyx/basyx-aas-web-ui/issues/1271)
+- **Backend (eclipse-basyx/basyx-java-server-sdk):** [Implement RestAPI for Digital Product Passport (DPP) according to DIN EN 18222](https://github.com/eclipse-basyx/basyx-java-server-sdk/issues/1008)
 
 ### Why this solution exists
 
