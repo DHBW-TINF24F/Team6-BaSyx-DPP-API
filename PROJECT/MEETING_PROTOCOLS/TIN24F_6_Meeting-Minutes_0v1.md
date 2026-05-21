@@ -1,0 +1,1843 @@
+# Meeting Protocol - Team 6 BaSyx DPP API
+
+## Table of Contents
+- [Meeting 21.05.2026 - This is our last report](#lastReport)
+- [Meeting 15.05.2026 - Final Meeting and Feedback with Herr Rentschler](#final)
+- [Meeting 13.05.2026 - Final Sprint & Document Sync](#status4)
+- [Meeting 08.05.2026 - Feedback Review](#feedback)
+- [Meeting 07.05.2026 - Backend/Frontend & Modules & Testing Integration](#status3)
+- [Meeting 30.04.2026 - UI Logic & AAS-DPP Mapping](#uiDPP)
+- [Meeting 21.04.2026 - Quick Update](#quickUpdate)
+- [Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild](#backendRebuild)
+- [Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration](#bigMeeting)
+- [Meeting 02.04.2026 - Quick Check](#quickCheck)
+- [Meeting 27.03.2026 - DPP Structure &Repo Integration](#dppIntegration)
+- [Meeting 20.03.2026 - "Back, but not end" - Backend Strategy](#backendStrategy)
+- [Meeting 13.03.2026 - New start](#newStart) 
+- [Meeting 19.11.2025 – Final discussion for presentation](#finalPresentationMeeting)
+- [Meeting 10.11.2025 - Show and Tell](#showAndTell)
+- [Meeting 06.11.2025 - Feedback from Herr Rentschler](#review)
+- [Meeting 06.11.2025 - Quick Meeting for Presentation](#presentationMeeting)
+- [Meeting 04.11.2025 - Status team members II](#status2)
+- [Meeting 28.10.2025 - Status team members I](#status)
+- [Meeting 22.10.2025 - Document Distribution and Jira/GitHub Tasks](#documentDistribution)
+- [Meeting 17.10.2025 - Discussion of Task Distribution](#discussionBriefing)
+- [Meeting 15.10.2025 - Task Distribution](#TaskDistribution)
+- [Meeting 09.10.2025 - Next Steps](#next-steps)
+- [Meeting 30.09.2025 - Research](#research)
+- [Meeting 29.09.2025 - Foundations](#foundations)
+
+
+---
+<a id="lastReport">
+  
+## Meeting 21.05.2026 - "This is our last report"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | PowerPoint Slides Review | Team | 25 min|
+| 2 | Presentation agenda and assignment of roles | Team | 20 min |
+| 3 | Final Deployment Check | Team | 30 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Teams
+**Date:** 21.05.2026  
+**Time:** 10:00 – 11:15
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly 
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz, Herr Rentschler
+
+---
+
+## I. Agenda & PowerPoint Review
+The team reviewed the PowerPoint presentation and finalized its content.
+
+## II. Presentation Structure 
+The team has established the following fixed speaking roles for the final presentation:
+1. Project Overview & Introduction
+- Speaker: Nataliia Chubak
+- Content: Context of the demonstrator, project objectives
+2. Requirements (SRS)
+- Speaker: Luca Schmoll
+- Content: Key functional and non-functional requirements
+3. Architecture & System Design (SAS)
+- Speaker: Noah Becker
+- Content: Deployment scenario, routing via Traefik, interaction between aas-web-ui and the forked BaSyx backend.
+4. Backend Implementation & Data Model
+- Speakers: Magnus Lörcher & Fabian Steiß
+- Content: Deep dive into the Spring Boot application, MongoDB integration, dynamic submodel queries, and REST API endpoints.
+5. Live Demo
+- Speaker: Felix Schulz
+- Content: End-to-end walkthrough in the frontend (AAS list, DPP registration pop-up, versioning via dropdown, and the integrated registry).
+6. Quality Assurance & Testing (STP/STR)
+- Speaker: Manuel Lutz
+- Content: Test scenarios, GitHub Actions CI/CD pipeline, mockup tests, and validation against the production backend.
+
+>**Note:** Conclusion: The presentation has a logical structure. Everyone knows their role. Good luck with the presentation!
+
+---
+
+
+<a id="final">
+  
+## Meeting 15.05.2026 - "Final Meeting and Feedback with Herr Rentschler"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Discussion of frontend | Herr Rentschler, Noah Becker, Nataliia Chubak, Felix Schulz | 45 min |
+| 2 | Extras (submission dates, basyx implementation)| All | 15 min |
+||||
+
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 15.05.2026  
+**Time:** 09:45 – 10:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly and feedback supervisor
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz, Herr Rentschler
+
+---
+## I. Feedback from Herr Rentschler – DPP Section
+
+### DPP List
+- The existing DPP list is generally understandable.
+- A clearer explanation should be added below the list.
+- **Only one sub-item (DPP List)** should be present to fulfill the requirements.
+- **Important:** A DPP is not the same as an AAS. Only the DPP ID is stored. This must be clearly communicated to the user – the two concepts are strictly separated.
+
+### DPP Viewer
+- The Viewer should be kept. Supplementary label: *"View the selected AAS as DPP"*.
+- The selected object must remain consistently recognizable between the AAS Viewer and DPP Viewer.
+- **Goal:** Display the contents of the submodels – similar to the [Harting DPP Viewer](https://dpp40.harting.com:3000/dpp?aas=https://dpp40.harting.com:8081/shells/aHR0cHM6Ly9kcHA0MC5oYXJ0aW5nLmNvbS9zaGVsbHMvMDIwMTE2MDgxMDE).
+- The submodel "Nameplate" should **not** appear in the right-hand selection, as it is already displayed on the board.
+- QR code and image should be displayed.
+- The right-hand submodel selection panel should be removed → focus on **content** of the submodels instead.
+- Representation should be one abstraction level above raw XML (not loaded directly from XML).
+- Orientation towards the BaSyx DPP demo; community acceptance should be considered.
+- Reference: `Tutorials.md` + digital nameplate from the presentation.
+
+### DPP Editor
+- The term "Editor" requires explanation: this is **not** an AAS editor, but a tool for managing the DPP registry.
+- Functions: add a new DPP (`registerNewDPP` or similar), delete existing entries, update via PATCH.
+- All buttons must be clearly and intuitively labeled.
+- Creating DPPs from scratch is explicitly desired.
+- Mr. Rentschler questioned whether an editor makes sense → tendency towards a **pure DPP Viewer**.
+
+### Hosting / Swagger
+- Only a Docker container with access is needed for Swagger hosting.
+- Deployment on the Arena server: decision pending until end of project.
+
+
+## IV. Open Action Items
+
+| Task | Responsible | Due |
+|------|------------|-----|
+| Finalize AAS list | Nataliia Chubak | 15.05.2026 |
+| Finalize Editor | Nataliia Chubak + Noah Becker | 15.05.2026 |
+| Presentation | Luca Schmoll + Magnus Lörcher | 15.05.2026 |
+| Finalize documentation | Team | 15.05.2026 |
+| Complete all documents | Team | Tonight |
+
+> **Note:** Implementation of any outstanding items may also take place after today's deadline.
+
+
+---
+
+<a id="status4">
+
+## Meeting 13.05.2026 - "Final Sprint & Document Sync"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Documentation & README Update | Fabian Steiß | 5 min|
+| 2 | Frontend Progress & UI State | FrontendTeam | 20 min |
+| 3 | Testing| Manuel Lutz | 10 min |
+| 4 | MODs | Team | 10 min|
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 13.05.2026  
+**Time:** 12:45 – 13:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Current Project Status
+1. Documentation: Fabian has updated the main README to reflect the new requirements (based on feedback from Rentschler).
+2. Modules: The team has completed all technical module descriptions (MODs).
+3. Quality assurance:
+  - The Software Test Report (STR) and the Software Test Plan (STP) were finalized by Manuel.
+  - All automated tests are running successfully and cover the current implementation.
+
+### II. Frontend Progress
+The user interface has seen significant progress:
+  - Components: Noah has successfully added the main DPP tabs for DPPList, DPPView, and DPPEditor.
+  - Overview: Nataliia has completed the basic structure of the DPPListView page.
+  - Details: Felix has finalized the DppDetailPage.
+
+### IV. Special Notes
+The division of the list view into “existing passes” and “available AAS without a pass” is crucial for the usability of the demonstrator (pop-up logic).
+Luca and Magnus will ensure that all technical updates from last week are correctly displayed in the presentation.
+
+### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| AAS-Liste finalise | Nataliia Chubak | 15.05.2026 | 
+| Finalizing the Editor | Nataliia Chubak + Noah Becker| 15.05.2026 | 
+| Presentation | Luca Schmoll + Magnus Lörcher  | 15.05.2026 |
+| Finalizing of documentation | Team | 15.05.2026 |
+||||
+
+### IV. Future meeting
+The next meeting is planned for 15.05.2026
+
+---
+<a id="feedback">
+  
+## Meeting 08.05.2026 - "Feedback Review"
+  
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | General Project Requirements | Nataliia Chubak | 10 min|
+| 2 | Swagger & API Documentation | BackendTeam | 20 min |
+| 3 | SRS & SAS Refinement | Luca Schmoll + Noah Becker | 15 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart/Teams
+**Date:** 08.05.2026  
+**Time:** 11:00 – 11:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Feedback  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. General Requirements
+- Visualization: Screenshots of the frontend must be included in the README.
+- Hosting: The REST API must be hosted (demonstration-ready).
+- Interlinking: All documents must be linked to one another.
+- Open Source Contribution: Contact Aaron (BaSyx). Submit a pull request to the BaSyx repository with:
+- Screenshots of frontend and backend sections.
+- Brief description & communication diagram (from the SAS).
+
+### II. Documentation & Specifications
+1. Swagger (API Specification)
+- Delete any unnecessary .yaml files.
+- Error Handling: Clearly define error scenarios and distinguish between cases.
+-  Specify message texts and status messages from the backend.
+2. SRS (Software Requirements Specification)
+- Wording: Use “Display/Visualize” instead of “Load”.
+- Navigation: Replace “clickable navigation” with “show/hide information.”
+- Terminology: Use “Main Menu” (analogous to AAS Web UI).
+- Structure: Include all Functional Requirements (FR) in the table of contents; incorporate/link sources & references from the SAS.
+3. SAS (Software Architecture Specification)
+- Naming: Use “DPP Front-End/Back-End” consistently throughout instead of just “Front-End/Back-End”.
+- Diagrams: Adjust Figure 3.1; move architecture principles to the beginning (top-down approach).
+- Structure: Rename the “White-Box” chapter to “Architecture Diagram [Backend/Frontend]” for better readability.
+- Details: List Traefik as a technology and under the term “Routing.”
+
+### *Notes*
+More -> WhatsApp group -> "Feedback_08_05_2026.txt"
+
+---
+
+<a id="status3">
+
+## Meeting 07.05.2026 - "Backend/Frontend & Modules & Testing Integration"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Completion | BackendTeam | 10 min|
+| 2 | Frontend: UI Components & Logic | FrontendTeam | 20 min |
+| 3 | Testing: CI/CD & Mockups | Manuel Lutz | 15 min |
+| 4 | Module Definition (MOD DPP) | Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 07.05.2026  
+**Time:** 13:00 – 13:55
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Backend: The backend is fully complete. All core functions have been implemented and are stable.
+2. Testing:
+  - The Software Test Reports (STR) are up to date with the tests performed so far.
+  - CI/CD: Test cases have been integrated via GitHub Actions and are now a mandatory requirement for pull requests (PRs).
+  - Methodology: Mockup tests are complete; some tests against the “production” backend are already running. Due to the latest backend changes, a refactoring of the test suites is necessary this week.
+
+### II. Discussion Points
+1. Frontend Structure:
+  - DPP General: Focus on the AAS list (API integration) and the registration workflow (pop-up).
+  - DPP Details: Design of the dashboard and the editor (including the edit button).
+
+  - ### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| AAS-Liste (API Integration) finalise | Nataliia Chubak | 15.05.2026 | 
+| Editor (Framework + Button) | Nataliia Chubak | 15.05.2026 | 
+| Web Interface & Dashboard Setup | Felix Schulz | 15.05.2026  |
+| Editor (API-Connection) | Noah Becker | 15.05.2026  |
+| MOD: DPP Backend | Luca Schmoll + Magnus Lörcher  | 15.05.2026 |
+| MOD: DPP API | Fabian Steiß | 15.05.2026 |
+| MOD: DPP Routing-Spezifikation | Noah Becker | 15.05.2026 |
+| MOD: DPP Frontend | Felix Schulz | 15.05.2026 |
+||||
+
+
+### IV. Future meeting
+The next meeting is planned for 15.05.2026
+
+---
+
+<a id="uiDPP">
+
+## Meeting 30.04.2026 - "UI Logic & AAS-DPP Mapping"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Concept: 1-to-1 Mapping (DPP/AAS) | FrontendTeam | 10 min|
+| 2 | Frontend: Overview & Detail View | FrontendTeam | 10 min |
+| 3 | Versioning & Dropdown Logic | FrontendTeam | 7 min |
+| 4 | Task Distribution | FrontendTeam | 3 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 30.04.2026  
+**Time:** 10:45 – 11:15
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+Defining the user interface in the frontend and establishing the logic for creating Digital Product Passports (DPP) from existing Asset Administration Shells (AAS).
+II. Discussion Points
+*Core Concept:*
+- It was decided: One DPP per AAS. This simplifies mapping and structure in the demonstrator.
+- The overview page lists all available AAS.
+*Registration Logic:*
+- If an AAS is selected that does not yet have a registered DPP, a pop-up appears.
+- Via this pop-up, the user can “register” the DPP directly for this AAS.
+*Detail View & Versioning:*
+- By default, the detail view always displays the latest version of the DPP.
+- To view older versions, a drop-down menu is implemented that allows users to access specific versions/history.
+*Design Review:*
+- The team discussed the visual design of the web pages based on feedback from Mr. Renschler to ensure intuitive navigation between the list and the editor.
+
+### To-dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Create a list: Generate an overview of all AAS for the frontend | Nataliia Chubak | 07.05.2026 | 
+| Implementation: Logic transfer (based on Felix's preliminary work) from the AAS list to DPP generation | Felix Schulz | 07.05.2026  |
+| UI Component: Develop a pop-up for DPP registration | Noah Becker | 07.05.2026  |
+| Dropdown Logic: Check the backend connection for retrieving historical versions | Team | 07.05.2026 |
+||||
+
+
+### IV. Future meeting
+The next meeting is planned for 07.05.2026. Focus: Review the implemented list and test the registration pop-up.
+
+---
+
+<a id="quickUpdate">
+
+## Meeting 21.04.2026 - Quick Update
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Missing Backend Methods | BackendTeam | 10 min|
+| 2 | API Registry & Parameter Error Handling | BackendTeam | 10 min |
+| 3 | Frontend | FrontendTeam | 7 min |
+| 4 | Stakeholder Meeting Prep | Nataliia Chubak | 3 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 21.04.2026  
+**Time:** 10:00 – 11:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Progress on the backend branch was discussed. The following components are still missing and are currently in development:
+2. AAS Registration: The method for official registration with the AAS is still missing.
+3. Path Access: Retrieving and updating elements via elementPath.
+4. Error Handling: Correct error messages for invalid parameters (see the backend README for details).
+5. API Clarification: Specific consultation regarding the PostNewDppToRegistery method.
+
+### II. Frontend & Organization
+Frontend Adjustment: After further discussion, it was decided to remove the Favorites (heart icon) feature to focus on the core functions of the DPP Editor.
+Rentschler Meeting: Preparation of the to-do list for the upcoming meeting with Mr. Rentschler.
+
+### To-dos
+### III. To-dos 
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Implementation of Element-Update via elementPath | BackendTeam | 30.04.2026 | 
+| Document error handling in the backend code | BackendTeam | 27.04.2026 |
+||||
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 30.04.2026
+
+
+---
+
+<a id="backendRebuild">
+
+## Meeting 17.04.2026 - Based on feedback from Mr.Rentschler – Backend rebuild
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Architecture Reset | Luca Schmoll | 20 min|
+| 2 | Spring Boot& MongoDB Integration | Fabian Steiß | 10 min |
+| 3 | API Method Implementation | Magnus Lörcher | 40 min |
+| 4 | Open Tasks & Dynamic Calls| Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Discord
+**Date:** 17.04.2026  
+**Time:** 20:30 – 22:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Ad-hoc-Meeting: based on the feedback from Mr. Rentschler
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß
+
+---
+### I. Objectives
+1. Complete rebuild of the backend based on feedback from Mr. Rentschler
+2. Implementation of the database connection and basic CRUD operations
+
+### II. Discussion Points & Progress
+1. Restructuring: The backend has been completely rebuilt. A new branch was created for this purpose to ensure a clean codebase. 
+2. Database: A connection to MongoDB has been established and successfully tested.
+3. Implemented API Methods:
+  - POST /dpps: Creates new records in MongoDB.
+  - GET /dpps/{dppid}: Returns a complete DPP via DPP ID.
+  - GET /dppsByProductId/{productId}: Returns the latest DPP version for a product ID.
+  - GET /dppsByProductIdAndDate/{productID}: Retrieves a DPP for a specific date.
+  - DELETE /dpps/{id}: Deletes a DPP via ID.
+  - POST /dppIdsByProductIds: Batch query for a set of Product IDs.
+  - PUT /dpps/{dppId}: Updates or inserts DPP data.
+
+### III. To-dos 
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| Dynamics: createDPP – Dynamically call SubmodelIdentifier | BackendTeam | 27.04.2026 | 
+| payload: Customize getDPP methods (resolve references & retrieve submodel data for the frontend)| BackendTeam | 27.04.2026 |
+| Path Logic: Implementing elementPath & elementID (idShort) | BackendTeam| 27.04.2026 |
+| Backend online hosten | Noah Becker| 23.04.2026 |
+||||
+
+---
+### Notes
+Due to the urgency of Mr. Rentschler’s request for feedback, this meeting was held on short notice and outside the regular schedule.
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 21.04.2026
+
+---
+<a id="bigMeeting">
+
+## Meeting 10.04.2026 - Big Meeting -> Backend Final Steps & DPP Integration
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Definition of DPP and AAS IDs | Noah Becker | 15 min|
+| 2 |  Backend Status | Backend Team | 20 min |
+| 3 | Frontend -> Favorites | Nataliia Chubak | 5 min |
+| 4 | Editor | Frontend Team | 10 min |
+| 5 | Testing Plan | Manuel Lutz | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 02.04.2026  
+**Time:** 10:00 – 11:00
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz
+
+---
+
+### I. Objectives
+1. Alignment of DPP and AAS identifiers (Product ID).
+2. Assessment of backend readiness and transition to the containerization phase.
+3. Coordination of frontend interaction with backend models to create the editor.
+
+### II. Implementation Status
+The structure of DPP IDs and Product IDs has been defined. AAS identifiers were discussed separately—it was decided to use Base64 decoding (instead of encoding) for proper processing.
+
+Successfully implemented packaging of AAS models and their invocation via API for local modules.
+
+Current status: the backend is running stably. The project is in its final stage; only the last steps remain before full completion.
+
+The need to create a Docker container for the backend was discussed.
+
+Frontend and UI:
+- The “Favorites” feature (Heart icons) has been implemented.
+
+The team discussed the details of the web page. Clarified the requirements for the editor’s visualization and determined exactly where the models will be processed.
+
+Currently, the frontend is awaiting the finished models from the backend for further integration into the editor.
+
+### III. To-Dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| “Favorites” feature (Heart icons/Favorites)| Nataliia Chubak | 10.04.2026 | 
+| Begin testing the backend and DPP calls | Manuel Lutz | 17.04.2026 |
+| Schedule a meeting with Mr. Rentschler| Nataliia Chubak | 17.04.2026 |
+| Integrate models into the editor (after receiving data from the backend) | Frontend Team | 17.04.2026 |
+||||
+
+---
+
+### IV. Future meeting
+The next meeting is planned for 17.04.2026
+
+---
+
+<a id="quickCheck">
+
+## Meeting 02.04.2026 - Quick Check
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Health-Endpoint Verification| Backend Team  | 10 min|
+| 2 |  Listing Logic for AAS | Backend Team | 5 min |
+| 3 | DIN-Norm Prototyping (/dpp) | Backend Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 02.04.2026  
+**Time:** 12:45 – 13:10
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz
+
+---
+
+### I. Objectives
+Defining and testing the initial API structure to ensure that the backend is accessible to the frontend.
+
+### II. Implementation Status
+The backend team presented the current status of the REST API. The following endpoints are registered in the system:
+
+- /api/v1/health * Status: Functional.
+
+Purpose: Serves as a health check to ensure that the API is active and can accept requests (“liveness probe”).
+
+- /api/v1/dpp/list * Status: Under review.
+
+Purpose: This endpoint returns a list of currently registered Asset Administration Shells (AAS). It is still being verified whether the filtering of the shells has been fully optimized on the server side.
+
+- /dpp/{productId} * Status: Prototype / Shell.
+
+Purpose: This is the central entry point in accordance with the DIN standard.
+
+Details: The basic structure is already in place but is not yet 100% complete. The logic for aggregating data from the submodel elements is currently being refined.
+
+### III. To-Dos
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|-------------------|---------------------|----------|
+| “Favorites” feature (Heart icons/Favorites)| Nataliia Chubak | 10.04.2026 | 
+| Finalization of the /dpp/{productId} logic (DIN-compliant) | Backend Team | 10.04.2026 |
+| Documentation of endpoints in Swagger/OpenAPI | Backend team | 15.04.2026 |
+
+
+### IV. Future meeting
+The next meeting is planned for 10.04.2026
+
+---
+
+<a id="dppIntegration">
+
+## Meeting 27.03.2026 - DPP Structure & Repo Integration
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | DPP Object & DIN-Payload | Noah Becker  | 10 min|
+| 2 |  Repository & Submodule Setup | Noah Becker | 10 min |
+| 3 | Spring Boot Prototyping | Magnus Lörcher, Luca Schmoll, Fabian Steiß | 15 min |
+| 4 | Frontend Strategy | Frontend Team | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 27.03.2026  
+**Time:** 11:00 – 11:45
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Felix Schulz
+
+---
+
+### I. Objectives
+1. Defining the DPP object structure based on AAS endpoints and DIN standards.
+2. Restructuring the project repositories to enable efficient collaboration between front-end and back-end teams.
+3. Evaluating the initial steps of the Spring Boot implementation.
+
+### II. Discussion Points
+1. DPP Object Modeling: The team reviewed the Digital Product Passport (DPP) object. The payload (specific attributes in the JSON response object)
+ was defined in accordance with the DIN standard. The data is aggregated from the existing AAS Environment API endpoints.
+2. Repository Structure (GitHub): To enable direct work on the codebase, the aas-web-ui (frontend) and basyx-java-server-sdk (backend) repositories 
+were forked within the TINF24 organization.
+3. Two new repos: Team6-BaSyx-DPP-API_Frontend & Team6-BaSyx-DPP-API_Backend.
+4. These are now linked to the main repo via Git submodules to enable parallel changes without manually switching repos.
+5. Backend prototyping: Luca, Magnus, and Fabian have begun implementing the backend model in Spring Boot. 
+This was initially done in an external test environment to verify the logic without directly affecting the complex BaSyx codebase.
+
+### III. To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Frontend: implementation of the first user interface elements (buttons, layout structure)| Frontend Team | 03.04.2026 | 
+| Frontend: Map the JSON payload to UI components | Frontend Team | 03.04.20226 |
+| Familiarize with the BaSyx codebase (backend) | Felix Schulz, Nataliia Chubak | 03.04.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 02.04.2026
+
+---
+
+
+<a id="backendStrategy">
+
+## Meeting 20.03.2026 - "Back, but not end" - Backend Strategy
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Backend Infrastructure | Backend Team  | 20 min|
+| 2 | Stakeholder Feedback Review | Noah Becker | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 20.03.2026  
+**Time:** 10:00 – 10:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Felix Schulz
+
+---
+
+### I. Objectives
+1. Finalizing the server-side architecture and the implementation plan.
+2. Review and integrate feedback received from Mr.Rentschler.
+
+### II. Discussion Points
+1. Noah Becker shared the latest updates from the meeting with Mr. Rentschler (refer to the documentation shared in the group chat).
+2. Environment Setup -> Docker
+3. Selecting a Testing Strategy
+4. Defining Endpoints 
+
+### III To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Start of backend development | Noah Becker, Fabian Steiß, Magnus Lörcher, Luca Schmoll | 03.04.2026 | 
+| Update the BaSyx Backend services on Server to newest available version | Noah Becker | 27.03.20226 |
+| Develop Docker Container | Fabian Steiß, Magnus Lörcher | 27.03.2026 |
+| Develop Java spring | Fabian Steiß | 27.03.2026 | 
+| Conduct systematic testing | Manuel Lutz | 25.03.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 27.03.2026
+
+---
+
+<a id="newStart">
+
+## Meeting 13.03.2026 - New start
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Next Phase Planning & Resource Allocation | Nataliia Chubak | 20 min 
+| 2 | Task Tracker Setup & Workflow Definition | Nataliia Chubak | 10 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 13.03.2026  
+**Time:** 09:00 – 09:30
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Phase planning   
+</td>
+</tr>
+</table>>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß 
+
+---
+
+### I. Objectives
+1. Organizational: Define the development plan for the upcoming sprint and distribute responsibilities.
+2. Establish a task-tracking system to monitor progress.
+3. Distill key action items from recent feedback sessions.
+
+### II. Discussion Points
+1. Comprehensive review of the feedback provided by the lecturers; identifying core areas for improvement.
+2. Discussion of the strategy for further project implementation.
+
+### III To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Develop a detailed roadmap for upcoming feature implementation | Nataliia Chubak | 20.03.2026 |
+| Update project documentation (README.md) | Fabian Steiß | 20.03.2026 |
+| Update Project structure plan, including Implementation and Testing | Nataliia Chubak | 20.03.2026 |
+| Create Gantt-Diagram for 4th semester| Nataliia Chubak | 20.03.2026 |
+|Create task distribution matrix (initial responsibilities)| Nataliia Chubak | 20.03.2026 |
+---
+
+### IV. Future meeting
+The next meeting is planned for 20.03.2026
+
+---
+
+
+
+
+<a id="finalPresentationMeeting">
+
+## Meeting 19.11.2025 – Final discussion for presentation
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Who is going to do what in the presentation|All|8 min|
+||||
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 19.11.2025  
+**Time:** 09:00 – 09:32
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß 
+
+---
+
+### I. Goal  
+Final presentation round, who does what
+
+### II. Status  
+All documents are almost ready, a few still need some final touches.
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Everyone introduces themselves
+- Manuel introduces the project
+- Use case Magnus
+- Functional requirements Luca
+- Non-functional requirements Magnus
+- Business case Nataliia
+- Tools used Fabian
+- Project plan Nataliia
+- Risk analysis Nataliia
+- Solution approach Noah
+- System architecture Noah
+- Mockups Felix
+- Questions - everyone
+
+### V. Future meeting
+This was the last meeting for this Project Phase. The next meeting is planned for next year.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+|Close GitHub Issues|Nataliia|21.11.2025|
+---
+
+**Notes:**  
+
+
+<a id="showAndTell">
+
+## Meeting 10.11.2025 – Show and Tell
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Show and Tell|All|20 min|
+||||
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 10.11.2025  
+**Time:** 12:34 – 12:56
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Fabian Steiß (remote) 
+
+---
+
+### I. Goal  
+This weekly is intended for showing and discussing.
+
+### II. Status  
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Swagger?
+- Show presentation itself, or present? -> Just show
+- Documents for editing, Luca has started, Magnus not yet
+- Which wireframes does Luca need from Felix? (Front-end requirements must be defined -> based on Harting solution (Luca))
+
+- Document format references at the very bottom of the sources
+- Presentation of API mapping, diagrams to be added, patches, registry still missing, and others ...
+- Ask Rentschler for a meeting
+- We definitely need unit tests
+- Nataliia should look at SAS
+
+
+### V. Future meeting
+The next meeting is planned for 19.11.2025.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+||||
+---
+
+**Notes:**  
+
+---
+
+
+<a id="review">
+
+## Meeting 06.11.2025 – Feedback from Herr Rentschler
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+|1|CRS|Magnus Lörcher|20 min|
+|2|SRS|Luca Schmoll|30 min|
+|3|SAS|Noah Becker|20 min|
+|4|PM|Nataliia Chubak|20 min|
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Teams Meeting  
+**Date:** 07.11.2025  
+**Time:** 13:00 – 14:40   
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Review  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Felix Schulz, Fabian Steiß, Herr Rentschler  
+
+---
+
+### I. Goal  
+Receive feedback from Herr Rentschler so that we can improve the documents.
+
+### II. Status  
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+**Herr Rentschler** offered us the opportunity to present our project to the **BaSyx Community**, if we would like to.  
+
+**Contact to Product Owner of BaSyx Aaron Zielstorff:**  
+Contact person BaSyx: **Aaron Zielstorff**,  
+**Aaron.zielstorff@iese.fraunhofer.de**  
+
+---
+
+## CRS
+
+- References (sources) are missing (link to the original task description)  
+- No team division  
+- Add history (Version Control)  
+- Grammar errors (Nonfunctional requirements, conformity, in BP03 Documentation, FR02 Norm conformity)  
+- UC04 → functionality, not a Use Case  
+
+---
+
+## SRS
+
+- Missing context on where we are → copy from CRS  
+- Table of contents incorrect  
+- Missing link to task description  
+- Leave out "Geltungsbereich" or rename to "Systemumgebung"  
+- Terminology should appear earlier (e.g. 1.2)  
+- System architecture is actually SAS, but according to him, keep it as is  
+
+### Use Cases
+- Cases 1–3 go into the Architecture Specification, as they are not real use cases  
+- Use Case is fine but should be moved into the CRS (all Use Cases into CRS, in SRS only reference them)  
+  → from SRS refer to CRS  
+
+- FR01 and FR02 belong together  
+- FR03 add **Harting** example (link + more pictures)  
+- FR05 and FR03 should be clustered together  
+- FR04 belongs in Frontend requirements  
+- FR06 is not a Functional Requirement → it is a test environment topic  
+
+### Frontend Requirements
+- Should describe what is provided by the frontend  
+- FR09 goes into CRS + include more of Rentschler’s ideas  
+- *Scope of Submodels* goes into SRS + expand it  
+
+- The written NFRs are actually test parameters according to him
+- NFR05 was not well received  
+
+- External Interfaces (6) provide no information gain for him  
+
+### Point 8
+- The graphic would fit the Use Case, but it "hangs in the air"  
+- Usability concept & workflow are missing according to him; he recommends screenshots  
+
+### Point 9
+- Most are not non-functional requirements  
+
+### Point 10
+- Move everything into CRS  
+
+### Point 11
+- Delete everything (lol)  
+
+### Formal
+- There are no references to the CRS (he wants that); for requirements, justify with a link to CRS  
+- A references chapter for sources is missing (license, task description, norm, BaSyx environment)  
+- Ensure a consistent layout across all documents  
+- Chapter 3 → rename to “Functional something”  
+- Scope of Submodel (screenshot from Nataliia’s notes)  
+
+---
+
+## SAS
+
+- Consistent layout missing  
+- Remove team division (belongs in the product plan), remove stakeholders  
+- Delete 2.2  
+- In 4.1, remove “Technology” from the image  
+- Remove duplicate “Vue.js” (redundancy, once is enough)  
+- Move 5.2 higher up, not so far down  
+- Delete everything under 6  
+- **Data model** is very important (Where does it come from, where does it go, …)  
+
+---
+
+## PM
+
+- Layout and format must be consistent  
+- Version Control directly under the header  
+- Remove "Details" from Project Assignment (keep only the headline)  
+- In Project Context, two fields are missing; for Temporal Context, he didn’t understand what was meant  
+
+### Strategy Plan
+- Dev. API must be included (DPP API from Grok), e.g. in point 3.1  
+
+- 2.0 Design Mapping Concept + Frontend Design  
+- 4.0 Testing → write “Test Strategy” instead of “Write Tests”
+
+
+
+
+### V. Future meeting
+The next meeting is planned for 10.11.2025.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+||||
+---
+
+**Notes:**  
+
+---
+
+
+<a id="presentationMeeting">
+
+## Meeting 06.11.2025 – Quick Meeting for Presentation
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Who is going to do what in the presentation|All|8 min|
+||||
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 06.11.2025  
+**Time:** 12:00 – 12:08 
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Briefing  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Felix Schulz, Fabian Steiß  
+
+---
+
+### I. Goal  
+Quick overview of who is presenting a topic
+
+### II. Status  
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Everyone introduces themselves
+- Manuel introduces the project + (tests by Lucas SRS)
+- Use case Luca
+- Functional requirements Luca
+- Non-functional requirements Magnus
+- Business case Nataliia
+- Tools used Fabian
+- Project plan Nataliia
+- Risk analysis Nataliia
+- System architecture Noah
+- Solution approach Noah
+- Mockups Felix
+- Questions - everyone
+
+
+### V. Future meeting
+The next meeting is planned for 10.11.2025.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+||||
+---
+
+**Notes:**  
+
+---
+
+
+<a id="status2">
+
+## Meeting 04.11.2025 – Status team members II
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Documentation status|All|20 min|
+||||
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 04.11.2025  
+**Time:** 11:30 – 12:00 
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Manuel Lutz, Magnus Lörcher, Luca Schmoll, Felix Schulz, Fabian Steiß  
+
+---
+
+### I. Goal  
+Team members share there documentation status and other discussions
+
+### II. Status  
+- CRS finished
+- SRS and SAS will be soon finished
+- Presentation in progress but needs more information from team members
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Document status query
+  CRS from Magnus complete, feedback from Rentschler via Nataliia
+
+  SRS complete, wireframes have to be added
+
+  SAS will be finished soon
+
+
+- Presentation
+  Manuel waits for infos from team members
+
+
+
+
+### V. Future meeting
+The next meeting is planned for 04.11.2025.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+|Pushing needed Infos for presentation|all|10.11.2025|
+|CRS Feedback from Herr Rentschler |Nataliia Chubak|10.11.2025|
+|Questions regarding frontend to Herr Rentschler |Noah Becker|10.11.2025|
+---
+
+**Notes:**  
+
+---
+
+
+<a id="status">
+
+## Meeting 28.10.2025 – Status team members
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 |Mockup presentation|Felix Schulz|5 min|
+| 2 |Presentation task distribution|all|10 min|
+| 3 |Pull request rule question|Fabian|2 min|
+| 4 |Security concept|all|5 min|
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 28.10.2025  
+**Time:** 11:30 – 12:04  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Felix Schulz, Fabian Steiß  
+
+---
+
+### I. Goal  
+To check the status of the team members
+
+### II. Status  
+- SRS will be finalized this week
+- 2 mockups have been created
+- SAS deadline in 2 days, still some work to do
+- Transfer of tasks from Jira to GitHub Project successful
+
+### III. Risks / Issues
+
+### IV. Discussion Points
+
+- Presentation of mockups
+  - Team appreciated designidea
+  - Recognized the problem of dynamic value integration, for example: an object has 4 values, another object has 1000 values
+
+- Presentation
+  - Discussion who will do what in the presentation
+  - Will be specified in the next meeting
+
+- UML diagrams in SRS
+  - Magnus and Luca are going to do it
+
+- Pull requests must be consistently followed through
+
+- Languages and Tools
+  - Backend: Django
+  - Frontend: React with Typescript and Tailwind for design
+
+- No test driven development
+
+- Security concept
+  - Authentication in the web app with a login page
+
+
+
+### V. Future meeting
+The next meeting is planned for 04.11.2025.
+
+
+---
+
+### To-dos
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+|Create presentation|Manuel Lutz|20.11.2025|
+|Finish writing SAS|Noah Becker|14.11.2025|
+|Finish writing SRS|Luca Schmoll|14.11.2025|
+|Mockup of the login page|Felix Schulz|15.11.2025|
+|Email for trial presentation to Herr Rentschler|Nataliia Chubak|28.10.2025|
+
+---
+
+**Notes:**  
+- Manuel Lutz not present
+---
+
+
+
+---
+<a id="documentDistribution">
+
+## Meeting 22.10.2025 – Document Distribution and Jira/GitHub Tasks
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Who writes which documents | All | 10 min |
+| 2 | GitHub Issues and Jira | All | 10 min |
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 22.10.2025  
+**Time:** 12:40 – 13:05  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Weekly  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher,  
+Manuel Lutz, Luca Schmoll, Felix Schulz, Fabian Steiß  
+
+---
+
+### I. Goal  
+- To get an overview of who writes which documents
+
+### II. Status  
+✔️ BaSyx Environment is now [reachable](https://srv01.noah-becker.de/uni/swe/basyx/) and fully functional
+
+### III. Risks / Issues  
+
+### IV. Discussion Points  
+
+- **Document Distribution:**
+  - SRS – Luca Schmoll  
+  - CRS – Magnus Lörcher  
+  - BC – Nataliia Chubak  
+  - PM – Nataliia Chubak  
+  - SAS – Noah Becker  
+  - MOD (Web-Interface) - Felix Schulz   
+  - STR, STP – Manuel Lutz  
+  - Presentation – Manuel Lutz, Felix Schulz  
+  - Meeting Minutes, User Manual – Fabian Steiß  
+
+- **More Git Issues**
+  - Discussion on whether Jira tasks should be created as GitHub Issues.  
+    **Result:** Ask Rentschler what is preferred  
+
+- **Upstream Changes**
+  - Do not make upstream changes from the original repository. If at all, only at the end when necessary  
+
+### V. Future Meeting  
+The next meeting is planned for **29.10.2025**.  
+
+---
+
+### To-Do’s
+
+| **To-Do** | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Ask Herr Rentschler whether Jira tasks should be created as GitHub Issues | Luca Schmoll | 24.10.2025 |
+| Fix file upload in BaSyx Environment | Noah Becker | 24.10.2025 |
+
+---
+
+**Notes:**  
+---
+
+<a id="discussionBriefing">
+
+## Meeting 17.10.2025 – Discussion of Task Description
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic              | Responsibility | Time (min) |
+|-----|--------------------|----------------|-------------|
+| 1   | Explaination / discussion of project goal| All       | 10          |
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 17.10.2025  
+**Time:** 10:30 – 10:40  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type:** Briefing  
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß  
+
+---
+
+### I. Goal  
+The goal is to understand what we need to do with the API.
+
+### II. Status  
+
+### III. Risks / Issues  
+
+### IV. Discussion Points  
+- Noah Becker spoke with Herr. Rentschler. We need to extend the existing REST API’s OpenAPI specifications, both in the backend and the frontend.
+
+---
+
+
+
+
+<a id="TaskDistribution"></a>
+
+## Meeting 15.10.2025 - Task Distribution
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic                | Responsibility   | Time (min) |
+|-----|----------------------|------------------|-------------|
+| 1   | Task Distribution    | Nataliia Chubak  | 10          |
+| 2   | Task unclear         |All                  |             15|
+
+
+</td>
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 15.10.2025  
+**Time:** 12:40 – 13:05  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type** Weekly
+
+</td>
+</tr>
+</table>
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher,  
+Manuel Lutz, Luca Schmoll, Felix Schulz, Fabian Steiß  
+
+---
+
+### I. Goal  
+
+### II. Status  
+✔️ Business Case completed  
+✔️ BaSyx environment is active  
+✔️ Link to Swagger is up  
+
+### III. Risks / Issues  
+- **File uploading not working**  
+- **Basic functionality unclear — what exactly needs to be done**  
+
+### IV. Discussion Points  
+- **Task Distribution**  
+  - Manuel Lutz: Presentation and testing  
+  - Magnus Lörcher, Fabian Steiß, Luca Schmoll: Backend  
+  - Felix Schulz: Frontend, UI Design   and presentation
+  - Noah Becker: Fullstack  
+
+
+  **Documents:**  
+  - **Setup of BaSyx environment**  
+  - File upload in BaSyx AASX Web UI not working, but Swagger works  
+  → Therefore, email to Herr. Rentschler asking for clarification of the project goal  
+
+### V. Future Meeting  
+The next meeting is planned for 22.10.2025.  
+
+---
+
+### To-Do’s
+
+| **To-Do**                                          | **Responsible Person(s)** | **Due Date** |
+|----------------------------------------------------|----------------------------|---------------|
+| Email Herr Rentschler about clarification of project goal | Nataliia Chubak            | 15.10.2025    |
+
+
+
+**Notes:**  
+  - [**Swagger UI**](https://srv01.noah-becker.de/uni/swe/swagger/)
+---
+
+<a id="next-steps"></a>
+## Meeting 09.10.2025 - Next Steps
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+
+
+| No. | Topic           | Responsibility | Time (min) |
+|-----|-----------------|----------------|-------------|
+| 1   | Documents       | All            | 10          |
+| 2   | Jira            | All            | 5           |
+| 3   | Weekly Meetings | All            | 5           |
+
+</td>
+    <td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 09.10.2025  
+**Time:** 13:00 – 13:22  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type** Weekly
+
+</td>
+  </tr>
+</table>
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher,  
+Manuel Lutz, Luca Schmoll, Felix Schulz, Fabian Steiß
+
+---
+
+
+### I. Goal
+Overview of the next steps and documents to be submitted.
+
+### II. Status
+✔️ Business Case completed
+
+### III. Risks / Issues
+- Wrong repository forked, fixed by Manuel.
+
+### IV. Discussion Points
+- **Documents to be created:** Epic Stories, process model, timeline, and usability concepts.  
+  Overview of which documents must be submitted at the end.  
+  To be written by Magnus, Luca, and Nataliia.
+
+- **Tasks in Jira:**  
+  The team decided to use Jira to manage and assign tasks.
+
+- **Weekly Meetings:**  
+  Planned for Tuesdays during the break (from 11:30 AM).
+
+- **Build Pipelines:**  
+  To be set up by Noah and Manuel for the BaSyx environment.
+
+- **Unit Tests:**  
+  Decided to follow a Test Driven Design approach.
+
+### V. Future Meeting
+The next meeting is planned for 14.10.2025.
+
+
+
+---
+
+### To-Do’s
+| **To-Do**                                  | **Responsible Person(s)**                      | **Due Date**     |
+|--------------------------------------------|------------------------------------------------|------------------|
+| Get an overview of the BaSyx project        | All                                            | 14.10.2025       |
+| Epic Stories, process model, timeline, usability concepts | Nataliia Chubak, Magnus Lörcher, Luca Schmoll | open       |
+| Create issues on GitHub                     | Fabian Steiß                                   | 14.10.2025       |
+| Set up Swagger on the server for the API    | Noah Becker                                   | 14.10.2025       |
+
+**Notes:**
+
+-	Manuel Lutz was 3 minutes late.
+
+-	**Jira Board:** [https://zerodayz.atlassian.net/jira/software/projects/BDA/boards/67](https://zerodayz.atlassian.net/jira/software/projects/BDA/boards/67)
+
+---
+
+<a id="research"></a>
+## Meeting 30.09.2025 - Research
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+
+
+| No. | Topic         | Responsibility | Time (min) |
+|-----|----------------|----------------|-------------|
+| 1   | What is BaSyX  | All            | 10          |
+| 2   | Research Phase | All            | 15          |
+| 3   | Discussion     | All            | 35          |
+
+</td>
+    <td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 30.09.2025  
+**Time:** 10:00 – 11:00  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type** Weekly
+
+</td>
+  </tr>
+</table>
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher,  
+Manuel Lutz, Luca Schmoll, Felix Schulz, Fabian Steiß
+
+---
+
+### I. Goal
+Conducting initial research on BaSyx and project-related topics.
+
+### II. Status
+Research ongoing.
+
+### III. Risks / Issues
+None identified.
+
+### IV. Discussion Points
+- **Research Phase:**  
+  The team mainly conducted research on BaSyx and Industry 4.0 concepts to build a foundational understanding.  
+  Each member summarized their findings to align on project direction.
+
+- **Next Steps:**  
+  Plan for documentation and technical specification (System Architecture, OpenAPI).
+
+### V. Future Meeting
+The next meeting is planned for Thursday, 09.10.2025.
+
+---
+
+### To-Do’s
+| **To-Do**                       | **Responsible Person(s)** | **Due Date** |
+|---------------------------------|----------------------------|--------------|
+
+
+**Notes:**  
+- Full team attendance.  
+- This session focused mainly on **research and understanding BaSyx**.
+
+---
+<a id="foundations"></a>
+## Meeting 29.09.2025 - Foundations
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Project Topic | All | 10 |
+| 2 | Role Distribution | All | 15 |
+| 3 | First Steps | All | 35 |
+
+</td>
+    <td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** DHBW Stuttgart  
+**Date:** 26.09.2025  
+**Time:** 10:00 – 11:00  
+**Moderator:** Nataliia Chubak  
+**Minutes:** Fabian Steiß  
+**Type** Weekly
+
+</td>
+  </tr>
+</table>
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher,  
+Manuel Lutz, Luca Schmoll, Felix Schulz, Fabian Steiß
+
+---
+
+### I. Goal
+Definition of basic project prerequisites.
+
+### II. Status
+None
+
+### III. Risks / Issues
+None
+
+### IV. Discussion Points
+- **Decision on project topic:**  
+  The team decided to work on the *Team6-BaSyx-DPP-API* project.
+
+- **Role distribution:**  
+  The following roles were assigned:
+
+  | Role              | Responsible Person(s)             |
+  |-------------------|-----------------------------------|
+  | Project Manager   | Nataliia Chubak                   |
+  | Product Manager   | Luca Schmoll, Magnus Lörcher      |
+  | Test Manager      | Manuel Lutz                       |
+  | System Architect  | Noah Becker                       |
+  | Documentation     | Fabian Steiß                      |
+  | UI Designer       | Felix Schulz                      |
+  | Developer         | All                               |
+
+### V. Future Meeting
+The next meeting is planned for Thursday, 09.10.2025.
+
+---
+
+### To-Do’s
+| **To-Do**                   | **Responsible Person(s)**                      | **Due Date**     |
+|------------------------------|------------------------------------------------|------------------|
+| Clone repository             | Manuel Lutz                                   | 03.10.2025       |
+| Write business case          | Nataliia Chubak                               | 07.10.2025       |
+| Write CRS                    | Nataliia Chubak, Magnus Lörcher, Luca Schmoll | open       |
+| Set up BaSyx infrastructure  | Noah Becker                                   | 10.10.2025       |
+
+**Notes:**  
+- Full team attendance.

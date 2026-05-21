@@ -123,6 +123,7 @@ public class APIController {
             dppContent.setCreatedAt(timeStamp);
             dppContent.setDppId(dppId);
             dppContent.setSubmodels(filteredSubmodels);
+            dppContent.setGlobalAssetId(Base64DPP.ensureEncoding(shellId));
 
             // ensure the productId is stored in base64 format
             dppContent.setProductId(Base64DPP.ensureEncoding(dppContent.getProductId()));
@@ -173,9 +174,11 @@ public class APIController {
             ObjectNode collctedSubmodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
+            ObjectNode collectedShell = APIUtilsDPP.collectAASNameAndDescription(restClient, logger, mapper, dpp);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("shell", collectedShell);
             response.putPOJO("assetInformation", collectedAssetInformation);
             response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", collctedSubmodels);
@@ -366,9 +369,13 @@ public class APIController {
 
         try {
             Aggregation aggregation = Aggregation.newAggregation(
-                    Aggregation.match(Criteria.where("dpps.productId").is(productId)),
+                    Aggregation.match(new Criteria().orOperator(
+                            Criteria.where("dpps.productId").is(productId), // Keep all if parent ID matches
+                            Criteria.where("dpps.globalAssetId").is(productId))),
                     Aggregation.unwind("dpps"),
-                    Aggregation.match(Criteria.where("dpps.productId").is(productId)),
+                    Aggregation.match(new Criteria().orOperator(
+                            Criteria.where("dpps.productId").is(productId), // Keep all if parent ID matches
+                            Criteria.where("dpps.globalAssetId").is(productId))),
                     Aggregation.replaceRoot("dpps"));
 
             List<org.bson.Document> results = mongoTemplate.aggregate(
@@ -385,9 +392,11 @@ public class APIController {
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
+            ObjectNode collectedShell = APIUtilsDPP.collectAASNameAndDescription(restClient, logger, mapper, dpp);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("shell", collectedShell);
             response.putPOJO("assetInformation", collectedAssetInformation);
             response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", submodels);
@@ -407,12 +416,18 @@ public class APIController {
 
         try {
             Aggregation aggregation = Aggregation.newAggregation(
-                    Aggregation.match(Criteria.where("dpps.productId").is(productId)
-                            .and("dpps.createdAt").is(date)),
+                    Aggregation.match(new Criteria().orOperator(
+                            Criteria.where("dpps.productId").is(productId),
+                            Criteria.where("dpps.globalAssetId").is(productId)).and("dpps.createdAt").is(date)
+                        ),
                     Aggregation.unwind("dpps"),
-                    Aggregation.match(Criteria.where("dpps.productId").is(productId)
-                            .and("dpps.createdAt").is(date)),
+                    Aggregation.match(new Criteria().orOperator(
+                            Criteria.where("dpps.productId").is(productId),
+                            Criteria.where("dpps.globalAssetId").is(productId)).and("dpps.createdAt").is(date)
+                        ),
                     Aggregation.replaceRoot("dpps"));
+
+
 
             List<org.bson.Document> results = mongoTemplate.aggregate(
                     aggregation, "dpp-repo", org.bson.Document.class).getMappedResults();
@@ -428,9 +443,11 @@ public class APIController {
             ObjectNode submodels = APIUtilsDPP.collectSubmodelData(mapper, dpp, restClient, logger);
             ObjectNode collectedAssetInformation = APIUtilsDPP.collectAssetInformation(mapper, dpp, restClient, logger);
             ObjectNode collectedAdministration = APIUtilsDPP.collectAdministration(mapper, dpp, restClient, logger);
+            ObjectNode collectedShell = APIUtilsDPP.collectAASNameAndDescription(restClient, logger, mapper, dpp);
 
             response.put("status", "success");
             response.putPOJO("dpp", dpp);
+            response.putPOJO("shell", collectedShell);
             response.putPOJO("assetInformation", collectedAssetInformation);
             response.putPOJO("administration", collectedAdministration);
             response.putPOJO("submodels_values", submodels);
@@ -469,9 +486,13 @@ public class APIController {
 
         try {
             Aggregation aggregation = Aggregation.newAggregation(
-                    Aggregation.match(Criteria.where("dpps.productId").in(productIds)),
+                    Aggregation.match(new Criteria().orOperator(
+                            Criteria.where("dpps.productId").in(productIds),
+                            Criteria.where("dpps.globalAssetId").in(productIds))),
                     Aggregation.unwind("dpps"),
-                    Aggregation.match(Criteria.where("dpps.productId").in(productIds)),
+                    Aggregation.match(new Criteria().orOperator(
+                            Criteria.where("dpps.productId").in(productIds),
+                            Criteria.where("dpps.globalAssetId").in(productIds))),
                     Aggregation.project()
                             .and("dpps.productId").as("productId")
                             .and("dpps._id").as("dppId"));
