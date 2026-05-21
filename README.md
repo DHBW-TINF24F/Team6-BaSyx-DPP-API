@@ -17,13 +17,15 @@
 
 ## Table of Contents
 1. [Project Description](#project-description)
-2. [Architecture](#architecture)
-3. [Frontend Screenshots](#frontend-screenshots)
-4. [Main Tasks](#main-tasks)
-5. [Team Members](#team-members)
-6. [Technologies & Tools](#technologies--tools)
-7. [Documentation](#documentation)
-8. [Useful Links](#useful-links)
+2. [License](#license)
+3. [Architecture](#architecture)
+4. [Screenshots of BaSyx Web UI for DPP](#screenshots-of-basyx-web-ui-for-dpp)
+5. [Main Tasks](#main-tasks)
+6. [Team Members](#team-members)
+7. [Technologies & Tools](#technologies--tools)
+8. [Documentation](#documentation)
+9. [Useful Links](#useful-links)
+10. [Version History](#version-history)
 
 
 
@@ -97,10 +99,27 @@ For the full architectural specification, see the [SAS (Software Architecture Sp
 
 
 
-## Frontend Screenshots
+## Screenshots of BaSyx Web UI for DPP
 
-<img src="./SOURCE/media/dpp_detail.jpeg" alt="DPP Detail Page">
-<img src="./SOURCE/media/dpp_list.jpeg" alt="DPP List Page">
+Feature list
+<img src="./SOURCE/media/screenshots/dpp_frontend_listing_features.png" alt="DPP Detail Page">
+
+<br>
+DPP List
+<img src="./SOURCE/media/screenshots/dpp_list.png" alt="DPP Detail Page">
+
+<br>
+DPP Viewer
+<img src="./SOURCE/media/screenshots/dpp_detail_1.png" alt="DPP Detail Page">
+<img src="./SOURCE/media/screenshots/detail_component_2.png" alt="DPP Detail Page">
+<img src="./SOURCE/media/screenshots/detail_component_3.png" alt="DPP Detail Page">
+<img src="./SOURCE/media/screenshots/detail_component_4.png" alt="DPP Detail Page">
+<img src="./SOURCE/media/screenshots/detail_component_5.png" alt="DPP Detail Page">
+<img src="./SOURCE/media/screenshots/detail_component_6.png" alt="DPP Detail Page">
+
+<br>
+DPP Registry
+<img src="./SOURCE/media/screenshots/dpp_registry.png" alt="DPP Detail Page">
 
 
 ## Main Tasks
@@ -177,8 +196,8 @@ An overview of all project documents. The documents are cross-linked: the SRS re
 
 
 ## Version History
-
-- **1.5** (current) - Added frontend screenshots, issue link and licence disclaimer - *iFabse*
+- **1.6** (current) - Final version with new Web UI screenshots - *iFabse*
+- **1.5** - Added frontend screenshots, issue link and licence disclaimer - *iFabse*
 - **1.4** - Link fixing for documents - *iFabse*
 - **1.3** - Landing README improvements and User Manual - *iFabse*
 - **1.2** (24.04.2026) - Updated WIP badge with build and deploy badges - *noahdbecker*
