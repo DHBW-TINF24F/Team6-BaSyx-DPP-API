@@ -96,25 +96,30 @@ jobs:
       # context to Docker.
       #
       # Why this is necessary:
-      #   The Dockerfile's `RUN yarn build` triggers the `prebuild` lifecycle
-      #   hook, which runs `cross-env NODE_ENV=production yarn lint:check`.
+      #   The Dockerfile's `RUN pnpm build` triggers the `prebuild` lifecycle
+      #   hook, which runs `cross-env NODE_ENV=production pnpm lint:check`.
       #   In production mode several rules are elevated to errors (no-console,
       #   simple-import-sort, prettier/prettier). Running `lint:fix` here
       #   corrects all auto-fixable violations in-place so that when Docker
       #   copies the files via `COPY . .` it sees already-clean source.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'yarn'
-          cache-dependency-path: ${{ env.FRONTEND_DIR }}/yarn.lock
+          cache: 'pnpm'
+          cache-dependency-path: ${{ env.FRONTEND_DIR }}/pnpm-lock.yaml
 
       - name: Install frontend dependencies
-        run: yarn install --frozen-lockfile --non-interactive --network-timeout 600000
+        run: pnpm install --frozen-lockfile
         working-directory: ${{ env.FRONTEND_DIR }}
 
       - name: Lint & auto-fix (pre-Docker)
-        run: yarn lint:fix
+        run: pnpm lint:fix
         working-directory: ${{ env.FRONTEND_DIR }}
 
       # ── Docker build ──────────────────────────────────────────────────────
@@ -147,7 +152,7 @@ jobs:
             type=sha,prefix=sha-,format=short
 
       # Registry-based layer cache stored in GHCR under :buildcache.
-      # The yarn install / node_modules layer is expensive (~2-4 min); the cache
+      # The pnpm install / node_modules layer is expensive (~2-4 min); the cache
       # skips it when only src/* files changed.
       #
       # VITE_APP_* build args surface version/commit/date in the running app.
