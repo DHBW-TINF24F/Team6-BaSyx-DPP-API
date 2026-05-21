@@ -1,6 +1,7 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
+- [Meeting 21.05.2026 - This is our last report](#lastReport)
 - [Meeting 15.05.2026 - Final Meeting and Feedback with Herr Rentschler](#final)
 - [Meeting 13.05.2026 - Final Sprint & Document Sync](#status4)
 - [Meeting 08.05.2026 - Feedback Review](#feedback)
@@ -28,11 +29,70 @@
 
 
 ---
+<a id="lastReport">
+  
+## Meeting 21.05.2026 - "This is our last report"
 
-# Meeting Minutes
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | PowerPoint Slides Review | Team | 25 min|
+| 2 | Presentation agenda and assignment of roles | Team | 20 min |
+| 3 | Final Deployment Check | Team | 30 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Teams
+**Date:** 21.05.2026  
+**Time:** 10:00 – 11:15
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly 
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz, Herr Rentschler
+
+---
+
+## I. Agenda & PowerPoint Review
+The team reviewed the PowerPoint presentation and finalized its content.
+
+## II. Presentation Structure 
+The team has established the following fixed speaking roles for the final presentation:
+1. Project Overview & Introduction
+- Speaker: Nataliia Chubak
+- Content: Context of the demonstrator, project objectives
+2. Requirements (SRS)
+- Speaker: Luca Schmoll
+- Content: Key functional and non-functional requirements
+3. Architecture & System Design (SAS)
+- Speaker: Noah Becker
+- Content: Deployment scenario, routing via Traefik, interaction between aas-web-ui and the forked BaSyx backend.
+4. Backend Implementation & Data Model
+- Speakers: Magnus Lörcher & Fabian Steiß
+- Content: Deep dive into the Spring Boot application, MongoDB integration, dynamic submodel queries, and REST API endpoints.
+5. Live Demo
+- Speaker: Felix Schulz
+- Content: End-to-end walkthrough in the frontend (AAS list, DPP registration pop-up, versioning via dropdown, and the integrated registry).
+6. Quality Assurance & Testing (STP/STR)
+- Speaker: Manuel Lutz
+- Content: Test scenarios, GitHub Actions CI/CD pipeline, mockup tests, and validation against the production backend.
+
+>**Note:** Conclusion: The presentation has a logical structure. Everyone knows their role. Good luck with the presentation!
+
+---
+
 
 <a id="final">
-
+  
 ## Meeting 15.05.2026 - "Final Meeting and Feedback with Herr Rentschler"
 
 <table style="width:100%;border-collapse:collapse;">
@@ -41,9 +101,10 @@
 
 | No. | Topic | Responsibility | Time (min) |
 |-----|--------|----------------|-------------|
-| 1 | Discussion of frontend | Herr Rentschler, Noah Becker, Nataliia Chubak, Felix Schulz | 45 min|
+| 1 | Discussion of frontend | Herr Rentschler, Noah Becker, Nataliia Chubak, Felix Schulz | 45 min |
 | 2 | Extras (submission dates, basyx implementation)| All | 15 min |
 ||||
+
 <td style="width:40%; vertical-align:bottom; text-align:center;">
 
 **Location:** DHBW Stuttgart  
