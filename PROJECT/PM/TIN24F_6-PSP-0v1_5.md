@@ -287,16 +287,19 @@ Officially, the following tasks must be completed in the project:
 * **GitHub:** The GitHub repository needs to be cleaned up, and its wiki has to be updated.
 * **Documentation:** The complete set of documents must be delivered:
     * Project structure plan 
-    * Customer Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/CRS/crs.md">CRS</a>
-    * Business Case <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TINF24F_BC_Team_6_1v3.md">BC</a>
+    * Customer Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/CRS/TIN24F_6-CRS-0v1.md">CRS</a>
+    * Business Case <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/BC/TIN24F_6-BC-0v1_3.md">BC</a>
     * Software Requirement Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SRS/SRS.md">SRS</a>
-    * Software Architecture Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SAS/TIN24F_SAS_Team_6_0v1.md">SAS</a>
-    * Protocols/Meeting Minutes <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MEETING_PROTOCOLS/README.md">Meeting Minutes</a>
+    * Software Architecture Specification <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/SAS/TIN24F_6-SAS-0v1.md">SAS</a>
+    * Protocols/Meeting Minutes <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MEETING_PROTOCOLS/TIN24F_6_Meeting-Minutes_0v1.md">Meeting Minutes</a>
     * User Manual <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/USER_MANUAL/usermanual.md">User Manual</a> 
     * Developer README (Setup, local development, backend & frontend) <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/README.dev.md">DevReadme</a>
     * Mockups <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PM/Mockups%20%26%20Wireframes">Mockups</a>
-    * Module documentation <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/MOD">MODs</a>
-    * System Test Report <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STP/TINF24F_STP_Team_6_0v1.md">STr</a>
-    * Software Test Plan <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STR/TINF24F_STR_Team_6_0v1.md">STP</a>
+    * MOD-Routing <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MOD/TINF24F_6-MOD-Routing-0v1.md">Routing</a>
+    * MOD-DPP-Frontend <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MOD/TINF24F_6-MOD-Frontend-0v1.md">DPP-Frontend</a>
+    * MOD-DPP-Backend<a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MOD/TINF24F_6-MOD-BACKEND-0v1.md">DPP-Backend</a>
+    * MOD-API <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/MOD/TINF24F_6-MOD-API-0v1.yaml">API</a>
+    * System Test Report <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STR/TIN24F_6-STR-0v1.md">STR</a>
+    * Software Test Plan <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/blob/main/PROJECT/STP/TIN24F_6-STP-0v1.md">STP</a>
 * **Product presentation I&II** <a href="https://github.com/DHBW-TINF24F/Team6-BaSyx-DPP-API/tree/main/PROJECT/PRESENTATION">PowerPoint</a>
 * **Code: The source code and an executable version has to be published on GitHub Repository**

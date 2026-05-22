@@ -88,6 +88,8 @@ The project milestones are:
 
 * **Planning and Requirements Analysis:** Weeks 1-6
 * **Design and Architecture:** Weeks 7-11
+* **Development** Weeks 12-17
+* **Testing:** Weeks 17-21
 
 ## Gantt chart 3rd Semester
 
@@ -98,6 +100,17 @@ The project milestones are:
 ![Gantt chart](images/Gantt_design.png)
 
 <p align="center"> <i>Figur.2 Gantt chart 3rd Semester (Phase II)</i> </p>  
+
+
+## Gantt chart 4rd Semester
+
+![Gantt chart](images/Gantt_dev.jpg)
+
+<p align="center"> <i>Figur.3 Gantt chart 4rd Semester (Phase III)</i> </p>  
+
+![Gantt chart](images/Gantt_testing.png)
+
+<p align="center"> <i>Figur.4 Gantt chart 4d Semester (Phase IV)</i> </p>  
 
 ---
 
