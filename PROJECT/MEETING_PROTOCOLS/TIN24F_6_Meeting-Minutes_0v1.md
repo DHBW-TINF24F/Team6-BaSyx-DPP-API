@@ -1,6 +1,7 @@
 # Meeting Protocol - Team 6 BaSyx DPP API
 
 ## Table of Contents
+- [Meeting 22.05.2026 - The Final Countdown – We made it!](#weMadeIt)
 - [Meeting 21.05.2026 - This is our last report](#lastReport)
 - [Meeting 15.05.2026 - Final Meeting and Feedback with Herr Rentschler](#final)
 - [Meeting 13.05.2026 - Final Sprint & Document Sync](#status4)
@@ -26,6 +27,55 @@
 - [Meeting 09.10.2025 - Next Steps](#next-steps)
 - [Meeting 30.09.2025 - Research](#research)
 - [Meeting 29.09.2025 - Foundations](#foundations)
+---
+<a id="weMadeIt">
+  
+## Meeting 22.05.2026 - "The Final Countdown - We made it"
+
+<table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <td style="width:60%; vertical-align:top;">
+
+| No. | Topic | Responsibility | Time (min) |
+|-----|--------|----------------|-------------|
+| 1 | Final Project Presentation | Team | 20 min|
+| 2 | Cake Celebration | Team | 30 min |
+||||
+<td style="width:40%; vertical-align:bottom; text-align:center;">
+
+**Location:** Teams
+**Date:** 21.05.2026  
+**Time:** 11:30 – 12:20
+**Moderator:** Nataliia Chubak  
+**Minutes:** Nataliia Chubak  
+**Type:** Weekly 
+</td>
+</tr>
+</table>
+
+---
+
+**Attendees:**  
+Noah Becker, Nataliia Chubak, Magnus Lörcher, Luca Schmoll, Fabian Steiß, Manuel Lutz, Felix Schulz, Herr Rentschler
+
+---
+## I. Project Completion & Presentation
+- Successful Presentation: The team successfully presented the project and the DPP demonstrator they developed today.
+- Content: All sections—from the project introduction (Nataliia) to the use cases (Luca), the architecture (Noah), the backend (Magnus & Fabian), the flawless live demo (Felix), and testing (Manuel)—were presented smoothly and professionally as planned.
+- Live Demonstration: The hosted REST API and the customized aas-web-ui ran stably during the demonstration and successfully showcased the entire workflow (AAS overview, registration pop-up, versioning, and editor).
+
+## II. Closing Remarks by the Project Leader & Cake Time
+After the official part and successfully navigating the Q&A session, it was time for the social part:
+- Cake Celebration: To properly celebrate the success, the entire team was treated to cake! The perfect pick-me-up after the stress of the presentation.
+- Outlook & Motivation: At the end of the lecture period, the project manager wished all team members a relaxing break and, above all, good luck on the upcoming exams in the other modules.
+
+## III. Status
+- Project Status: SUCCESSFULLY COMPLETED (CLOSED)
+- Sugar Level: HIGH (Cake successfully deployed)
+- Repository Status: The final code and all documents (SRS, SAS, MODs, User Manual, STP/STR) have been successfully pushed, versioned, and submitted.
+
+
+>**Note:** Congratulations on the successful completion of the project! Get those exams out of the way and celebrate in style!
 
 
 ---
